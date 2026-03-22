@@ -18,6 +18,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/c11y: {}
+
   packages/classic-impl:
     dependencies:
       selenium-webdriver:
@@ -27,8 +29,6 @@ importers:
       '@types/selenium-webdriver':
         specifier: ^4.35.5
         version: 4.35.5
-
-  packages/i14y: {}
 
   packages/vibium-impl:
     dependencies:

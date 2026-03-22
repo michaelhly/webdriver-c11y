@@ -1,7 +1,7 @@
 {
-  "name": "@michaelhly.webdriver-interop/mono",
+  "name": "@michaelhly.webdriver-compat/mono",
   "version": "1.0.0",
-  "description": "WebDriver Interop Monorepo",
+  "description": "WebDriver Compatibility Monorepo",
   "main": "index.js",
   "private": true,
   "scripts": {
