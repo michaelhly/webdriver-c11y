@@ -2,6 +2,7 @@
 	"name": "@michaelhly.webdriver-interop/vibium-impl",
 	"version": "1.0.0",
 	"description": "",
+	"type": "module",
 	"main": "src/index.ts",
 	"scripts": {
 		"format": "biome format --write",
@@ -13,6 +14,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@michaelhly.webdriver-interop/c11y": "workspace:^",
 		"vibium": "^26.3.18"
 	}
 }
