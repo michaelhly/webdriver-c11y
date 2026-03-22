@@ -1,18 +1,21 @@
 {
-  "name": "@michaelhly.webdriver-interop/classic-impl",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "selenium-webdriver": "^4.41.0"
-  },
-  "devDependencies": {
-    "@types/selenium-webdriver": "^4.35.5"
-  }
+	"name": "@michaelhly.webdriver-interop/classic-impl",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/index.ts",
+	"scripts": {
+		"format": "biome format --write",
+		"lint": "biome lint",
+		"lint:fix": "biome lint --write",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"selenium-webdriver": "^4.41.0"
+	},
+	"devDependencies": {
+		"@types/selenium-webdriver": "^4.35.5"
+	}
 }

@@ -5,6 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "format": "biome format --write packages/**",
+    "lint": "biome lint packages/**",
+    "lint:fix": "biome lint --write packages/**",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
