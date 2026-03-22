@@ -1,0 +1,37 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "c11y://session",
+	"definitions": {
+		"Capabilities": {
+			"type": "object",
+			"properties": {
+				"browserName": {
+					"type": "string",
+					"enum": ["chrome", "firefox", "edge", "safari"]
+				},
+				"headless": { "type": "boolean" },
+				"executablePath": { "type": "string" },
+				"args": {
+					"type": "array",
+					"items": { "type": "string" }
+				}
+			},
+			"additionalProperties": false
+		},
+		"NewSessionParams": {
+			"type": "object",
+			"properties": {
+				"capabilities": { "$ref": "#/definitions/Capabilities" }
+			},
+			"additionalProperties": false
+		},
+		"NewSessionResult": {
+			"type": "object",
+			"properties": {
+				"sessionId": { "type": "string" }
+			},
+			"required": ["sessionId"],
+			"additionalProperties": false
+		}
+	}
+}
