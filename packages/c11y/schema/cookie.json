@@ -1,0 +1,67 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "c11y://cookie",
+	"definitions": {
+		"Cookie": {
+			"type": "object",
+			"properties": {
+				"name": { "type": "string" },
+				"value": { "type": "string" },
+				"path": { "type": "string" },
+				"domain": { "type": "string" },
+				"secure": { "type": "boolean" },
+				"httpOnly": { "type": "boolean" },
+				"expiry": { "type": "number" },
+				"sameSite": {
+					"type": "string",
+					"enum": ["Strict", "Lax", "None"]
+				}
+			},
+			"required": ["name", "value"],
+			"additionalProperties": false
+		},
+		"GetCookieParams": {
+			"type": "object",
+			"properties": {
+				"name": { "type": "string" }
+			},
+			"required": ["name"],
+			"additionalProperties": false
+		},
+		"GetAllCookiesResult": {
+			"type": "object",
+			"properties": {
+				"cookies": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/Cookie" }
+				}
+			},
+			"required": ["cookies"],
+			"additionalProperties": false
+		},
+		"GetCookieResult": {
+			"type": "object",
+			"properties": {
+				"cookie": { "$ref": "#/definitions/Cookie" }
+			},
+			"required": ["cookie"],
+			"additionalProperties": false
+		},
+		"AddCookieParams": {
+			"type": "object",
+			"properties": {
+				"cookie": { "$ref": "#/definitions/Cookie" }
+			},
+			"required": ["cookie"],
+			"additionalProperties": false
+		},
+		"DeleteCookieParams": {
+			"type": "object",
+			"properties": {
+				"name": { "type": "string" }
+			},
+			"required": ["name"],
+			"additionalProperties": false
+		}
+	}
+}
