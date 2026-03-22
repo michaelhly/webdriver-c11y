@@ -43,6 +43,7 @@ export type {
 
 // Functional driver interface
 export {
+	type Protocol,
 	type SessionHandlers,
 	type NavigationHandlers,
 	type ElementHandlers,
