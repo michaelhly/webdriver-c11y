@@ -105,10 +105,16 @@ export interface AlertHandlers {
 }
 
 // ---------------------------------------------------------------------------
+// Protocol identifier — distinguishes the underlying implementation.
+// ---------------------------------------------------------------------------
+
+export type Protocol = "webdriver-classic" | "webdriver-bidi";
+
+// ---------------------------------------------------------------------------
 // Driver — the complete functional interface, composed from handler groups.
 // ---------------------------------------------------------------------------
 
-export type Driver = SessionHandlers &
+export type Driver = { readonly protocol: Protocol } & SessionHandlers &
 	NavigationHandlers &
 	ElementHandlers &
 	ScriptHandlers &
@@ -131,6 +137,7 @@ export type Driver = SessionHandlers &
 // ---------------------------------------------------------------------------
 
 export interface DriverComponents {
+	protocol: Protocol;
 	session: SessionHandlers;
 	navigation: NavigationHandlers;
 	element: ElementHandlers;
@@ -143,6 +150,7 @@ export interface DriverComponents {
 
 export function createDriver(components: DriverComponents): Driver {
 	return {
+		protocol: components.protocol,
 		...components.session,
 		...components.navigation,
 		...components.element,
