@@ -1,12 +1,19 @@
+import { ElementNotFoundError, type SelectorOptions } from "vibium";
 import type {
 	ElementHandlers,
 	LocatorStrategy,
 } from "@michaelhly.webdriver-interop/c11y";
-import { UnsupportedOperationError } from "@michaelhly.webdriver-interop/c11y";
-import type { VibiumContext } from "./context.js";
+import {
+	NoSuchElementError,
+	UnsupportedOperationError,
+} from "@michaelhly.webdriver-interop/c11y";
+import type { BidiContext } from "./context.js";
 import { storeElement, getElement } from "./context.js";
 
-function toCssSelector(using: LocatorStrategy, value: string): string {
+function toSelector(
+	using: LocatorStrategy,
+	value: string,
+): string | SelectorOptions {
 	switch (using) {
 		case "css":
 			return value;
@@ -19,34 +26,52 @@ function toCssSelector(using: LocatorStrategy, value: string): string {
 		case "class-name":
 			return `.${value}`;
 		case "placeholder":
-			return `[placeholder="${value}"]`;
+			return { placeholder: value };
 		case "role":
-			return `[role="${value}"]`;
+			return { role: value };
+		case "text":
+			return { text: value };
+		case "label":
+			return { label: value };
 		case "xpath":
+			return { xpath: value };
 		case "link-text":
 		case "partial-link-text":
-		case "text":
-		case "label":
 			throw new UnsupportedOperationError(
-				`Locator strategy "${using}" is not supported by the BiDi backend`,
+				`Unsupported locator strategy: ${using}`,
 			);
 		default:
 			throw new UnsupportedOperationError(
-				`Unknown locator strategy: ${using as string}`,
+				`Unsupported locator strategy: ${using as string}`,
 			);
 	}
 }
 
-export function createElementHandlers(ctx: VibiumContext): ElementHandlers {
+export function createElementHandlers(ctx: BidiContext): ElementHandlers {
 	return {
-		async findElement({ locator }) {
-			const selector = toCssSelector(locator.using, locator.value);
-			const el = await ctx.getPage().find(selector);
-			return { elementId: storeElement(ctx, el) };
+		async findElement({ locator, fromElement }) {
+			const selector = toSelector(locator.using, locator.value);
+			const root = fromElement
+				? getElement(ctx, fromElement)
+				: ctx.getPage();
+			try {
+				const el = await root.find(selector);
+				return { elementId: storeElement(ctx, el) };
+			} catch (e) {
+				if (e instanceof ElementNotFoundError) {
+					throw new NoSuchElementError(
+						`Element not found: ${locator.using}=${locator.value}`,
+					);
+				}
+				throw e;
+			}
 		},
-		async findElements({ locator }) {
-			const selector = toCssSelector(locator.using, locator.value);
-			const els = await ctx.getPage().findAll(selector);
+		async findElements({ locator, fromElement }) {
+			const selector = toSelector(locator.using, locator.value);
+			const root = fromElement
+				? getElement(ctx, fromElement)
+				: ctx.getPage();
+			const els = await root.findAll(selector);
 			return { elementIds: els.map((el) => storeElement(ctx, el)) };
 		},
 		async elementClick({ elementId }) {
@@ -62,41 +87,47 @@ export function createElementHandlers(ctx: VibiumContext): ElementHandlers {
 			return { text: await getElement(ctx, elementId).text() };
 		},
 		async elementGetAttribute({ elementId, name }) {
-			const value = await getElement(ctx, elementId).attr(name);
-			return { value };
+			return { value: await getElement(ctx, elementId).attr(name) };
 		},
 		async elementGetProperty({ elementId, name }) {
 			const el = getElement(ctx, elementId);
-			const value = await ctx
-				.getPage()
-				.evaluate(
-					`(el, prop) => el[prop]`,
-					el,
-					name,
-				);
-			return { value };
+			switch (name) {
+				case "value":
+					return { value: await el.value() };
+				case "checked":
+					return { value: await el.isChecked() };
+				case "innerText":
+					return { value: await el.innerText() };
+				case "textContent":
+					return { value: await el.text() };
+				default:
+					return { value: await el.attr(name) };
+			}
 		},
 		async elementGetCssValue({ elementId, propertyName }) {
 			const el = getElement(ctx, elementId);
-			const value = await ctx
-				.getPage()
-				.evaluate(
-					`(el, prop) => getComputedStyle(el).getPropertyValue(prop)`,
-					el,
-					propertyName,
-				);
-			return { value: String(value) };
+			const bounds = await el.bounds();
+			const cx = bounds.x + bounds.width / 2;
+			const cy = bounds.y + bounds.height / 2;
+			const value = await ctx.getPage().evaluate<string>(
+				`(() => {
+					const el = document.elementFromPoint(${String(cx)}, ${String(cy)});
+					return el ? getComputedStyle(el).getPropertyValue(${JSON.stringify(propertyName)}) : '';
+				})()`,
+			);
+			return { value: String(value ?? "") };
 		},
 		async elementGetTagName({ elementId }) {
-			const el = getElement(ctx, elementId);
-			const tagName = await ctx
-				.getPage()
-				.evaluate(`(el) => el.tagName.toLowerCase()`, el);
-			return { tagName: String(tagName) };
+			return { tagName: getElement(ctx, elementId).info.tag };
 		},
 		async elementGetRect({ elementId }) {
-			const b = await getElement(ctx, elementId).bounds();
-			return { x: b.x, y: b.y, width: b.width, height: b.height };
+			const bounds = await getElement(ctx, elementId).bounds();
+			return {
+				x: bounds.x,
+				y: bounds.y,
+				width: bounds.width,
+				height: bounds.height,
+			};
 		},
 		async elementIsDisplayed({ elementId }) {
 			return { value: await getElement(ctx, elementId).isVisible() };

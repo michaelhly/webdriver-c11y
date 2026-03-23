@@ -1,8 +1,8 @@
 import type { NavigationHandlers } from "@michaelhly.webdriver-interop/c11y";
-import type { VibiumContext } from "./context.js";
+import type { BidiContext } from "./context.js";
 
 export function createNavigationHandlers(
-	ctx: VibiumContext,
+	ctx: BidiContext,
 ): NavigationHandlers {
 	return {
 		async navigateTo({ url }) {

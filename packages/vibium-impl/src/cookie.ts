@@ -2,59 +2,73 @@ import type {
 	CookieHandlers,
 	Cookie,
 } from "@michaelhly.webdriver-interop/c11y";
-import type { CookieData } from "vibium";
-import type { VibiumContext } from "./context.js";
+import type { Cookie as VibiumCookie, SetCookieParam } from "vibium";
+import type { BidiContext } from "./context.js";
 
-function toCookie(c: CookieData): Cookie {
+function toCookie(c: VibiumCookie): Cookie {
 	const cookie: Cookie = { name: c.name, value: c.value };
 	if (c.domain !== undefined) cookie.domain = c.domain;
 	if (c.path !== undefined) cookie.path = c.path;
 	if (c.secure !== undefined) cookie.secure = c.secure;
 	if (c.httpOnly !== undefined) cookie.httpOnly = c.httpOnly;
-	if (c.expires !== undefined) cookie.expiry = c.expires;
-	if (c.sameSite != null)
+	if (c.expiry !== undefined) cookie.expiry = c.expiry;
+	if (c.sameSite !== undefined)
 		cookie.sameSite = c.sameSite as NonNullable<Cookie["sameSite"]>;
 	return cookie;
 }
 
-function toVibiumCookie(c: Cookie): CookieData {
-	const cookie: CookieData = { name: c.name, value: c.value };
-	if (c.domain !== undefined) cookie.domain = c.domain;
-	if (c.path !== undefined) cookie.path = c.path;
-	if (c.secure !== undefined) cookie.secure = c.secure;
-	if (c.httpOnly !== undefined) cookie.httpOnly = c.httpOnly;
-	if (c.expiry !== undefined) cookie.expires = c.expiry;
-	if (c.sameSite != null) cookie.sameSite = c.sameSite;
-	return cookie;
-}
-
-export function createCookieHandlers(ctx: VibiumContext): CookieHandlers {
+export function createCookieHandlers(ctx: BidiContext): CookieHandlers {
 	return {
 		async getAllCookies() {
-			const raw = await ctx.getContext().cookies();
+			const raw = await ctx.getPage().context.cookies();
 			return { cookies: raw.map(toCookie) };
 		},
 		async getCookie({ name }) {
-			const all = await ctx.getContext().cookies();
+			const all = await ctx.getPage().context.cookies();
 			const found = all.find((c) => c.name === name);
-			if (!found) throw new Error(`Cookie not found: ${name}`);
+			if (!found) {
+				return { cookie: { name, value: "" } };
+			}
 			return { cookie: toCookie(found) };
 		},
 		async addCookie({ cookie }) {
-			const existing = await ctx.getContext().cookies();
-			await ctx
-				.getContext()
-				.setCookies([...existing, toVibiumCookie(cookie)]);
+			const param: SetCookieParam = {
+				name: cookie.name,
+				value: cookie.value,
+			};
+			if (cookie.domain !== undefined) param.domain = cookie.domain;
+			if (cookie.path !== undefined) param.path = cookie.path;
+			if (cookie.secure !== undefined) param.secure = cookie.secure;
+			if (cookie.httpOnly !== undefined)
+				param.httpOnly = cookie.httpOnly;
+			if (cookie.sameSite !== undefined)
+				param.sameSite = cookie.sameSite;
+			if (cookie.expiry !== undefined) param.expiry = cookie.expiry;
+			await ctx.getPage().context.setCookies([param]);
 		},
 		async deleteCookie({ name }) {
-			const existing = await ctx.getContext().cookies();
-			await ctx.getContext().clearCookies();
-			await ctx
-				.getContext()
-				.setCookies(existing.filter((c) => c.name !== name));
+			const all = await ctx.getPage().context.cookies();
+			await ctx.getPage().context.clearCookies();
+			const remaining = all.filter((c) => c.name !== name);
+			if (remaining.length > 0) {
+				await ctx.getPage().context.setCookies(
+					remaining.map((c) => ({
+						name: c.name,
+						value: c.value,
+						domain: c.domain,
+						path: c.path,
+						httpOnly: c.httpOnly,
+						secure: c.secure,
+						sameSite: c.sameSite,
+						...(c.expiry !== undefined
+							? { expiry: c.expiry }
+							: {}),
+					})),
+				);
+			}
 		},
 		async deleteAllCookies() {
-			await ctx.getContext().clearCookies();
+			await ctx.getPage().context.clearCookies();
 		},
 	};
 }

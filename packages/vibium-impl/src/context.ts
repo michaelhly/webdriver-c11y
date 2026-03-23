@@ -1,66 +1,71 @@
-import type { Browser, Page, BrowserContext, Element } from "vibium";
+import type {
+	Browser,
+	Page,
+	Element as VibiumElement,
+	Dialog,
+} from "vibium";
 import {
 	SessionNotCreatedError,
 	NoSuchElementError,
 } from "@michaelhly.webdriver-interop/c11y";
 
-export interface VibiumContext {
-	getBrowser(): Browser;
-	getPage(): Page;
-	getContext(): BrowserContext;
-	setBrowser(browser: Browser): void;
-	setPage(page: Page): void;
-	setContext(ctx: BrowserContext): void;
-	clear(): void;
-	elements: Map<string, Element>;
+export interface AlertState {
+	pendingDialog: Dialog | null;
 }
 
-export function createVibiumContext(): VibiumContext {
-	let bro: Browser | null = null;
+export interface BidiContext {
+	getBrowser(): Browser;
+	getPage(): Page;
+	setBrowser(browser: Browser): void;
+	setPage(page: Page): void;
+	clearSession(): void;
+	elements: Map<string, VibiumElement>;
+	alert: AlertState;
+}
+
+export function createContext(): BidiContext {
+	let browser: Browser | null = null;
 	let page: Page | null = null;
-	let context: BrowserContext | null = null;
-	const elements = new Map<string, Element>();
+	const elements = new Map<string, VibiumElement>();
+	const alert: AlertState = { pendingDialog: null };
 
 	return {
 		getBrowser() {
-			if (!bro) throw new SessionNotCreatedError("No active session");
-			return bro;
+			if (!browser) throw new SessionNotCreatedError("No active session");
+			return browser;
 		},
 		getPage() {
-			if (!page) throw new SessionNotCreatedError("No active page");
+			if (!page) throw new SessionNotCreatedError("No active session");
 			return page;
 		},
-		getContext() {
-			if (!context) throw new SessionNotCreatedError("No active context");
-			return context;
-		},
 		setBrowser(b: Browser) {
-			bro = b;
+			browser = b;
 		},
 		setPage(p: Page) {
 			page = p;
 		},
-		setContext(c: BrowserContext) {
-			context = c;
-		},
-		clear() {
-			bro = null;
+		clearSession() {
+			browser = null;
 			page = null;
-			context = null;
 			elements.clear();
+			alert.pendingDialog = null;
 		},
 		elements,
+		alert,
 	};
 }
 
 let nextId = 0;
-export function storeElement(ctx: VibiumContext, el: Element): string {
+export function storeElement(ctx: BidiContext, el: VibiumElement): string {
 	const id = `el-${String(nextId++)}`;
 	ctx.elements.set(id, el);
 	return id;
 }
 
-export function getElement(ctx: VibiumContext, elementId: string): Element {
+export function getElement(
+	ctx: BidiContext,
+	elementId: string,
+): VibiumElement {
 	const el = ctx.elements.get(elementId);
 	if (!el) throw new NoSuchElementError(`Element not found: ${elementId}`);
 	return el;

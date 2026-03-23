@@ -1,47 +1,35 @@
 import type { AlertHandlers } from "@michaelhly.webdriver-interop/c11y";
-import {
-	NoSuchAlertError,
-	UnsupportedOperationError,
-} from "@michaelhly.webdriver-interop/c11y";
-import type { Dialog } from "vibium";
-import type { VibiumContext } from "./context.js";
+import { NoSuchAlertError } from "@michaelhly.webdriver-interop/c11y";
+import type { BidiContext } from "./context.js";
 
-export interface AlertState {
-	pendingDialog: Dialog | null;
-	lastDialogText: string | null;
-}
-
-export function createAlertState(): AlertState {
-	return { pendingDialog: null, lastDialogText: null };
-}
-
-export function createAlertHandlers(
-	ctx: VibiumContext,
-	alertState: AlertState,
-): AlertHandlers {
+export function createAlertHandlers(ctx: BidiContext): AlertHandlers {
 	return {
 		async getAlertText() {
-			if (!alertState.pendingDialog)
-				throw new NoSuchAlertError("No alert is open");
-			return { text: alertState.pendingDialog.message() };
+			const dialog = ctx.alert.pendingDialog;
+			if (!dialog)
+				throw new NoSuchAlertError("No alert is currently open");
+			return { text: dialog.message() };
 		},
 		async acceptAlert() {
-			if (!alertState.pendingDialog)
-				throw new NoSuchAlertError("No alert is open");
-			await alertState.pendingDialog.accept();
-			alertState.pendingDialog = null;
+			const dialog = ctx.alert.pendingDialog;
+			if (!dialog)
+				throw new NoSuchAlertError("No alert is currently open");
+			await dialog.accept();
+			ctx.alert.pendingDialog = null;
 		},
 		async dismissAlert() {
-			if (!alertState.pendingDialog)
-				throw new NoSuchAlertError("No alert is open");
-			await alertState.pendingDialog.dismiss();
-			alertState.pendingDialog = null;
+			const dialog = ctx.alert.pendingDialog;
+			if (!dialog)
+				throw new NoSuchAlertError("No alert is currently open");
+			await dialog.dismiss();
+			ctx.alert.pendingDialog = null;
 		},
 		async sendAlertText({ text }) {
-			if (!alertState.pendingDialog)
-				throw new NoSuchAlertError("No alert is open");
-			await alertState.pendingDialog.accept(text);
-			alertState.pendingDialog = null;
+			const dialog = ctx.alert.pendingDialog;
+			if (!dialog)
+				throw new NoSuchAlertError("No alert is currently open");
+			await dialog.accept(text);
+			ctx.alert.pendingDialog = null;
 		},
 	};
 }

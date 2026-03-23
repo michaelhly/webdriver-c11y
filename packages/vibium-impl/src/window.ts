@@ -1,40 +1,32 @@
-import type { WindowHandlers, Rect } from "@michaelhly.webdriver-interop/c11y";
-import { UnsupportedOperationError } from "@michaelhly.webdriver-interop/c11y";
-import type { VibiumContext } from "./context.js";
+import type { WindowHandlers } from "@michaelhly.webdriver-interop/c11y";
+import type { BidiContext } from "./context.js";
 
-async function getViewportRect(ctx: VibiumContext): Promise<Rect> {
-	const result = await ctx
-		.getPage()
-		.evaluate<{ w: number; h: number }>(
-			"({ w: window.innerWidth, h: window.innerHeight })",
-		);
-	return { x: 0, y: 0, width: result.w, height: result.h };
-}
-
-export function createWindowHandlers(ctx: VibiumContext): WindowHandlers {
+export function createWindowHandlers(ctx: BidiContext): WindowHandlers {
 	return {
 		async getWindowRect() {
-			return getViewportRect(ctx);
+			const win = await ctx.getPage().window();
+			return {
+				x: win.x,
+				y: win.y,
+				width: win.width,
+				height: win.height,
+			};
 		},
-		async setWindowRect() {
-			throw new UnsupportedOperationError(
-				"setWindowRect is not supported by the BiDi backend",
-			);
+		async setWindowRect(params) {
+			await ctx.getPage().setWindow(params);
+			return this.getWindowRect();
 		},
 		async maximizeWindow() {
-			throw new UnsupportedOperationError(
-				"maximizeWindow is not supported by the BiDi backend",
-			);
+			await ctx.getPage().setWindow({ state: "maximized" });
+			return this.getWindowRect();
 		},
 		async minimizeWindow() {
-			throw new UnsupportedOperationError(
-				"minimizeWindow is not supported by the BiDi backend",
-			);
+			await ctx.getPage().setWindow({ state: "minimized" });
+			return this.getWindowRect();
 		},
 		async fullscreenWindow() {
-			throw new UnsupportedOperationError(
-				"fullscreenWindow is not supported by the BiDi backend",
-			);
+			await ctx.getPage().setWindow({ state: "fullscreen" });
+			return this.getWindowRect();
 		},
 	};
 }
