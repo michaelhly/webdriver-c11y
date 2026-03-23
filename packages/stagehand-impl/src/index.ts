@@ -8,7 +8,7 @@ import { createNavigationHandlers } from "./navigation.js";
 import { createScreenshotHandlers } from "./screenshot.js";
 import { createScriptHandlers } from "./script.js";
 import { createSessionHandlers } from "./session.js";
-import type { StagehandContext } from "./shared.js";
+import type { StagehandContext } from "./compat/context.js";
 import { createWindowHandlers } from "./window.js";
 
 export function createStagehandDriver(stagehand: Stagehand): Driver {
@@ -40,4 +40,4 @@ export { createCookieHandlers } from "./cookie.js";
 export { createWindowHandlers } from "./window.js";
 export { createScreenshotHandlers } from "./screenshot.js";
 export { createAlertHandlers } from "./alert.js";
-export type { StagehandContext } from "./shared.js";
+export type { StagehandContext } from "./compat/context.js";

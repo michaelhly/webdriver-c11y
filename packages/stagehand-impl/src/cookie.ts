@@ -3,8 +3,8 @@ import type {
 	CookieHandlers,
 } from "@michaelhly.webdriver-interop/c11y";
 import { DriverError } from "@michaelhly.webdriver-interop/c11y";
-import type { StagehandContext } from "./shared.js";
-import { getActivePage } from "./shared.js";
+import type { StagehandContext } from "./compat/context.js";
+import { getActivePage } from "./compat/page.js";
 
 export function createCookieHandlers(ctx: StagehandContext): CookieHandlers {
 	return {

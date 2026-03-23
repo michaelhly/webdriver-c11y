@@ -3,14 +3,14 @@ import {
 	NoSuchElementError,
 	StaleElementReferenceError,
 } from "@michaelhly.webdriver-interop/c11y";
-import type { StagehandContext } from "./shared.js";
+import type { StagehandContext } from "./compat/context.js";
 import {
 	callOnElement,
 	generateElementId,
-	getActivePage,
 	getElementLocator,
-	toSelector,
-} from "./shared.js";
+} from "./compat/element.js";
+import { getActivePage } from "./compat/page.js";
+import { toSelector } from "./compat/selector.js";
 
 export function createElementHandlers(ctx: StagehandContext): ElementHandlers {
 	return {

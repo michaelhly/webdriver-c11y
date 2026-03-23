@@ -1,7 +1,7 @@
 import type { AlertHandlers } from "@michaelhly.webdriver-interop/c11y";
 import { NoSuchAlertError } from "@michaelhly.webdriver-interop/c11y";
-import type { StagehandContext } from "./shared.js";
-import { getActivePage } from "./shared.js";
+import type { StagehandContext } from "./compat/context.js";
+import { getActivePage } from "./compat/page.js";
 
 export function createAlertHandlers(ctx: StagehandContext): AlertHandlers {
 	return {
