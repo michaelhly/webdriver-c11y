@@ -1,5 +1,5 @@
 import type {
-	Cookie as C11yCookie,
+	Cookie as SeleniumCookie,
 	CookieHandlers,
 } from "@michaelhly.webdriver-interop/c11y";
 import { DriverError } from "@michaelhly.webdriver-interop/c11y";
@@ -65,7 +65,7 @@ function mapStagehandCookie(sh: {
 	httpOnly: boolean;
 	secure: boolean;
 	sameSite: "Strict" | "Lax" | "None";
-}): C11yCookie {
+}): SeleniumCookie {
 	return {
 		name: sh.name,
 		value: sh.value,
