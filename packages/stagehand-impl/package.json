@@ -1,0 +1,24 @@
+{
+	"name": "@michaelhly.webdriver-interop/stagehand-impl",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"main": "src/index.ts",
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"format": "biome check .",
+		"lint": "biome lint .",
+		"lint:fix": "biome lint . --apply-unsafe && biome format . --write",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@browserbasehq/stagehand": "^3.2.0",
+		"@michaelhly.webdriver-interop/c11y": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0"
+	}
+}

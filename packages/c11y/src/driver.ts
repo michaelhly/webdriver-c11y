@@ -108,7 +108,7 @@ export interface AlertHandlers {
 // Protocol identifier — distinguishes the underlying implementation.
 // ---------------------------------------------------------------------------
 
-export type Protocol = "webdriver-classic" | "webdriver-bidi";
+export type Protocol = "webdriver-classic" | "webdriver-bidi" | "cdp";
 
 // ---------------------------------------------------------------------------
 // Driver — the complete functional interface, composed from handler groups.
