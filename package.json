@@ -7,6 +7,7 @@
 	"scripts": {
 		"format": "biome check --write .",
 		"format:check": "biome check .",
+		"lint": "biome lint .",
 		"typecheck": "pnpm -r run typecheck",
 		"build": "pnpm -r run build",
 		"test": "echo \"Error: no test specified\" && exit 1"
