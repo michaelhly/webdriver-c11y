@@ -1,31 +1,40 @@
 # @michaelhly.webdriver-c11y/schema
 
-Compatibility interface between WebDriver Classic (`selenium-webdriver`) and WebDriver BiDi (`vibium`).
+Shared schema and driver interface for WebDriver Classic and BiDi.
 
-Types are generated from JSON Schema definitions using [quicktype](https://github.com/glideapps/quicktype). The driver interface is functional — implementations provide independent handler groups that compose into a full `Driver`.
+Types are generated from JSON Schema definitions using [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript). The driver interface is functional — implementations provide independent handler groups that compose into a full `Driver`.
 
 ## Project layout
 
 ```
-json/                    # JSON Schema source of truth
-├── session.json         # Capabilities, NewSessionParams, NewSessionResult
-├── navigation.json      # NavigateParams, GetCurrentUrlResult, ...
-├── element.json         # Locator, LocatorStrategy, FindElementParams, ...
-├── script.json          # ExecuteScriptParams, ScriptResult
-├── cookie.json          # Cookie, GetCookieParams, AddCookieParams, ...
-├── window.json          # Rect, SetWindowRectParams
-├── screenshot.json      # TakeScreenshotParams
-└── alert.json           # SendAlertTextParams, AlertTextResult
+json/                          # W3C WebDriver 2 schemas
+├── actions.json               # PerformActionsParams, ActionSequence, ...
+├── alert.json                 # SendAlertTextParams, AlertTextResult
+├── context.json               # WindowHandle, SwitchToWindow/Frame, NewWindow
+├── cookie.json                # Cookie, GetCookie, AddCookie, DeleteCookie
+├── element.json               # Locator, FindElement, ShadowRoot, ComputedRole/Label
+├── navigation.json            # NavigateParams, GetCurrentUrl, GetTitle, ...
+├── print.json                 # PrintParams, PrintResult
+├── screenshot.json            # TakeScreenshotParams
+├── script.json                # ExecuteScriptParams, ScriptResult
+├── session.json               # Capabilities, Timeouts, StatusResult
+└── window.json                # Rect, SetWindowRectParams
+json/bidi/                     # WebDriver BiDi-only schemas
+├── browser.json               # UserContext, ClientWindow
+├── browsing-context.json      # Create, Navigate, GetTree, SetViewport, Print
+├── input.json                 # PerformActions, ReleaseActions, SetFiles
+├── log.json                   # LogEntry, StackTrace
+├── network.json               # Intercept, ContinueRequest/Response, ProvideResponse
+├── script.json                # Evaluate, CallFunction, PreloadScript, Realms
+└── storage.json               # Partition-aware cookie operations
 scripts/
-└── generate-types.ts    # quicktype codegen script
+└── generate.ts                # json-schema-to-typescript codegen script
 src/
-├── generated/types.ts   # Auto-generated TypeScript interfaces (do not edit)
-├── driver.ts            # Functional handler group interfaces + createDriver
-├── errors.ts            # Shared error hierarchy
-└── index.ts             # Public API barrel
+├── generated/                 # Auto-generated TypeScript interfaces (do not edit)
+├── driver.ts                  # Handler group interfaces + createDriver
+├── errors.ts                  # Shared error hierarchy
+└── index.ts                   # Public API barrel
 ```
-
-Each shared type lives in the domain that owns it (`Locator` in `element.json`, `Cookie` in `cookie.json`, `Rect` in `window.json`, `Capabilities` in `session.json`). Cross-domain references use `$ref` and are resolved at codegen time.
 
 ## Regenerating types
 
@@ -37,123 +46,54 @@ pnpm generate
 
 ## Handler groups
 
-The driver is composed of 8 handler groups. Each group is an independent interface that an implementation must satisfy:
+The driver is composed of 11 handler groups. Each group is an independent interface:
 
 | Group | Handlers |
 |---|---|
-| `SessionHandlers` | `newSession`, `deleteSession` |
+| `SessionHandlers` | `status`, `newSession`, `deleteSession`, `getTimeouts`, `setTimeouts` |
 | `NavigationHandlers` | `navigateTo`, `getCurrentUrl`, `getTitle`, `getPageSource`, `back`, `forward`, `refresh` |
-| `ElementHandlers` | `findElement`, `findElements`, `elementClick`, `elementSendKeys`, `elementClear`, `elementGetText`, `elementGetAttribute`, `elementGetProperty`, `elementGetCssValue`, `elementGetTagName`, `elementGetRect`, `elementIsDisplayed`, `elementIsEnabled`, `elementIsSelected`, `elementTakeScreenshot` |
+| `ContextHandlers` | `getWindowHandle`, `closeWindow`, `switchToWindow`, `getWindowHandles`, `newWindow`, `switchToFrame`, `switchToParentFrame` |
+| `ElementHandlers` | `findElement`, `findElements`, `getActiveElement`, `elementClick`, `elementSendKeys`, `elementClear`, `elementGetText`, `elementGetAttribute`, `elementGetProperty`, `elementGetCssValue`, `elementGetTagName`, `elementGetRect`, `elementIsDisplayed`, `elementIsEnabled`, `elementIsSelected`, `elementGetComputedRole`, `elementGetComputedLabel`, `elementGetShadowRoot`, `findElementFromShadowRoot`, `findElementsFromShadowRoot`, `elementTakeScreenshot` |
 | `ScriptHandlers` | `executeScript`, `executeAsyncScript` |
 | `CookieHandlers` | `getAllCookies`, `getCookie`, `addCookie`, `deleteCookie`, `deleteAllCookies` |
 | `WindowHandlers` | `getWindowRect`, `setWindowRect`, `maximizeWindow`, `minimizeWindow`, `fullscreenWindow` |
+| `ActionHandlers` | `performActions`, `releaseActions` |
 | `ScreenshotHandlers` | `takeScreenshot` |
+| `PrintHandlers` | `printPage` |
 | `AlertHandlers` | `getAlertText`, `acceptAlert`, `dismissAlert`, `sendAlertText` |
 
 `Driver` is the intersection of all groups:
 
 ```ts
-type Driver = SessionHandlers & NavigationHandlers & ElementHandlers
-  & ScriptHandlers & CookieHandlers & WindowHandlers
-  & ScreenshotHandlers & AlertHandlers;
+type Driver = { readonly protocol: Protocol }
+  & SessionHandlers & NavigationHandlers & ContextHandlers
+  & ElementHandlers & ScriptHandlers & CookieHandlers
+  & WindowHandlers & ActionHandlers & ScreenshotHandlers
+  & PrintHandlers & AlertHandlers;
 ```
 
 ## Implementing a driver
 
 Implementation packages (e.g. `selenium-impl`) provide factory functions that return handler groups, then compose them with `createDriver`.
 
-### Step 1 — implement handler groups
-
-Write a factory for each group that wraps the underlying library:
-
-```ts
-// selenium-impl/src/navigation.ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
-import type { WebDriver } from "selenium-webdriver";
-
-export function createNavigationHandlers(
-  driver: WebDriver,
-): NavigationHandlers {
-  return {
-    navigateTo: async ({ url }) => {
-      await driver.get(url);
-    },
-    getCurrentUrl: async () => ({
-      url: await driver.getCurrentUrl(),
-    }),
-    getTitle: async () => ({
-      title: await driver.getTitle(),
-    }),
-    getPageSource: async () => ({
-      source: await driver.getPageSource(),
-    }),
-    back: async () => {
-      await driver.navigate().back();
-    },
-    forward: async () => {
-      await driver.navigate().forward();
-    },
-    refresh: async () => {
-      await driver.navigate().refresh();
-    },
-  };
-}
-```
-
-The same group in the BiDi implementation:
-
-```ts
-// selenium-impl/src/navigation.ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
-import type { Page } from "vibium";
-
-export function createNavigationHandlers(page: Page): NavigationHandlers {
-  return {
-    navigateTo: async ({ url }) => {
-      await page.go(url);
-    },
-    getCurrentUrl: async () => ({
-      url: await page.url(),
-    }),
-    getTitle: async () => ({
-      title: await page.title(),
-    }),
-    getPageSource: async () => ({
-      source: await page.content(),
-    }),
-    back: async () => {
-      await page.back();
-    },
-    forward: async () => {
-      await page.forward();
-    },
-    refresh: async () => {
-      await page.reload();
-    },
-  };
-}
-```
-
-### Step 2 — compose into a Driver
-
 ```ts
 import { createDriver } from "@michaelhly.webdriver-c11y/schema";
 
-export function createClassicDriver(webDriver: WebDriver): Driver {
-  return createDriver({
-    session:    createSessionHandlers(webDriver),
-    navigation: createNavigationHandlers(webDriver),
-    element:    createElementHandlers(webDriver),
-    script:     createScriptHandlers(webDriver),
-    cookie:     createCookieHandlers(webDriver),
-    window:     createWindowHandlers(webDriver),
-    screenshot: createScreenshotHandlers(webDriver),
-    alert:      createAlertHandlers(webDriver),
-  });
-}
+const driver = createDriver({
+  protocol: "webdriver",
+  session:    createSessionHandlers(webDriver),
+  navigation: createNavigationHandlers(webDriver),
+  context:    createContextHandlers(webDriver),
+  element:    createElementHandlers(webDriver),
+  script:     createScriptHandlers(webDriver),
+  cookie:     createCookieHandlers(webDriver),
+  window:     createWindowHandlers(webDriver),
+  action:     createActionHandlers(webDriver),
+  screenshot: createScreenshotHandlers(webDriver),
+  print:      createPrintHandlers(webDriver),
+  alert:      createAlertHandlers(webDriver),
+});
 ```
-
-### Step 3 — use the driver
 
 Consumer code is backend-agnostic:
 
@@ -162,38 +102,14 @@ async function run(driver: Driver) {
   await driver.navigateTo({ url: "https://example.com" });
 
   const { title } = await driver.getTitle();
-  console.log(title);
-
   const { elementId } = await driver.findElement({
     locator: { using: "css", value: "h1" },
   });
   const { text } = await driver.elementGetText({ elementId });
-  console.log(text);
 
   await driver.deleteSession();
 }
 ```
-
-## Locator strategies
-
-The `LocatorStrategy` union covers both Classic and BiDi locator types:
-
-| Strategy | Classic (selenium-webdriver) | BiDi (vibium) |
-|---|---|---|
-| `css` | `By.css()` | `page.find()` |
-| `xpath` | `By.xpath()` | translate or unsupported |
-| `id` | `By.id()` | translate to `#id` css |
-| `name` | `By.name()` | translate to `[name="..."]` css |
-| `tag-name` | `By.tagName()` | translate to tag css |
-| `class-name` | `By.className()` | translate to `.class` css |
-| `link-text` | `By.linkText()` | translate to text locator |
-| `partial-link-text` | `By.partialLinkText()` | translate or unsupported |
-| `text` | translate to xpath | semantic text locator |
-| `role` | translate or unsupported | semantic role locator |
-| `label` | translate or unsupported | semantic label locator |
-| `placeholder` | translate to `[placeholder="..."]` css | semantic placeholder locator |
-
-Implementations are responsible for translating strategies that aren't natively supported by their backend. Throw `UnsupportedOperationError` for strategies that can't be translated.
 
 ## Errors
 
