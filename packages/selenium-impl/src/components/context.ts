@@ -1,7 +1,7 @@
 import {
 	NoSuchElementError,
 	SessionNotCreatedError,
-} from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
 import type { WebDriver, WebElement } from "selenium-webdriver";
 import type { ShadowRoot } from "selenium-webdriver/lib/webdriver.js";
 

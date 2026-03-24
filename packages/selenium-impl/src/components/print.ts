@@ -1,4 +1,4 @@
-import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import { Command } from "selenium-webdriver/lib/command.js";
 import type { ClassicContext } from "./context.js";
 

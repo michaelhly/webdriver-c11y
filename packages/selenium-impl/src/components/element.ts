@@ -1,8 +1,8 @@
 import type {
 	ElementHandlers,
 	LocatorStrategy,
-} from "@michaelhly.webdriver-c11y/schema";
-import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
+import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import { By, type WebElement } from "selenium-webdriver";
 import type { ClassicContext } from "./context.js";
 import {

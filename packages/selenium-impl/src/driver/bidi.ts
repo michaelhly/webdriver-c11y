@@ -1,7 +1,7 @@
 import {
 	type BidiDriver,
 	createBidiDriver,
-} from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
 import {
 	createBidiBrowserHandlers,
 	createBidiBrowsingContextHandlers,

@@ -1,4 +1,4 @@
-import type { BidiLogHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { BidiLogHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { ClassicContext } from "../context.js";
 
 export function createBidiLogHandlers(ctx: ClassicContext): BidiLogHandlers {

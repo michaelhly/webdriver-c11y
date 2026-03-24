@@ -1,4 +1,4 @@
-import type { AlertHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { AlertHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { ClassicContext } from "./context.js";
 
 export function createAlertHandlers(ctx: ClassicContext): AlertHandlers {

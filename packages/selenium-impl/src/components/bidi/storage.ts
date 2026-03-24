@@ -3,7 +3,7 @@ import type {
 	DeleteCookiesResult,
 	GetCookiesResult,
 	SetCookieResult,
-} from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
 import type { ClassicContext } from "../context.js";
 
 export function createBidiStorageHandlers(

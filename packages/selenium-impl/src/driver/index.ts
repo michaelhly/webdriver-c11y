@@ -1,4 +1,4 @@
-import { createDriver, type Driver } from "@michaelhly.webdriver-c11y/schema";
+import { createDriver, type Driver } from "@michaelhly.webdriver-c11y/schemas";
 import { createContext } from "../components/context.js";
 import { buildBidiComponents } from "./bidi.js";
 import { buildClassicComponents } from "./classic.js";
