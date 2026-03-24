@@ -55,34 +55,6 @@ After editing any `.json` file in `json/` or `json/bidi/`:
 pnpm generate
 ```
 
-## Classic handler groups
-
-| Group | Handlers |
-|---|---|
-| `SessionHandlers` | `status`, `newSession`, `deleteSession`, `getTimeouts`, `setTimeouts` |
-| `NavigationHandlers` | `navigateTo`, `getCurrentUrl`, `getTitle`, `getPageSource`, `back`, `forward`, `refresh` |
-| `ContextHandlers` | `getWindowHandle`, `closeWindow`, `switchToWindow`, `getWindowHandles`, `newWindow`, `switchToFrame`, `switchToParentFrame` |
-| `ElementHandlers` | `findElement`, `findElements`, `getActiveElement`, `elementClick`, `elementSendKeys`, `elementClear`, `elementGetText`, `elementGetAttribute`, `elementGetProperty`, `elementGetCssValue`, `elementGetTagName`, `elementGetRect`, `elementIsDisplayed`, `elementIsEnabled`, `elementIsSelected`, `elementGetComputedRole`, `elementGetComputedLabel`, `elementGetShadowRoot`, `findElementFromShadowRoot`, `findElementsFromShadowRoot`, `elementTakeScreenshot` |
-| `ScriptHandlers` | `executeScript`, `executeAsyncScript` |
-| `CookieHandlers` | `getAllCookies`, `getCookie`, `addCookie`, `deleteCookie`, `deleteAllCookies` |
-| `WindowHandlers` | `getWindowRect`, `setWindowRect`, `maximizeWindow`, `minimizeWindow`, `fullscreenWindow` |
-| `ActionHandlers` | `performActions`, `releaseActions` |
-| `ScreenshotHandlers` | `takeScreenshot` |
-| `PrintHandlers` | `printPage` |
-| `AlertHandlers` | `getAlertText`, `acceptAlert`, `dismissAlert`, `sendAlertText` |
-
-## BiDi handler groups
-
-| Group | Handlers |
-|---|---|
-| `BidiBrowsingContextHandlers` | `browsingContextCreate`, `browsingContextClose`, `browsingContextActivate`, `browsingContextNavigate`, `browsingContextReload`, `browsingContextTraverseHistory`, `browsingContextGetTree`, `browsingContextSetViewport`, `browsingContextPrint` |
-| `BidiNetworkHandlers` | `networkAddIntercept`, `networkRemoveIntercept`, `networkContinueRequest`, `networkContinueResponse`, `networkProvideResponse`, `networkFailRequest`, `networkContinueWithAuth`, `networkSetCacheBehavior` |
-| `BidiScriptHandlers` | `scriptEvaluate`, `scriptCallFunction`, `scriptAddPreloadScript`, `scriptRemovePreloadScript`, `scriptGetRealms`, `scriptDisown` |
-| `BidiLogHandlers` | `onLogEntry` |
-| `BidiInputHandlers` | `inputPerformActions`, `inputReleaseActions`, `inputSetFiles` |
-| `BidiStorageHandlers` | `storageGetCookies`, `storageSetCookie`, `storageDeleteCookies` |
-| `BidiBrowserHandlers` | `browserClose`, `browserCreateUserContext`, `browserGetUserContexts`, `browserRemoveUserContext`, `browserGetClientWindows`, `browserSetClientWindowState` |
-
 ## Usage
 
 ### Classic only
