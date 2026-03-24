@@ -1,14 +1,16 @@
-import { By } from "selenium-webdriver";
 import type {
 	ElementHandlers,
 	LocatorStrategy,
-} from "@michaelhly.webdriver-interop/c11y";
-import {
-	InvalidSelectorError,
-	UnsupportedOperationError,
-} from "@michaelhly.webdriver-interop/c11y";
+} from "@michaelhly.webdriver-c11y/schema";
+import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schema";
+import { By, type WebElement } from "selenium-webdriver";
 import type { ClassicContext } from "./context.js";
-import { storeElement, getElement } from "./context.js";
+import {
+	getElement,
+	getShadowRoot,
+	storeElement,
+	storeShadowRoot,
+} from "./context.js";
 
 function toBy(using: LocatorStrategy, value: string): By {
 	switch (using) {
@@ -49,19 +51,19 @@ export function createElementHandlers(ctx: ClassicContext): ElementHandlers {
 	return {
 		async findElement({ locator, fromElement }) {
 			const by = toBy(locator.using, locator.value);
-			const root = fromElement
-				? getElement(ctx, fromElement)
-				: ctx.getDriver();
+			const root = fromElement ? getElement(ctx, fromElement) : ctx.getDriver();
 			const el = await root.findElement(by);
 			return { elementId: storeElement(ctx, el) };
 		},
 		async findElements({ locator, fromElement }) {
 			const by = toBy(locator.using, locator.value);
-			const root = fromElement
-				? getElement(ctx, fromElement)
-				: ctx.getDriver();
+			const root = fromElement ? getElement(ctx, fromElement) : ctx.getDriver();
 			const els = await root.findElements(by);
 			return { elementIds: els.map((el) => storeElement(ctx, el)) };
+		},
+		async getActiveElement() {
+			const el = await ctx.getDriver().switchTo().activeElement();
+			return { elementId: storeElement(ctx, el) };
 		},
 		async elementClick({ elementId }) {
 			await getElement(ctx, elementId).click();
@@ -83,18 +85,12 @@ export function createElementHandlers(ctx: ClassicContext): ElementHandlers {
 			const el = getElement(ctx, elementId);
 			const val = await ctx
 				.getDriver()
-				.executeScript(
-					"return arguments[0][arguments[1]]",
-					el,
-					name,
-				);
+				.executeScript("return arguments[0][arguments[1]]", el, name);
 			return { value: val };
 		},
 		async elementGetCssValue({ elementId, propertyName }) {
 			return {
-				value: await getElement(ctx, elementId).getCssValue(
-					propertyName,
-				),
+				value: await getElement(ctx, elementId).getCssValue(propertyName),
 			};
 		},
 		async elementGetTagName({ elementId }) {
@@ -125,6 +121,43 @@ export function createElementHandlers(ctx: ClassicContext): ElementHandlers {
 			return {
 				value: await getElement(ctx, elementId).isSelected(),
 			};
+		},
+		async elementGetComputedRole({ elementId }) {
+			const el = getElement(ctx, elementId);
+			const role = await ctx
+				.getDriver()
+				.executeScript<string>(
+					"return arguments[0].computedRole || arguments[0].getAttribute('role') || ''",
+					el,
+				);
+			return { role: role ?? "" };
+		},
+		async elementGetComputedLabel({ elementId }) {
+			const el = getElement(ctx, elementId);
+			const label = await ctx
+				.getDriver()
+				.executeScript<string>(
+					"return arguments[0].computedLabel || arguments[0].getAttribute('aria-label') || ''",
+					el,
+				);
+			return { label: label ?? "" };
+		},
+		async elementGetShadowRoot({ elementId }) {
+			const el = getElement(ctx, elementId);
+			const shadowRoot = await el.getShadowRoot();
+			return { shadowRootId: storeShadowRoot(ctx, shadowRoot) };
+		},
+		async findElementFromShadowRoot({ shadowRootId, locator }) {
+			const root = getShadowRoot(ctx, shadowRootId);
+			const by = toBy(locator.using, locator.value);
+			const el = await root.findElement(by);
+			return { elementId: storeElement(ctx, el) };
+		},
+		async findElementsFromShadowRoot({ shadowRootId, locator }) {
+			const root = getShadowRoot(ctx, shadowRootId);
+			const by = toBy(locator.using, locator.value);
+			const els: WebElement[] = await root.findElements(by);
+			return { elementIds: els.map((el) => storeElement(ctx, el)) };
 		},
 		async elementTakeScreenshot({ elementId }) {
 			const data = await getElement(ctx, elementId).takeScreenshot();

@@ -1,4 +1,4 @@
-import type { NavigationHandlers } from "@michaelhly.webdriver-interop/c11y";
+import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
 import type { ClassicContext } from "./context.js";
 
 export function createNavigationHandlers(

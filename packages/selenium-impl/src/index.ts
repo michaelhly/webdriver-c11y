@@ -1,25 +1,34 @@
-import { createDriver, type Driver } from "@michaelhly.webdriver-interop/c11y";
-import { createContext } from "./context.js";
-import { createSessionHandlers } from "./session.js";
-import { createNavigationHandlers } from "./navigation.js";
-import { createElementHandlers } from "./element.js";
-import { createScriptHandlers } from "./script.js";
-import { createCookieHandlers } from "./cookie.js";
-import { createWindowHandlers } from "./window.js";
-import { createScreenshotHandlers } from "./screenshot.js";
+import {
+	type ClassicDriver,
+	createClassicDriver,
+} from "@michaelhly.webdriver-c11y/schema";
+import { createActionHandlers } from "./action.js";
 import { createAlertHandlers } from "./alert.js";
+import { createContext } from "./context.js";
+import { createContextHandlers } from "./context-handlers.js";
+import { createCookieHandlers } from "./cookie.js";
+import { createElementHandlers } from "./element.js";
+import { createNavigationHandlers } from "./navigation.js";
+import { createPrintHandlers } from "./print.js";
+import { createScreenshotHandlers } from "./screenshot.js";
+import { createScriptHandlers } from "./script.js";
+import { createSessionHandlers } from "./session.js";
+import { createWindowHandlers } from "./window.js";
 
-export function createClassicDriver(): Driver {
+export function createSeleniumDriver(): ClassicDriver {
 	const ctx = createContext();
-	return createDriver({
-		protocol: "webdriver-classic",
+	return createClassicDriver({
+		protocol: "webdriver",
 		session: createSessionHandlers(ctx),
 		navigation: createNavigationHandlers(ctx),
+		context: createContextHandlers(ctx),
 		element: createElementHandlers(ctx),
 		script: createScriptHandlers(ctx),
 		cookie: createCookieHandlers(ctx),
 		window: createWindowHandlers(ctx),
+		action: createActionHandlers(ctx),
 		screenshot: createScreenshotHandlers(ctx),
+		print: createPrintHandlers(ctx),
 		alert: createAlertHandlers(ctx),
 	});
 }

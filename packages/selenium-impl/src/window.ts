@@ -1,4 +1,4 @@
-import type { WindowHandlers } from "@michaelhly.webdriver-interop/c11y";
+import type { WindowHandlers } from "@michaelhly.webdriver-c11y/schema";
 import type { ClassicContext } from "./context.js";
 
 export function createWindowHandlers(ctx: ClassicContext): WindowHandlers {

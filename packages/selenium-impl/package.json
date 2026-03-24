@@ -16,7 +16,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@michaelhly.webdriver-interop/c11y": "workspace:^",
+		"@michaelhly.webdriver-c11y/schema": "workspace:^",
 		"selenium-webdriver": "^4.41.0"
 	},
 	"devDependencies": {

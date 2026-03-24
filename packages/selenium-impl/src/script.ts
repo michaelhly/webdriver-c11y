@@ -1,4 +1,4 @@
-import type { ScriptHandlers } from "@michaelhly.webdriver-interop/c11y";
+import type { ScriptHandlers } from "@michaelhly.webdriver-c11y/schema";
 import type { ClassicContext } from "./context.js";
 
 export function createScriptHandlers(ctx: ClassicContext): ScriptHandlers {

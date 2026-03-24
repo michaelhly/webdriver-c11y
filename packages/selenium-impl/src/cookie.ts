@@ -1,7 +1,4 @@
-import type {
-	CookieHandlers,
-	Cookie,
-} from "@michaelhly.webdriver-interop/c11y";
+import type { Cookie, CookieHandlers } from "@michaelhly.webdriver-c11y/schema";
 import type { IWebDriverOptionsCookie } from "selenium-webdriver";
 import type { ClassicContext } from "./context.js";
 
