@@ -1,6 +1,7 @@
 import type {
 	AddInterceptResult,
 	BidiNetworkHandlers,
+	BidiResponse,
 } from "@michaelhly.webdriver-c11y/schemas";
 import type { ClassicContext } from "../context.js";
 
@@ -18,7 +19,7 @@ export function createBidiNetworkHandlers(
 					contexts: params.contexts,
 				},
 			});
-			return (response as { result: AddInterceptResult }).result;
+			return (response as BidiResponse<AddInterceptResult>).result;
 		},
 		async networkRemoveIntercept(params) {
 			const bidi = await ctx.getDriver().getBidi();

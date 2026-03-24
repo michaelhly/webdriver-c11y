@@ -1,5 +1,6 @@
 import type {
 	AddPreloadScriptResult,
+	BidiResponse,
 	BidiScriptHandlers,
 	GetRealmsResult,
 } from "@michaelhly.webdriver-c11y/schemas";
@@ -22,7 +23,7 @@ export function createBidiScriptHandlers(
 					userActivation: params.userActivation,
 				},
 			});
-			return (response as { result: unknown }).result;
+			return (response as BidiResponse<unknown>).result;
 		},
 		async scriptCallFunction(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -39,7 +40,7 @@ export function createBidiScriptHandlers(
 					userActivation: params.userActivation,
 				},
 			});
-			return (response as { result: unknown }).result;
+			return (response as BidiResponse<unknown>).result;
 		},
 		async scriptAddPreloadScript(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -52,7 +53,7 @@ export function createBidiScriptHandlers(
 					sandbox: params.sandbox,
 				},
 			});
-			return (response as { result: AddPreloadScriptResult }).result;
+			return (response as BidiResponse<AddPreloadScriptResult>).result;
 		},
 		async scriptRemovePreloadScript(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -70,7 +71,7 @@ export function createBidiScriptHandlers(
 					type: params.type,
 				},
 			});
-			return (response as { result: GetRealmsResult }).result;
+			return (response as BidiResponse<GetRealmsResult>).result;
 		},
 		async scriptDisown(params) {
 			const bidi = await ctx.getDriver().getBidi();

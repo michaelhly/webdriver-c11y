@@ -1,6 +1,7 @@
 import type {
 	BidiBrowsingContextHandlers,
 	BidiPrintResult,
+	BidiResponse,
 	CreateResult,
 	InfoListResult,
 	NavigateResult,
@@ -22,7 +23,7 @@ export function createBidiBrowsingContextHandlers(
 					userContext: params.userContext,
 				},
 			});
-			return (response as { result: CreateResult }).result;
+			return (response as BidiResponse<CreateResult>).result;
 		},
 		async browsingContextClose(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -51,7 +52,7 @@ export function createBidiBrowsingContextHandlers(
 					wait: params.wait,
 				},
 			});
-			return (response as { result: NavigateResult }).result;
+			return (response as BidiResponse<NavigateResult>).result;
 		},
 		async browsingContextReload(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -63,7 +64,7 @@ export function createBidiBrowsingContextHandlers(
 					wait: params.wait,
 				},
 			});
-			return (response as { result: NavigateResult }).result;
+			return (response as BidiResponse<NavigateResult>).result;
 		},
 		async browsingContextTraverseHistory(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -81,7 +82,7 @@ export function createBidiBrowsingContextHandlers(
 					maxDepth: params.maxDepth,
 				},
 			});
-			return (response as { result: InfoListResult }).result;
+			return (response as BidiResponse<InfoListResult>).result;
 		},
 		async browsingContextSetViewport(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -109,7 +110,7 @@ export function createBidiBrowsingContextHandlers(
 					shrinkToFit: params.shrinkToFit,
 				},
 			});
-			return (response as { result: BidiPrintResult }).result;
+			return (response as BidiResponse<BidiPrintResult>).result;
 		},
 	};
 }

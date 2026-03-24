@@ -59,6 +59,14 @@ import type {
 import type { Protocol } from "./index.js";
 
 // ---------------------------------------------------------------------------
+// Generic BiDi response wrapper — bidi.send() returns { result: T }.
+// ---------------------------------------------------------------------------
+
+export interface BidiResponse<T> {
+	result: T;
+}
+
+// ---------------------------------------------------------------------------
 // BiDi handler groups — domains unique to WebDriver BiDi.
 // ---------------------------------------------------------------------------
 

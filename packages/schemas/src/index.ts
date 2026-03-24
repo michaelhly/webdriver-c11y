@@ -8,6 +8,7 @@ export {
 	type BidiBrowsingContextHandlers,
 	type BidiDriver,
 	type BidiDriverComponents,
+	type BidiResponse,
 	type BidiInputHandlers,
 	type BidiLogHandlers,
 	type BidiNetworkHandlers,

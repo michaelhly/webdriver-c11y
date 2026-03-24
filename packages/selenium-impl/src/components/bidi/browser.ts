@@ -1,5 +1,6 @@
 import type {
 	BidiBrowserHandlers,
+	BidiResponse,
 	ClientWindowInfo,
 	CreateUserContextResult,
 	GetClientWindowsResult,
@@ -21,7 +22,7 @@ export function createBidiBrowserHandlers(
 				method: "browser.createUserContext",
 				params: {},
 			});
-			return (response as { result: CreateUserContextResult }).result;
+			return (response as BidiResponse<CreateUserContextResult>).result;
 		},
 		async browserGetUserContexts() {
 			const bidi = await ctx.getDriver().getBidi();
@@ -29,7 +30,7 @@ export function createBidiBrowserHandlers(
 				method: "browser.getUserContexts",
 				params: {},
 			});
-			return (response as { result: GetUserContextsResult }).result;
+			return (response as BidiResponse<GetUserContextsResult>).result;
 		},
 		async browserRemoveUserContext(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -44,7 +45,7 @@ export function createBidiBrowserHandlers(
 				method: "browser.getClientWindows",
 				params: {},
 			});
-			return (response as { result: GetClientWindowsResult }).result;
+			return (response as BidiResponse<GetClientWindowsResult>).result;
 		},
 		async browserSetClientWindowState(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -59,7 +60,7 @@ export function createBidiBrowserHandlers(
 					y: params.y,
 				},
 			});
-			return (response as { result: ClientWindowInfo }).result;
+			return (response as BidiResponse<ClientWindowInfo>).result;
 		},
 	};
 }

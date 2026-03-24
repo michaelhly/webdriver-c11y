@@ -1,4 +1,5 @@
 import type {
+	BidiResponse,
 	BidiStorageHandlers,
 	DeleteCookiesResult,
 	GetCookiesResult,
@@ -19,7 +20,7 @@ export function createBidiStorageHandlers(
 					partition: params.partition,
 				},
 			});
-			return (response as { result: GetCookiesResult }).result;
+			return (response as BidiResponse<GetCookiesResult>).result;
 		},
 		async storageSetCookie(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -30,7 +31,7 @@ export function createBidiStorageHandlers(
 					partition: params.partition,
 				},
 			});
-			return (response as { result: SetCookieResult }).result;
+			return (response as BidiResponse<SetCookieResult>).result;
 		},
 		async storageDeleteCookies(params) {
 			const bidi = await ctx.getDriver().getBidi();
@@ -41,7 +42,7 @@ export function createBidiStorageHandlers(
 					partition: params.partition,
 				},
 			});
-			return (response as { result: DeleteCookiesResult }).result;
+			return (response as BidiResponse<DeleteCookiesResult>).result;
 		},
 	};
 }
