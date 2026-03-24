@@ -25,12 +25,13 @@ function toSelector(using: LocatorStrategy, value: string): string {
 		case "label":
 			return `[aria-label="${value}"]`;
 		case "xpath":
+			return `xpath=${value}`;
 		case "link-text":
+			return `xpath=//a[text()="${value}"]`;
 		case "partial-link-text":
+			return `xpath=//a[contains(text(),"${value}")]`;
 		case "text":
-			throw new UnsupportedOperationError(
-				`Locator strategy "${using}" requires evaluate; use CSS instead`,
-			);
+			return `xpath=//*[contains(text(),"${value}")]`;
 		default:
 			throw new UnsupportedOperationError(
 				`Unsupported locator strategy: ${using as string}`,
