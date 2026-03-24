@@ -1,4 +1,4 @@
-# @michaelhly.webdriver-interop/schema
+# @michaelhly.webdriver-c11y/schema
 
 Compatibility interface between WebDriver Classic (`selenium-webdriver`) and WebDriver BiDi (`vibium`).
 
@@ -68,7 +68,7 @@ Write a factory for each group that wraps the underlying library:
 
 ```ts
 // selenium-impl/src/navigation.ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-interop/schema";
+import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
 import type { WebDriver } from "selenium-webdriver";
 
 export function createNavigationHandlers(
@@ -104,7 +104,7 @@ The same group in the BiDi implementation:
 
 ```ts
 // selenium-impl/src/navigation.ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-interop/schema";
+import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
 import type { Page } from "vibium";
 
 export function createNavigationHandlers(page: Page): NavigationHandlers {
@@ -137,7 +137,7 @@ export function createNavigationHandlers(page: Page): NavigationHandlers {
 ### Step 2 — compose into a Driver
 
 ```ts
-import { createDriver } from "@michaelhly.webdriver-interop/schema";
+import { createDriver } from "@michaelhly.webdriver-c11y/schema";
 
 export function createClassicDriver(webDriver: WebDriver): Driver {
   return createDriver({
@@ -203,7 +203,7 @@ All implementations should throw errors from the shared hierarchy:
 import {
   NoSuchElementError,
   UnsupportedOperationError,
-} from "@michaelhly.webdriver-interop/schema";
+} from "@michaelhly.webdriver-c11y/schema";
 ```
 
 | Error | When to throw |

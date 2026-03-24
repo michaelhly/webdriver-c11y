@@ -1,7 +1,7 @@
 {
-	"name": "@michaelhly.webdriver-interop/schema",
+	"name": "@michaelhly.webdriver-c11y/schema",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Shared schema and driver interface for WebDriver Classic and BiDi",
 	"type": "module",
 	"main": "src/index.ts",
 	"scripts": {
