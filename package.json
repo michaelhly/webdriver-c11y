@@ -8,11 +8,14 @@
     "format": "biome format --write packages/**",
     "lint": "biome lint packages/**",
     "lint:fix": "biome lint --write packages/**",
+    "typecheck": "pnpm -r run typecheck",
+    "build": "tsc --build packages/*/tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@8.10.2",
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
     "@types/node": "^25.5.0",
