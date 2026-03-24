@@ -10,13 +10,13 @@
 		"lint": "biome lint",
 		"lint:fix": "biome lint --write",
 		"typecheck": "tsc --noEmit",
-		"generate": "tsx scripts/generate-types.ts",
+		"generate": "tsx scripts/generate.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"quicktype-core": "^23.2.6"
+		"json-schema-to-typescript": "^15.0.4"
 	}
 }

@@ -1,38 +1,38 @@
+import type { SendAlertTextParams, AlertTextResult } from "./generated/alert.js";
 import type {
 	AddCookieParams,
-	AlertTextResult,
+	DeleteCookieParams,
+	GetAllCookiesResult,
+	GetCookieParams,
+	GetCookieResult,
+} from "./generated/cookie.js";
+import type {
 	AttributeResult,
 	BooleanResult,
 	CssValueResult,
-	DeleteCookieParams,
 	ElementIdParams,
-	ExecuteScriptParams,
 	FindElementParams,
 	FindElementResult,
 	FindElementsResult,
-	GetAllCookiesResult,
 	GetAttributeParams,
-	GetCookieParams,
-	GetCookieResult,
 	GetCssValueParams,
+	GetPropertyParams,
+	PropertyResult,
+	ScreenshotResult,
+	SendKeysParams,
+	TagNameResult,
+	TextResult,
+} from "./generated/element.js";
+import type {
 	GetCurrentUrlResult,
 	GetPageSourceResult,
-	GetPropertyParams,
 	GetTitleResult,
 	NavigateParams,
-	NewSessionParams,
-	NewSessionResult,
-	PropertyResult,
-	Rect,
-	ScreenshotResult,
-	ScriptResult,
-	SendAlertTextParams,
-	SendKeysParams,
-	SetWindowRectParams,
-	TagNameResult,
-	TakeScreenshotParams,
-	TextResult,
-} from "./generated/types.js";
+} from "./generated/navigation.js";
+import type { TakeScreenshotParams } from "./generated/screenshot.js";
+import type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
+import type { NewSessionParams, NewSessionResult } from "./generated/session.js";
+import type { Rect, SetWindowRectParams } from "./generated/window.js";
 
 // ---------------------------------------------------------------------------
 // Functional handler groups — each domain is an independent composable unit.

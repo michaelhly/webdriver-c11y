@@ -1,45 +1,46 @@
-// Generated types — derived from JSON Schema via quicktype
+// Generated types — derived from JSON Schema via json-schema-to-typescript
+export type { SendAlertTextParams, AlertTextResult } from "./generated/alert.js";
 export type {
-	AddCookieParams,
-	AlertTextResult,
-	AttributeResult,
-	BooleanResult,
-	BrowserName,
-	Capabilities,
 	Cookie,
-	CssValueResult,
+	GetCookieParams,
+	GetAllCookiesResult,
+	GetCookieResult,
+	AddCookieParams,
 	DeleteCookieParams,
-	ElementIdParams,
-	ExecuteScriptParams,
+} from "./generated/cookie.js";
+export type {
+	LocatorStrategy,
+	Locator,
 	FindElementParams,
 	FindElementResult,
 	FindElementsResult,
-	GetAllCookiesResult,
+	ElementIdParams,
+	SendKeysParams,
 	GetAttributeParams,
-	GetCookieParams,
-	GetCookieResult,
-	GetCssValueParams,
-	GetCurrentUrlResult,
-	GetPageSourceResult,
 	GetPropertyParams,
-	GetTitleResult,
-	Locator,
-	LocatorStrategy,
+	GetCssValueParams,
+	TextResult,
+	AttributeResult,
+	PropertyResult,
+	CssValueResult,
+	TagNameResult,
+	BooleanResult,
+	ScreenshotResult,
+} from "./generated/element.js";
+export type {
 	NavigateParams,
+	GetCurrentUrlResult,
+	GetTitleResult,
+	GetPageSourceResult,
+} from "./generated/navigation.js";
+export type { TakeScreenshotParams } from "./generated/screenshot.js";
+export type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
+export type {
+	Capabilities,
 	NewSessionParams,
 	NewSessionResult,
-	PropertyResult,
-	Rect,
-	SameSite,
-	ScreenshotResult,
-	ScriptResult,
-	SendAlertTextParams,
-	SendKeysParams,
-	SetWindowRectParams,
-	TagNameResult,
-	TakeScreenshotParams,
-	TextResult,
-} from "./generated/types.js";
+} from "./generated/session.js";
+export type { Rect, SetWindowRectParams } from "./generated/window.js";
 
 // Functional driver interface
 export {
