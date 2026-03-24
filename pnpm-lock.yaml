@@ -31,17 +31,11 @@ importers:
         specifier: ^4.35.5
         version: 4.35.5
 
-  packages/schema:
+  packages/schemas:
     devDependencies:
       json-schema-to-typescript:
         specifier: ^15.0.4
         version: 15.0.4
-
-  packages/vibium-impl:
-    dependencies:
-      vibium:
-        specifier: ^26.3.18
-        version: 26.3.18
 
 packages:
 
@@ -410,51 +404,6 @@ packages:
       '@types/node': 25.5.0
     dev: true
 
-  /@vibium/darwin-arm64@26.3.18:
-    resolution: {integrity: sha512-eQLHeuWHFRqEMRqRBDuVgmG1YZf7PQTAjj4g6nPD0rkR2a2Cnh4mmuZ7vRMW6zqlfOP06aVabTGCIDRJfYTUSA==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@vibium/darwin-x64@26.3.18:
-    resolution: {integrity: sha512-KEOwI7wEV07fWyrVKEekLcsKGAocoecTXwnw4Gh/FIrfcs/Mm5Nm1jEAOsJX1Z+zXyWOcfTm7atI21DjJtykIQ==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@vibium/linux-arm64@26.3.18:
-    resolution: {integrity: sha512-BtKm/fjjHTMhCvMO16/9CafjOY+l1+dv4Idmm8cPFDW00z62BQxo5KN/KBeYPMm/0Te1hR1Tqik+ffQkkP3aXg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@vibium/linux-x64@26.3.18:
-    resolution: {integrity: sha512-Ns+h4kOXLm51hIbLQApj8J1qe0Q+O5etj8wWLwKItcp9BpYF/rNPh/YVAKVkIPDYBq67fDallIdxcoCEwQfjZA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@vibium/win32-x64@26.3.18:
-    resolution: {integrity: sha512-Burn6qoBoeTOEya1lIL961AzNqIo3zzDSRI0QH0BCI0HFBwGrfcMPvtl/zxSUev7PYLifQRImNCr5FksKm9PtQ==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
@@ -691,24 +640,6 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-    dev: false
-
-  /vibium@26.3.18:
-    resolution: {integrity: sha512-+Bg9Z8VZ7RzIv1PTULnl6j37ndpPYIMZe3rRL6XHNgLipr+4ux3E2UIZf4HdWH/4rudNjMdv6dh90p4CedHvyA==}
-    engines: {node: '>=18'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      ws: 8.20.0
-    optionalDependencies:
-      '@vibium/darwin-arm64': 26.3.18
-      '@vibium/darwin-x64': 26.3.18
-      '@vibium/linux-arm64': 26.3.18
-      '@vibium/linux-x64': 26.3.18
-      '@vibium/win32-x64': 26.3.18
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: false
 
   /ws@8.20.0:

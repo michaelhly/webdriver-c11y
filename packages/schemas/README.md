@@ -1,6 +1,6 @@
-# @michaelhly.webdriver-c11y/schema
+# @michaelhly.webdriver-c11y/schemas
 
-Shared schema and driver interface for WebDriver Classic and BiDi.
+Shared schemas and driver interface for WebDriver Classic and BiDi.
 
 Types are generated from JSON Schema definitions using [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript). Implementations provide handler groups that compose into a typed driver.
 
@@ -43,7 +43,7 @@ src/
 Each handler group wraps the underlying library. For example, a navigation handler group:
 
 ```ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { WebDriver } from "selenium-webdriver";
 
 export function createNavigationHandlers(wd: WebDriver): NavigationHandlers {
@@ -62,7 +62,7 @@ export function createNavigationHandlers(wd: WebDriver): NavigationHandlers {
 Handler groups compose into a driver:
 
 ```ts
-import { createClassicDriver } from "@michaelhly.webdriver-c11y/schema";
+import { createClassicDriver } from "@michaelhly.webdriver-c11y/schemas";
 
 const driver = createClassicDriver({
   protocol: "webdriver",
@@ -99,5 +99,5 @@ async function run(driver: ClassicDriver) {
 All implementations should throw errors from the shared hierarchy in `errors.ts`.
 
 ```ts
-import { NoSuchElementError, UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schema";
+import { NoSuchElementError, UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 ```
