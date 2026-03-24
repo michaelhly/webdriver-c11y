@@ -1,0 +1,154 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "webdriver-bidi://script",
+	"definitions": {
+		"Target": {
+			"type": "object",
+			"properties": {
+				"context": { "type": "string" },
+				"sandbox": { "type": "string" },
+				"realm": { "type": "string" }
+			},
+			"additionalProperties": false
+		},
+		"ResultOwnership": {
+			"type": "string",
+			"enum": ["root", "none"]
+		},
+		"SerializationOptions": {
+			"type": "object",
+			"properties": {
+				"maxDomDepth": { "type": "integer" },
+				"maxObjectDepth": { "type": "integer" },
+				"includeShadowTree": {
+					"type": "string",
+					"enum": ["none", "open", "all"]
+				}
+			},
+			"additionalProperties": false
+		},
+		"RealmType": {
+			"type": "string",
+			"enum": [
+				"window",
+				"dedicated-worker",
+				"shared-worker",
+				"service-worker",
+				"worker",
+				"paint-worklet",
+				"audio-worklet"
+			]
+		},
+		"RealmInfo": {
+			"type": "object",
+			"properties": {
+				"realm": { "type": "string" },
+				"origin": { "type": "string" },
+				"type": { "$ref": "#/definitions/RealmType" },
+				"context": { "type": "string" },
+				"sandbox": { "type": "string" }
+			},
+			"required": ["realm", "origin", "type"],
+			"additionalProperties": false
+		},
+		"EvaluateParams": {
+			"type": "object",
+			"properties": {
+				"expression": { "type": "string" },
+				"target": { "$ref": "#/definitions/Target" },
+				"awaitPromise": { "type": "boolean" },
+				"resultOwnership": { "$ref": "#/definitions/ResultOwnership" },
+				"serializationOptions": {
+					"$ref": "#/definitions/SerializationOptions"
+				},
+				"userActivation": { "type": "boolean" }
+			},
+			"required": ["expression", "target", "awaitPromise"],
+			"additionalProperties": false
+		},
+		"CallFunctionParams": {
+			"type": "object",
+			"properties": {
+				"functionDeclaration": { "type": "string" },
+				"target": { "$ref": "#/definitions/Target" },
+				"awaitPromise": { "type": "boolean" },
+				"arguments": {
+					"type": "array",
+					"items": {}
+				},
+				"this": {},
+				"resultOwnership": { "$ref": "#/definitions/ResultOwnership" },
+				"serializationOptions": {
+					"$ref": "#/definitions/SerializationOptions"
+				},
+				"userActivation": { "type": "boolean" }
+			},
+			"required": ["functionDeclaration", "target", "awaitPromise"],
+			"additionalProperties": false
+		},
+		"AddPreloadScriptParams": {
+			"type": "object",
+			"properties": {
+				"functionDeclaration": { "type": "string" },
+				"arguments": {
+					"type": "array",
+					"items": {}
+				},
+				"contexts": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"sandbox": { "type": "string" }
+			},
+			"required": ["functionDeclaration"],
+			"additionalProperties": false
+		},
+		"AddPreloadScriptResult": {
+			"type": "object",
+			"properties": {
+				"script": { "type": "string" }
+			},
+			"required": ["script"],
+			"additionalProperties": false
+		},
+		"RemovePreloadScriptParams": {
+			"type": "object",
+			"properties": {
+				"script": { "type": "string" }
+			},
+			"required": ["script"],
+			"additionalProperties": false
+		},
+		"GetRealmsParams": {
+			"type": "object",
+			"properties": {
+				"context": { "type": "string" },
+				"type": { "$ref": "#/definitions/RealmType" }
+			},
+			"additionalProperties": false
+		},
+		"GetRealmsResult": {
+			"type": "object",
+			"properties": {
+				"realms": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/RealmInfo" }
+				}
+			},
+			"required": ["realms"],
+			"additionalProperties": false
+		},
+		"DisownParams": {
+			"type": "object",
+			"properties": {
+				"handles": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"target": { "$ref": "#/definitions/Target" }
+			},
+			"required": ["handles", "target"],
+			"additionalProperties": false
+		}
+	}
+}

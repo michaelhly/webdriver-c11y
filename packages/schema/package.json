@@ -1,0 +1,22 @@
+{
+	"name": "@michaelhly.webdriver-c11y/schema",
+	"version": "1.0.0",
+	"description": "Shared schema and driver interface for WebDriver Classic and BiDi",
+	"type": "module",
+	"main": "src/index.ts",
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"format": "biome format --write",
+		"lint": "biome lint",
+		"lint:fix": "biome lint --write",
+		"typecheck": "tsc --noEmit",
+		"generate": "tsx scripts/generate.ts",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"json-schema-to-typescript": "^15.0.4"
+	}
+}
