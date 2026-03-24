@@ -47,6 +47,12 @@ function toBy(using: LocatorStrategy, value: string): By {
 	}
 }
 
+// getAriaRole/getAccessibleName exist at runtime but are missing from @types/selenium-webdriver
+interface WebElementWithAccessibility {
+	getAriaRole(): Promise<string>;
+	getAccessibleName(): Promise<string>;
+}
+
 export function createElementHandlers(ctx: ClassicContext): ElementHandlers {
 	return {
 		async findElement({ locator, fromElement }) {
@@ -83,9 +89,14 @@ export function createElementHandlers(ctx: ClassicContext): ElementHandlers {
 		},
 		async elementGetProperty({ elementId, name }) {
 			const el = getElement(ctx, elementId);
-			const val = await ctx
+			const val = await el
 				.getDriver()
-				.executeScript("return arguments[0][arguments[1]]", el, name);
+				.executeScript(
+					(element: unknown, prop: string) =>
+						(element as Record<string, unknown>)[prop],
+					el,
+					name,
+				);
 			return { value: val };
 		},
 		async elementGetCssValue({ elementId, propertyName }) {
@@ -123,24 +134,16 @@ export function createElementHandlers(ctx: ClassicContext): ElementHandlers {
 			};
 		},
 		async elementGetComputedRole({ elementId }) {
-			const el = getElement(ctx, elementId);
-			const role = await ctx
-				.getDriver()
-				.executeScript<string>(
-					"return arguments[0].computedRole || arguments[0].getAttribute('role') || ''",
-					el,
-				);
-			return { role: role ?? "" };
+			const el = getElement(ctx, elementId) as WebElement &
+				WebElementWithAccessibility;
+			const role = await el.getAriaRole();
+			return { role };
 		},
 		async elementGetComputedLabel({ elementId }) {
-			const el = getElement(ctx, elementId);
-			const label = await ctx
-				.getDriver()
-				.executeScript<string>(
-					"return arguments[0].computedLabel || arguments[0].getAttribute('aria-label') || ''",
-					el,
-				);
-			return { label: label ?? "" };
+			const el = getElement(ctx, elementId) as WebElement &
+				WebElementWithAccessibility;
+			const label = await el.getAccessibleName();
+			return { label };
 		},
 		async elementGetShadowRoot({ elementId }) {
 			const el = getElement(ctx, elementId);
