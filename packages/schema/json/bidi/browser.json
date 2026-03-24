@@ -1,0 +1,97 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "webdriver-bidi://browser",
+	"definitions": {
+		"UserContext": {
+			"type": "string",
+			"description": "Opaque user context ID"
+		},
+		"UserContextInfo": {
+			"type": "object",
+			"properties": {
+				"userContext": { "$ref": "#/definitions/UserContext" }
+			},
+			"required": ["userContext"],
+			"additionalProperties": false
+		},
+		"CreateUserContextResult": {
+			"type": "object",
+			"properties": {
+				"userContext": { "$ref": "#/definitions/UserContext" }
+			},
+			"required": ["userContext"],
+			"additionalProperties": false
+		},
+		"GetUserContextsResult": {
+			"type": "object",
+			"properties": {
+				"userContexts": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/UserContextInfo" }
+				}
+			},
+			"required": ["userContexts"],
+			"additionalProperties": false
+		},
+		"RemoveUserContextParams": {
+			"type": "object",
+			"properties": {
+				"userContext": { "$ref": "#/definitions/UserContext" }
+			},
+			"required": ["userContext"],
+			"additionalProperties": false
+		},
+		"ClientWindowInfo": {
+			"type": "object",
+			"properties": {
+				"clientWindow": { "type": "string" },
+				"state": {
+					"type": "string",
+					"enum": ["normal", "minimized", "maximized", "fullscreen"]
+				},
+				"x": { "type": "integer" },
+				"y": { "type": "integer" },
+				"width": { "type": "integer" },
+				"height": { "type": "integer" },
+				"active": { "type": "boolean" }
+			},
+			"required": [
+				"clientWindow",
+				"state",
+				"x",
+				"y",
+				"width",
+				"height",
+				"active"
+			],
+			"additionalProperties": false
+		},
+		"GetClientWindowsResult": {
+			"type": "object",
+			"properties": {
+				"clientWindows": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/ClientWindowInfo" }
+				}
+			},
+			"required": ["clientWindows"],
+			"additionalProperties": false
+		},
+		"SetClientWindowStateParams": {
+			"type": "object",
+			"properties": {
+				"clientWindow": { "type": "string" },
+				"state": {
+					"type": "string",
+					"enum": ["normal", "minimized", "maximized", "fullscreen"]
+				},
+				"x": { "type": "integer" },
+				"y": { "type": "integer" },
+				"width": { "type": "integer" },
+				"height": { "type": "integer" }
+			},
+			"required": ["clientWindow"],
+			"additionalProperties": false
+		}
+	}
+}
