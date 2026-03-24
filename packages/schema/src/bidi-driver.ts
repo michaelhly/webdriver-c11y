@@ -136,8 +136,10 @@ export interface BidiBrowserHandlers {
 // BidiDriver — the complete BiDi functional interface.
 // ---------------------------------------------------------------------------
 
+import type { Protocol } from "./driver.js";
+
 export type BidiDriver = {
-	readonly protocol: "cdp";
+	readonly protocol: Protocol;
 } & BidiBrowsingContextHandlers &
 	BidiNetworkHandlers &
 	BidiScriptHandlers &
@@ -147,6 +149,7 @@ export type BidiDriver = {
 	BidiBrowserHandlers;
 
 export interface BidiDriverComponents {
+	protocol: Protocol;
 	browsingContext: BidiBrowsingContextHandlers;
 	network: BidiNetworkHandlers;
 	script: BidiScriptHandlers;
@@ -158,7 +161,7 @@ export interface BidiDriverComponents {
 
 export function createBidiDriver(components: BidiDriverComponents): BidiDriver {
 	return {
-		protocol: "cdp",
+		protocol: components.protocol,
 		...components.browsingContext,
 		...components.network,
 		...components.script,

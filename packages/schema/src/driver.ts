@@ -173,7 +173,7 @@ export type Protocol = "webdriver" | "cdp";
 // Driver — the complete functional interface, composed from handler groups.
 // ---------------------------------------------------------------------------
 
-export type Driver = { readonly protocol: "webdriver" } & SessionHandlers &
+export type Driver = { readonly protocol: Protocol } & SessionHandlers &
 	NavigationHandlers &
 	ContextHandlers &
 	ElementHandlers &
@@ -199,6 +199,7 @@ export type Driver = { readonly protocol: "webdriver" } & SessionHandlers &
 // ---------------------------------------------------------------------------
 
 export interface DriverComponents {
+	protocol: Protocol;
 	session: SessionHandlers;
 	navigation: NavigationHandlers;
 	context: ContextHandlers;
@@ -214,7 +215,7 @@ export interface DriverComponents {
 
 export function createDriver(components: DriverComponents): Driver {
 	return {
-		protocol: "webdriver",
+		protocol: components.protocol,
 		...components.session,
 		...components.navigation,
 		...components.context,
