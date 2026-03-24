@@ -8,6 +8,7 @@
 		"lint": "biome lint",
 		"lint:fix": "biome lint --write",
 		"typecheck": "tsc --noEmit",
+		"build": "tsc",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],

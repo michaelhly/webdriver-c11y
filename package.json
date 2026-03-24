@@ -8,7 +8,7 @@
 		"format": "biome check --write .",
 		"format:check": "biome check .",
 		"typecheck": "pnpm -r run typecheck",
-		"build": "tsc --build packages/*/tsconfig.json",
+		"build": "pnpm -r run build",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
