@@ -1,21 +1,24 @@
 {
-  "name": "@michaelhly.webdriver-compat/mono",
-  "version": "1.0.0",
-  "description": "WebDriver Compatibility Monorepo",
-  "main": "index.js",
-  "private": true,
-  "scripts": {
-    "format": "biome format --write packages/**",
-    "lint": "biome lint packages/**",
-    "lint:fix": "biome lint --write packages/**",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@biomejs/biome": "2.4.8",
-    "@types/node": "^25.5.0",
-    "typescript": "^5.9.3"
-  }
+	"name": "@michaelhly.webdriver-compat/mono",
+	"version": "1.0.0",
+	"description": "WebDriver Compatibility Monorepo",
+	"main": "index.js",
+	"private": true,
+	"scripts": {
+		"format": "biome check --write .",
+		"format:check": "biome check .",
+		"lint": "biome lint .",
+		"typecheck": "pnpm -r run typecheck",
+		"build": "pnpm -r run build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@8.10.2",
+	"devDependencies": {
+		"@biomejs/biome": "2.4.8",
+		"@types/node": "^25.5.0",
+		"typescript": "^5.9.3"
+	}
 }
