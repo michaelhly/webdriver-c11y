@@ -1,23 +1,23 @@
 {
-  "name": "@michaelhly.webdriver-compat/mono",
-  "version": "1.0.0",
-  "description": "WebDriver Compatibility Monorepo",
-  "main": "index.js",
-  "private": true,
-  "scripts": {
-    "format": "biome check --write .",
-    "format:check": "biome check .",
-    "typecheck": "pnpm -r run typecheck",
-    "build": "tsc --build packages/*/tsconfig.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@8.10.2",
-  "devDependencies": {
-    "@biomejs/biome": "2.4.8",
-    "@types/node": "^25.5.0",
-    "typescript": "^5.9.3"
-  }
+	"name": "@michaelhly.webdriver-compat/mono",
+	"version": "1.0.0",
+	"description": "WebDriver Compatibility Monorepo",
+	"main": "index.js",
+	"private": true,
+	"scripts": {
+		"format": "biome check --write .",
+		"format:check": "biome check .",
+		"typecheck": "pnpm -r run typecheck",
+		"build": "tsc --build packages/*/tsconfig.json",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@8.10.2",
+	"devDependencies": {
+		"@biomejs/biome": "2.4.8",
+		"@types/node": "^25.5.0",
+		"typescript": "^5.9.3"
+	}
 }
