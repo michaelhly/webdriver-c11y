@@ -1,4 +1,3 @@
-import type { Protocol } from "./driver.js";
 import type {
 	ClientWindowInfo,
 	CreateUserContextResult,
@@ -6,7 +5,7 @@ import type {
 	GetUserContextsResult,
 	RemoveUserContextParams,
 	SetClientWindowStateParams,
-} from "./generated/bidi/browser.js";
+} from "../generated/bidi/browser.js";
 import type {
 	ActivateParams,
 	NavigateParams as BidiNavigateParams,
@@ -21,13 +20,13 @@ import type {
 	ReloadParams,
 	SetViewportParams,
 	TraverseHistoryParams,
-} from "./generated/bidi/browsing-context.js";
+} from "../generated/bidi/browsing-context.js";
 import type {
 	PerformActionsParams as BidiPerformActionsParams,
 	ReleaseActionsParams,
 	SetFilesParams,
-} from "./generated/bidi/input.js";
-import type { LogEntry } from "./generated/bidi/log.js";
+} from "../generated/bidi/input.js";
+import type { LogEntry } from "../generated/bidi/log.js";
 import type {
 	AddInterceptParams,
 	AddInterceptResult,
@@ -38,7 +37,7 @@ import type {
 	ProvideResponseParams,
 	RemoveInterceptParams,
 	SetCacheBehaviorParams,
-} from "./generated/bidi/network.js";
+} from "../generated/bidi/network.js";
 import type {
 	AddPreloadScriptParams,
 	AddPreloadScriptResult,
@@ -48,7 +47,7 @@ import type {
 	GetRealmsParams,
 	GetRealmsResult,
 	RemovePreloadScriptParams,
-} from "./generated/bidi/script.js";
+} from "../generated/bidi/script.js";
 import type {
 	DeleteCookiesParams,
 	DeleteCookiesResult,
@@ -56,7 +55,8 @@ import type {
 	GetCookiesResult,
 	SetCookieParams,
 	SetCookieResult,
-} from "./generated/bidi/storage.js";
+} from "../generated/bidi/storage.js";
+import type { Protocol } from "./index.js";
 
 // ---------------------------------------------------------------------------
 // BiDi handler groups — domains unique to WebDriver BiDi.

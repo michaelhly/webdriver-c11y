@@ -2,12 +2,12 @@ import {
 	type BidiDriver,
 	type BidiDriverComponents,
 	createBidiDriver,
-} from "./bidi-driver.js";
+} from "./bidi.js";
 import {
 	type ClassicDriver,
 	type ClassicDriverComponents,
 	createClassicDriver,
-} from "./classic-driver.js";
+} from "./classic.js";
 
 // ---------------------------------------------------------------------------
 // Protocol identifier — distinguishes the underlying implementation.
@@ -34,3 +34,33 @@ export function createDriver(components: DriverComponents): Driver {
 		...createBidiDriver({ protocol, ...bidi }),
 	};
 }
+
+export {
+	type BidiBrowserHandlers,
+	type BidiBrowsingContextHandlers,
+	type BidiDriver,
+	type BidiDriverComponents,
+	type BidiInputHandlers,
+	type BidiLogHandlers,
+	type BidiNetworkHandlers,
+	type BidiScriptHandlers,
+	type BidiStorageHandlers,
+	createBidiDriver,
+} from "./bidi.js";
+// Re-export everything from classic and bidi
+export {
+	type ActionHandlers,
+	type AlertHandlers,
+	type ClassicDriver,
+	type ClassicDriverComponents,
+	type ContextHandlers,
+	type CookieHandlers,
+	createClassicDriver,
+	type ElementHandlers,
+	type NavigationHandlers,
+	type PrintHandlers,
+	type ScreenshotHandlers,
+	type ScriptHandlers,
+	type SessionHandlers,
+	type WindowHandlers,
+} from "./classic.js";

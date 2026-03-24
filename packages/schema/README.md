@@ -9,7 +9,7 @@ Types are generated from JSON Schema definitions using [json-schema-to-typescrip
 | Interface | Factory | Use case |
 |---|---|---|
 | `ClassicDriver` | `createClassicDriver()` | WebDriver Classic only (e.g. selenium-webdriver) |
-| `BidiDriver` | `createBidiDriver()` | WebDriver BiDi only (e.g. CDP-based) |
+| `BidiDriver` | `createBidiDriver()` | WebDriver BiDi only |
 | `Driver` | `createDriver()` | Combined Classic + BiDi |
 
 ## Project layout
@@ -40,8 +40,9 @@ scripts/
 src/
 ├── generated/                 # Auto-generated Classic types (do not edit)
 ├── generated/bidi/            # Auto-generated BiDi types (do not edit)
-├── driver.ts                  # Classic handler groups + createClassicDriver
-├── bidi-driver.ts             # BiDi handler groups + createBidiDriver + createDriver
+├── driver/classic.ts           # Classic handler groups + createClassicDriver
+├── driver/bidi.ts             # BiDi handler groups + createBidiDriver
+├── driver/index.ts            # Protocol, combined Driver + createDriver
 ├── errors.ts                  # Shared error hierarchy
 └── index.ts                   # Public API barrel
 ```
@@ -111,7 +112,7 @@ const driver = createClassicDriver({
 import { createBidiDriver, type BidiDriver } from "@michaelhly.webdriver-c11y/schema";
 
 const driver = createBidiDriver({
-  protocol: "cdp",
+  protocol: "webdriver",
   browsingContext: createBrowsingContextHandlers(session),
   network:        createNetworkHandlers(session),
   script:         createScriptHandlers(session),

@@ -1,9 +1,8 @@
-import type { Protocol } from "./driver.js";
-import type { PerformActionsParams } from "./generated/actions.js";
+import type { PerformActionsParams } from "../generated/actions.js";
 import type {
 	AlertTextResult,
 	SendAlertTextParams,
-} from "./generated/alert.js";
+} from "../generated/alert.js";
 import type {
 	NewWindowParams,
 	NewWindowResult,
@@ -11,14 +10,14 @@ import type {
 	SwitchToWindowParams,
 	WindowHandleResult,
 	WindowHandlesResult,
-} from "./generated/context.js";
+} from "../generated/context.js";
 import type {
 	AddCookieParams,
 	DeleteCookieParams,
 	GetAllCookiesResult,
 	GetCookieParams,
 	GetCookieResult,
-} from "./generated/cookie.js";
+} from "../generated/cookie.js";
 import type {
 	ActiveElementResult,
 	AttributeResult,
@@ -40,23 +39,24 @@ import type {
 	ShadowRootResult,
 	TagNameResult,
 	TextResult,
-} from "./generated/element.js";
+} from "../generated/element.js";
 import type {
 	GetCurrentUrlResult,
 	GetPageSourceResult,
 	GetTitleResult,
 	NavigateParams,
-} from "./generated/navigation.js";
-import type { PrintParams, PrintResult } from "./generated/print.js";
-import type { TakeScreenshotParams } from "./generated/screenshot.js";
-import type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
+} from "../generated/navigation.js";
+import type { PrintParams, PrintResult } from "../generated/print.js";
+import type { TakeScreenshotParams } from "../generated/screenshot.js";
+import type { ExecuteScriptParams, ScriptResult } from "../generated/script.js";
 import type {
 	NewSessionParams,
 	NewSessionResult,
 	StatusResult,
 	Timeouts,
-} from "./generated/session.js";
-import type { Rect, SetWindowRectParams } from "./generated/window.js";
+} from "../generated/session.js";
+import type { Rect, SetWindowRectParams } from "../generated/window.js";
+import type { Protocol } from "./index.js";
 
 // ---------------------------------------------------------------------------
 // Classic handler groups — each domain is an independent composable unit.
