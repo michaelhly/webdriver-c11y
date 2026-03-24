@@ -5,9 +5,8 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "format": "biome format --write packages/**",
-    "lint": "biome lint packages/**",
-    "lint:fix": "biome lint --write packages/**",
+    "format": "biome check --write .",
+    "format:check": "biome check .",
     "typecheck": "pnpm -r run typecheck",
     "build": "tsc --build packages/*/tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
