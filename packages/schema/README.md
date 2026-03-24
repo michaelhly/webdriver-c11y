@@ -8,7 +8,7 @@ Types are generated from JSON Schema definitions using [json-schema-to-typescrip
 
 | Interface | Factory | Use case |
 |---|---|---|
-| `ClassicDriver` | `createClassicDriver()` | WebDriver Classic only (e.g. selenium-webdriver) |
+| `ClassicDriver` | `createClassicDriver()` | WebDriver Classic only |
 | `BidiDriver` | `createBidiDriver()` | WebDriver BiDi only |
 | `Driver` | `createDriver()` | Combined Classic + BiDi |
 
