@@ -2,19 +2,19 @@ import {
 	type ClassicDriver,
 	createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schema";
-import { createActionHandlers } from "../action.js";
-import { createAlertHandlers } from "../alert.js";
-import type { ClassicContext } from "../context.js";
-import { createContext } from "../context.js";
-import { createContextHandlers } from "../context-handlers.js";
-import { createCookieHandlers } from "../cookie.js";
-import { createElementHandlers } from "../element.js";
-import { createNavigationHandlers } from "../navigation.js";
-import { createPrintHandlers } from "../print.js";
-import { createScreenshotHandlers } from "../screenshot.js";
-import { createScriptHandlers } from "../script.js";
-import { createSessionHandlers } from "../session.js";
-import { createWindowHandlers } from "../window.js";
+import { createActionHandlers } from "../components/action.js";
+import { createAlertHandlers } from "../components/alert.js";
+import type { ClassicContext } from "../components/context.js";
+import { createContext } from "../components/context.js";
+import { createContextHandlers } from "../components/context-handlers.js";
+import { createCookieHandlers } from "../components/cookie.js";
+import { createElementHandlers } from "../components/element.js";
+import { createNavigationHandlers } from "../components/navigation.js";
+import { createPrintHandlers } from "../components/print.js";
+import { createScreenshotHandlers } from "../components/screenshot.js";
+import { createScriptHandlers } from "../components/script.js";
+import { createSessionHandlers } from "../components/session.js";
+import { createWindowHandlers } from "../components/window.js";
 
 export function buildClassicComponents(ctx: ClassicContext) {
 	return {
