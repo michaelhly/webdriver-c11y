@@ -1,5 +1,5 @@
 {
-	"name": "@michaelhly.webdriver-compat/classic-impl",
+	"name": "@michaelhly.webdriver-c11y/classic-impl",
 	"version": "1.0.0",
 	"description": "",
 	"main": "src/index.ts",
