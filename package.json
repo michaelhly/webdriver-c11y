@@ -1,5 +1,5 @@
 {
-	"name": "@michaelhly.webdriver-compat/mono",
+	"name": "@michaelhly.webdriver-c11y/mono",
 	"version": "1.0.0",
 	"description": "WebDriver Compatibility Monorepo",
 	"main": "index.js",
