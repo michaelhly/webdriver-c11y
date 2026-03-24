@@ -1,4 +1,7 @@
-import type { SendAlertTextParams, AlertTextResult } from "./generated/alert.js";
+import type {
+	AlertTextResult,
+	SendAlertTextParams,
+} from "./generated/alert.js";
 import type {
 	AddCookieParams,
 	DeleteCookieParams,
@@ -31,7 +34,10 @@ import type {
 } from "./generated/navigation.js";
 import type { TakeScreenshotParams } from "./generated/screenshot.js";
 import type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
-import type { NewSessionParams, NewSessionResult } from "./generated/session.js";
+import type {
+	NewSessionParams,
+	NewSessionResult,
+} from "./generated/session.js";
 import type { Rect, SetWindowRectParams } from "./generated/window.js";
 
 // ---------------------------------------------------------------------------

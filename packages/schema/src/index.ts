@@ -1,37 +1,70 @@
 // Generated types — derived from JSON Schema via json-schema-to-typescript
-export type { SendAlertTextParams, AlertTextResult } from "./generated/alert.js";
+
+// Functional driver interface
+export {
+	type AlertHandlers,
+	type CookieHandlers,
+	createDriver,
+	type Driver,
+	type DriverComponents,
+	type ElementHandlers,
+	type NavigationHandlers,
+	type Protocol,
+	type ScreenshotHandlers,
+	type ScriptHandlers,
+	type SessionHandlers,
+	type WindowHandlers,
+} from "./driver.js";
+// Error types
+export {
+	DriverError,
+	ElementNotInteractableError,
+	InvalidSelectorError,
+	NoSuchAlertError,
+	NoSuchElementError,
+	NoSuchWindowError,
+	ScriptTimeoutError,
+	SessionNotCreatedError,
+	StaleElementReferenceError,
+	TimeoutError,
+	UnsupportedOperationError,
+} from "./errors.js";
 export type {
-	Cookie,
-	GetCookieParams,
-	GetAllCookiesResult,
-	GetCookieResult,
+	AlertTextResult,
+	SendAlertTextParams,
+} from "./generated/alert.js";
+export type {
 	AddCookieParams,
+	Cookie,
 	DeleteCookieParams,
+	GetAllCookiesResult,
+	GetCookieParams,
+	GetCookieResult,
 } from "./generated/cookie.js";
 export type {
-	LocatorStrategy,
-	Locator,
+	AttributeResult,
+	BooleanResult,
+	CssValueResult,
+	ElementIdParams,
 	FindElementParams,
 	FindElementResult,
 	FindElementsResult,
-	ElementIdParams,
-	SendKeysParams,
 	GetAttributeParams,
-	GetPropertyParams,
 	GetCssValueParams,
-	TextResult,
-	AttributeResult,
+	GetPropertyParams,
+	Locator,
+	LocatorStrategy,
 	PropertyResult,
-	CssValueResult,
-	TagNameResult,
-	BooleanResult,
 	ScreenshotResult,
+	SendKeysParams,
+	TagNameResult,
+	TextResult,
 } from "./generated/element.js";
 export type {
-	NavigateParams,
 	GetCurrentUrlResult,
-	GetTitleResult,
 	GetPageSourceResult,
+	GetTitleResult,
+	NavigateParams,
 } from "./generated/navigation.js";
 export type { TakeScreenshotParams } from "./generated/screenshot.js";
 export type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
@@ -41,34 +74,3 @@ export type {
 	NewSessionResult,
 } from "./generated/session.js";
 export type { Rect, SetWindowRectParams } from "./generated/window.js";
-
-// Functional driver interface
-export {
-	type Protocol,
-	type SessionHandlers,
-	type NavigationHandlers,
-	type ElementHandlers,
-	type ScriptHandlers,
-	type CookieHandlers,
-	type WindowHandlers,
-	type ScreenshotHandlers,
-	type AlertHandlers,
-	type Driver,
-	type DriverComponents,
-	createDriver,
-} from "./driver.js";
-
-// Error types
-export {
-	DriverError,
-	SessionNotCreatedError,
-	NoSuchElementError,
-	StaleElementReferenceError,
-	ElementNotInteractableError,
-	NoSuchAlertError,
-	NoSuchWindowError,
-	ScriptTimeoutError,
-	TimeoutError,
-	InvalidSelectorError,
-	UnsupportedOperationError,
-} from "./errors.js";

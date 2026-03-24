@@ -8,22 +8,22 @@
  * via the `definition` "Capabilities".
  */
 export interface Capabilities {
-browserName?: ("chrome" | "firefox" | "edge" | "safari")
-headless?: boolean
-executablePath?: string
-args?: string[]
+	browserName?: "chrome" | "firefox" | "edge" | "safari";
+	headless?: boolean;
+	executablePath?: string;
+	args?: string[];
 }
 /**
  * This interface was referenced by `WebdriverSession`'s JSON-Schema
  * via the `definition` "NewSessionParams".
  */
 export interface NewSessionParams {
-capabilities?: Capabilities
+	capabilities?: Capabilities;
 }
 /**
  * This interface was referenced by `WebdriverSession`'s JSON-Schema
  * via the `definition` "NewSessionResult".
  */
 export interface NewSessionResult {
-sessionId: string
+	sessionId: string;
 }

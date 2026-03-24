@@ -1,5 +1,5 @@
-import { writeFileSync, readdirSync, rmSync, mkdirSync } from "node:fs";
-import { join, resolve, dirname, basename } from "node:path";
+import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { compileFromFile } from "json-schema-to-typescript";
 

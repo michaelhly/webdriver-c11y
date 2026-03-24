@@ -8,12 +8,12 @@
  * via the `definition` "SendAlertTextParams".
  */
 export interface SendAlertTextParams {
-text: string
+	text: string;
 }
 /**
  * This interface was referenced by `WebdriverAlert`'s JSON-Schema
  * via the `definition` "AlertTextResult".
  */
 export interface AlertTextResult {
-text: string
+	text: string;
 }

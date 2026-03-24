@@ -8,5 +8,5 @@
  * via the `definition` "TakeScreenshotParams".
  */
 export interface TakeScreenshotParams {
-fullPage?: boolean
+	fullPage?: boolean;
 }

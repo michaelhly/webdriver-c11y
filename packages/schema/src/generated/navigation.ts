@@ -8,26 +8,26 @@
  * via the `definition` "NavigateParams".
  */
 export interface NavigateParams {
-url: string
+	url: string;
 }
 /**
  * This interface was referenced by `WebdriverNavigation`'s JSON-Schema
  * via the `definition` "GetCurrentUrlResult".
  */
 export interface GetCurrentUrlResult {
-url: string
+	url: string;
 }
 /**
  * This interface was referenced by `WebdriverNavigation`'s JSON-Schema
  * via the `definition` "GetTitleResult".
  */
 export interface GetTitleResult {
-title: string
+	title: string;
 }
 /**
  * This interface was referenced by `WebdriverNavigation`'s JSON-Schema
  * via the `definition` "GetPageSourceResult".
  */
 export interface GetPageSourceResult {
-source: string
+	source: string;
 }
