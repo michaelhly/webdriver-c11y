@@ -207,8 +207,10 @@ export type { TakeScreenshotParams } from "./generated/screenshot.js";
 export type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
 export type {
 	Capabilities,
+	CapabilitiesRequest,
 	NewSessionParams,
 	NewSessionResult,
+	ProxyConfiguration,
 	StatusResult,
 	Timeouts,
 } from "./generated/session.js";

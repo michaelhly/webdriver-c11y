@@ -1,4 +1,5 @@
 import type {
+	Capabilities,
 	SessionHandlers,
 	Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
@@ -16,14 +17,35 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 			}
 		},
 		async newSession(params) {
+			const alwaysMatch = params.capabilities?.alwaysMatch ?? {};
+			const firstMatch = params.capabilities?.firstMatch ?? [{}];
+
+			// Merge alwaysMatch with first firstMatch entry (W3C §7.1 processing)
+			const merged = { ...alwaysMatch, ...firstMatch[0] };
+
 			const builder = new Builder();
-			if (params.capabilities?.browserName) {
-				builder.forBrowser(params.capabilities.browserName);
+
+			// Set browser via forBrowser for selenium's internal driver routing
+			if (merged.browserName) {
+				builder.forBrowser(merged.browserName);
 			}
+
+			// Apply all capabilities including vendor extensions (e.g. "goog:chromeOptions")
+			builder.withCapabilities(merged);
+
 			const driver = await builder.build();
 			ctx.setDriver(driver);
+
 			const session = await driver.getSession();
-			return { sessionId: session.getId() };
+			const matchedCaps = session.getCapabilities();
+
+			// Extract matched capabilities from the session
+			const capabilities: Capabilities = {};
+			for (const key of matchedCaps.keys()) {
+				(capabilities as Record<string, unknown>)[key] = matchedCaps.get(key);
+			}
+
+			return { sessionId: session.getId(), capabilities };
 		},
 		async deleteSession() {
 			await ctx.getDriver().quit();
