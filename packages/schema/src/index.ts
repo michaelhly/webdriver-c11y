@@ -1,6 +1,19 @@
 // Generated types — derived from JSON Schema via json-schema-to-typescript
 
-// Functional driver interface
+// BiDi driver interface
+export {
+	type BidiBrowserHandlers,
+	type BidiBrowsingContextHandlers,
+	type BidiDriver,
+	type BidiDriverComponents,
+	type BidiInputHandlers,
+	type BidiLogHandlers,
+	type BidiNetworkHandlers,
+	type BidiScriptHandlers,
+	type BidiStorageHandlers,
+	createBidiDriver,
+} from "./bidi-driver.js";
+// Classic driver interface
 export {
 	type ActionHandlers,
 	type AlertHandlers,
@@ -18,6 +31,7 @@ export {
 	type SessionHandlers,
 	type WindowHandlers,
 } from "./driver.js";
+
 // Error types
 export {
 	DriverError,
@@ -32,6 +46,8 @@ export {
 	TimeoutError,
 	UnsupportedOperationError,
 } from "./errors.js";
+
+// Classic generated types
 export type {
 	ActionSequence,
 	KeyAction,
@@ -46,6 +62,96 @@ export type {
 	AlertTextResult,
 	SendAlertTextParams,
 } from "./generated/alert.js";
+// BiDi generated types
+export type {
+	ClientWindowInfo,
+	CreateUserContextResult,
+	GetClientWindowsResult,
+	GetUserContextsResult,
+	RemoveUserContextParams,
+	SetClientWindowStateParams,
+	UserContext,
+	UserContextInfo,
+} from "./generated/bidi/browser.js";
+export type {
+	ActivateParams,
+	BrowsingContext,
+	CloseParams,
+	CreateParams,
+	CreateResult,
+	CreateType,
+	GetTreeParams,
+	Info,
+	InfoListResult,
+	NavigateParams as BidiNavigateParams,
+	NavigateResult,
+	Navigation,
+	PrintParams as BidiPrintParams,
+	PrintResult as BidiPrintResult,
+	ReadinessState,
+	ReloadParams,
+	SetViewportParams,
+	TraverseHistoryParams,
+} from "./generated/bidi/browsing-context.js";
+export type {
+	KeyAction as BidiKeyAction,
+	PerformActionsParams as BidiPerformActionsParams,
+	PointerAction as BidiPointerAction,
+	PointerType as BidiPointerType,
+	ReleaseActionsParams,
+	SetFilesParams,
+	SourceActions,
+	SourceActionType as BidiSourceActionType,
+	WheelAction as BidiWheelAction,
+} from "./generated/bidi/input.js";
+export type {
+	LogEntry,
+	LogLevel,
+	StackFrame,
+	StackTrace,
+} from "./generated/bidi/log.js";
+export type {
+	AddInterceptParams,
+	AddInterceptResult,
+	ContinueRequestParams,
+	ContinueResponseParams,
+	ContinueWithAuthParams,
+	FailRequestParams,
+	Header,
+	Intercept,
+	InterceptPhase,
+	ProvideResponseParams,
+	RemoveInterceptParams,
+	Request,
+	SetCacheBehaviorParams,
+	UrlPattern,
+} from "./generated/bidi/network.js";
+export type {
+	AddPreloadScriptParams,
+	AddPreloadScriptResult,
+	CallFunctionParams,
+	DisownParams,
+	EvaluateParams,
+	GetRealmsParams,
+	GetRealmsResult,
+	RealmInfo,
+	RealmType,
+	RemovePreloadScriptParams,
+	ResultOwnership,
+	SerializationOptions,
+	Target,
+} from "./generated/bidi/script.js";
+export type {
+	CookieFilter,
+	DeleteCookiesParams,
+	DeleteCookiesResult,
+	GetCookiesParams,
+	GetCookiesResult,
+	PartitionDescriptor,
+	PartitionKey,
+	SetCookieParams,
+	SetCookieResult,
+} from "./generated/bidi/storage.js";
 export type {
 	NewWindowParams,
 	NewWindowResult,
