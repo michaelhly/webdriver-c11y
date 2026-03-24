@@ -2,7 +2,7 @@
 
 Shared schema and driver interface for WebDriver Classic and BiDi.
 
-Types are generated from JSON Schema definitions using [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript). Three driver interfaces are available depending on your needs.
+Types are generated from JSON Schema definitions using [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript). Implementations provide handler groups that compose into a typed driver.
 
 ## Driver interfaces
 
@@ -12,42 +12,9 @@ Types are generated from JSON Schema definitions using [json-schema-to-typescrip
 | `BidiDriver` | `createBidiDriver()` | WebDriver BiDi only |
 | `Driver` | `createDriver()` | Combined Classic + BiDi |
 
-## Project layout
+## Development
 
-```
-json/                          # W3C WebDriver 2 schemas
-├── actions.json               # PerformActionsParams, ActionSequence, ...
-├── alert.json                 # SendAlertTextParams, AlertTextResult
-├── context.json               # WindowHandle, SwitchToWindow/Frame, NewWindow
-├── cookie.json                # Cookie, GetCookie, AddCookie, DeleteCookie
-├── element.json               # Locator, FindElement, ShadowRoot, ComputedRole/Label
-├── navigation.json            # NavigateParams, GetCurrentUrl, GetTitle, ...
-├── print.json                 # PrintParams, PrintResult
-├── screenshot.json            # TakeScreenshotParams
-├── script.json                # ExecuteScriptParams, ScriptResult
-├── session.json               # Capabilities, Timeouts, StatusResult
-└── window.json                # Rect, SetWindowRectParams
-json/bidi/                     # WebDriver BiDi-only schemas
-├── browser.json               # UserContext, ClientWindow
-├── browsing-context.json      # Create, Navigate, GetTree, SetViewport, Print
-├── input.json                 # PerformActions, ReleaseActions, SetFiles
-├── log.json                   # LogEntry, StackTrace
-├── network.json               # Intercept, ContinueRequest/Response, ProvideResponse
-├── script.json                # Evaluate, CallFunction, PreloadScript, Realms
-└── storage.json               # Partition-aware cookie operations
-scripts/
-└── generate.ts                # json-schema-to-typescript codegen script
-src/
-├── generated/                 # Auto-generated Classic types (do not edit)
-├── generated/bidi/            # Auto-generated BiDi types (do not edit)
-├── driver/classic.ts           # Classic handler groups + createClassicDriver
-├── driver/bidi.ts             # BiDi handler groups + createBidiDriver
-├── driver/index.ts            # Protocol, combined Driver + createDriver
-├── errors.ts                  # Shared error hierarchy
-└── index.ts                   # Public API barrel
-```
-
-## Regenerating types
+### Regenerating types
 
 After editing any `.json` file in `json/` or `json/bidi/`:
 
@@ -55,12 +22,47 @@ After editing any `.json` file in `json/` or `json/bidi/`:
 pnpm generate
 ```
 
-## Usage
+### Project layout
 
-### Classic only
+```
+json/                          # W3C WebDriver 2 schemas
+json/bidi/                     # WebDriver BiDi-only schemas
+scripts/generate.ts            # Codegen script
+src/
+├── generated/                 # Auto-generated Classic types (do not edit)
+├── generated/bidi/            # Auto-generated BiDi types (do not edit)
+├── driver/classic.ts          # Classic handler groups + createClassicDriver
+├── driver/bidi.ts             # BiDi handler groups + createBidiDriver
+├── driver/index.ts            # Protocol, combined Driver + createDriver
+├── errors.ts                  # Shared error hierarchy
+└── index.ts                   # Public API barrel
+```
+
+## Example: implementing with selenium-webdriver
+
+Each handler group wraps the underlying library. For example, a navigation handler group:
 
 ```ts
-import { createClassicDriver, type ClassicDriver } from "@michaelhly.webdriver-c11y/schema";
+import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { WebDriver } from "selenium-webdriver";
+
+export function createNavigationHandlers(wd: WebDriver): NavigationHandlers {
+  return {
+    navigateTo: async ({ url }) => { await wd.get(url); },
+    getCurrentUrl: async () => ({ url: await wd.getCurrentUrl() }),
+    getTitle: async () => ({ title: await wd.getTitle() }),
+    getPageSource: async () => ({ source: await wd.getPageSource() }),
+    back: async () => { await wd.navigate().back(); },
+    forward: async () => { await wd.navigate().forward(); },
+    refresh: async () => { await wd.navigate().refresh(); },
+  };
+}
+```
+
+Handler groups compose into a driver:
+
+```ts
+import { createClassicDriver } from "@michaelhly.webdriver-c11y/schema";
 
 const driver = createClassicDriver({
   protocol: "webdriver",
@@ -78,45 +80,6 @@ const driver = createClassicDriver({
 });
 ```
 
-### BiDi only
-
-```ts
-import { createBidiDriver, type BidiDriver } from "@michaelhly.webdriver-c11y/schema";
-
-const driver = createBidiDriver({
-  protocol: "webdriver",
-  browsingContext: createBrowsingContextHandlers(session),
-  network:        createNetworkHandlers(session),
-  script:         createScriptHandlers(session),
-  log:            createLogHandlers(session),
-  input:          createInputHandlers(session),
-  storage:        createStorageHandlers(session),
-  browser:        createBrowserHandlers(session),
-});
-```
-
-### Combined (Classic + BiDi)
-
-```ts
-import { createDriver, type Driver } from "@michaelhly.webdriver-c11y/schema";
-
-const driver = createDriver({
-  protocol: "webdriver",
-  classic: {
-    session:    createSessionHandlers(wd),
-    navigation: createNavigationHandlers(wd),
-    // ... all classic handler groups
-  },
-  bidi: {
-    browsingContext: createBrowsingContextHandlers(session),
-    network:        createNetworkHandlers(session),
-    // ... all bidi handler groups
-  },
-});
-```
-
-### Consumer code
-
 Consumer code is backend-agnostic:
 
 ```ts
@@ -133,24 +96,8 @@ async function run(driver: ClassicDriver) {
 
 ## Errors
 
-All implementations should throw errors from the shared hierarchy:
+All implementations should throw errors from the shared hierarchy in `errors.ts`.
 
 ```ts
-import {
-  NoSuchElementError,
-  UnsupportedOperationError,
-} from "@michaelhly.webdriver-c11y/schema";
+import { NoSuchElementError, UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schema";
 ```
-
-| Error | When to throw |
-|---|---|
-| `SessionNotCreatedError` | Browser session failed to start |
-| `NoSuchElementError` | Element not found |
-| `StaleElementReferenceError` | Element reference is stale |
-| `ElementNotInteractableError` | Element exists but can't be interacted with |
-| `NoSuchAlertError` | No alert/dialog is open |
-| `NoSuchWindowError` | Target window/tab doesn't exist |
-| `ScriptTimeoutError` | Script execution exceeded timeout |
-| `TimeoutError` | General operation timeout |
-| `InvalidSelectorError` | Locator syntax is invalid |
-| `UnsupportedOperationError` | Operation not supported by this backend |
