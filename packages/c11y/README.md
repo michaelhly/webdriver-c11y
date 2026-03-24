@@ -60,14 +60,14 @@ type Driver = SessionHandlers & NavigationHandlers & ElementHandlers
 
 ## Implementing a driver
 
-Each implementation package (`classic-impl`, `vibium-impl`) provides factory functions that return handler groups, then composes them with `createDriver`.
+Each implementation package (`selenium-impl`, `vibium-impl`) provides factory functions that return handler groups, then composes them with `createDriver`.
 
 ### Step 1 — implement handler groups
 
 Write a factory for each group that wraps the underlying library:
 
 ```ts
-// classic-impl/src/navigation.ts
+// selenium-impl/src/navigation.ts
 import type { NavigationHandlers } from "@michaelhly.webdriver-interop/c11y";
 import type { WebDriver } from "selenium-webdriver";
 

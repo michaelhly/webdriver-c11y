@@ -27,7 +27,13 @@ importers:
         specifier: ^23.2.6
         version: 23.2.6
 
-  packages/classic-impl:
+  packages/schema:
+    devDependencies:
+      json-schema-to-typescript:
+        specifier: ^15.0.4
+        version: 15.0.4
+
+  packages/selenium-impl:
     dependencies:
       '@michaelhly.webdriver-interop/c11y':
         specifier: workspace:^
@@ -39,12 +45,6 @@ importers:
       '@types/selenium-webdriver':
         specifier: ^4.35.5
         version: 4.35.5
-
-  packages/schema:
-    devDependencies:
-      json-schema-to-typescript:
-        specifier: ^15.0.4
-        version: 15.0.4
 
 packages:
 

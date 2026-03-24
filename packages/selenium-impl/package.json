@@ -1,5 +1,5 @@
 {
-	"name": "@michaelhly.webdriver-c11y/classic-impl",
+	"name": "@michaelhly.webdriver-c11y/selenium-impl",
 	"version": "1.0.0",
 	"description": "",
 	"type": "module",

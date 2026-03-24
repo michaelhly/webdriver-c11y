@@ -126,7 +126,7 @@ export type Driver = { readonly protocol: Protocol } & SessionHandlers &
 // ---------------------------------------------------------------------------
 // createDriver — assemble a Driver from individual handler groups.
 //
-// Usage in classic-impl / vibium-impl:
+// Usage in selenium-impl / vibium-impl:
 //
 //   const driver = createDriver({
 //     session:    createSessionHandlers(webDriver),
