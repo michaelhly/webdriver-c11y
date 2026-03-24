@@ -58,7 +58,9 @@
 				"target": { "$ref": "#/definitions/Target" },
 				"awaitPromise": { "type": "boolean" },
 				"resultOwnership": { "$ref": "#/definitions/ResultOwnership" },
-				"serializationOptions": { "$ref": "#/definitions/SerializationOptions" },
+				"serializationOptions": {
+					"$ref": "#/definitions/SerializationOptions"
+				},
 				"userActivation": { "type": "boolean" }
 			},
 			"required": ["expression", "target", "awaitPromise"],
@@ -76,7 +78,9 @@
 				},
 				"this": {},
 				"resultOwnership": { "$ref": "#/definitions/ResultOwnership" },
-				"serializationOptions": { "$ref": "#/definitions/SerializationOptions" },
+				"serializationOptions": {
+					"$ref": "#/definitions/SerializationOptions"
+				},
 				"userActivation": { "type": "boolean" }
 			},
 			"required": ["functionDeclaration", "target", "awaitPromise"],

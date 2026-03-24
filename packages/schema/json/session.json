@@ -32,6 +32,24 @@
 			},
 			"required": ["sessionId"],
 			"additionalProperties": false
+		},
+		"StatusResult": {
+			"type": "object",
+			"properties": {
+				"ready": { "type": "boolean" },
+				"message": { "type": "string" }
+			},
+			"required": ["ready", "message"],
+			"additionalProperties": false
+		},
+		"Timeouts": {
+			"type": "object",
+			"properties": {
+				"script": { "type": ["integer", "null"] },
+				"pageLoad": { "type": "integer" },
+				"implicit": { "type": "integer" }
+			},
+			"additionalProperties": false
 		}
 	}
 }

@@ -1,7 +1,16 @@
+import type { PerformActionsParams } from "./generated/actions.js";
 import type {
 	AlertTextResult,
 	SendAlertTextParams,
 } from "./generated/alert.js";
+import type {
+	NewWindowParams,
+	NewWindowResult,
+	SwitchToFrameParams,
+	SwitchToWindowParams,
+	WindowHandleResult,
+	WindowHandlesResult,
+} from "./generated/context.js";
 import type {
 	AddCookieParams,
 	DeleteCookieParams,
@@ -10,10 +19,14 @@ import type {
 	GetCookieResult,
 } from "./generated/cookie.js";
 import type {
+	ActiveElementResult,
 	AttributeResult,
 	BooleanResult,
+	ComputedLabelResult,
+	ComputedRoleResult,
 	CssValueResult,
 	ElementIdParams,
+	FindElementFromShadowRootParams,
 	FindElementParams,
 	FindElementResult,
 	FindElementsResult,
@@ -23,6 +36,7 @@ import type {
 	PropertyResult,
 	ScreenshotResult,
 	SendKeysParams,
+	ShadowRootResult,
 	TagNameResult,
 	TextResult,
 } from "./generated/element.js";
@@ -32,11 +46,14 @@ import type {
 	GetTitleResult,
 	NavigateParams,
 } from "./generated/navigation.js";
+import type { PrintParams, PrintResult } from "./generated/print.js";
 import type { TakeScreenshotParams } from "./generated/screenshot.js";
 import type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
 import type {
 	NewSessionParams,
 	NewSessionResult,
+	StatusResult,
+	Timeouts,
 } from "./generated/session.js";
 import type { Rect, SetWindowRectParams } from "./generated/window.js";
 
@@ -46,8 +63,11 @@ import type { Rect, SetWindowRectParams } from "./generated/window.js";
 // ---------------------------------------------------------------------------
 
 export interface SessionHandlers {
+	status: () => Promise<StatusResult>;
 	newSession: (params: NewSessionParams) => Promise<NewSessionResult>;
 	deleteSession: () => Promise<void>;
+	getTimeouts: () => Promise<Timeouts>;
+	setTimeouts: (params: Timeouts) => Promise<void>;
 }
 
 export interface NavigationHandlers {
@@ -63,6 +83,7 @@ export interface NavigationHandlers {
 export interface ElementHandlers {
 	findElement: (params: FindElementParams) => Promise<FindElementResult>;
 	findElements: (params: FindElementParams) => Promise<FindElementsResult>;
+	getActiveElement: () => Promise<ActiveElementResult>;
 	elementClick: (params: ElementIdParams) => Promise<void>;
 	elementSendKeys: (params: SendKeysParams) => Promise<void>;
 	elementClear: (params: ElementIdParams) => Promise<void>;
@@ -75,6 +96,19 @@ export interface ElementHandlers {
 	elementIsDisplayed: (params: ElementIdParams) => Promise<BooleanResult>;
 	elementIsEnabled: (params: ElementIdParams) => Promise<BooleanResult>;
 	elementIsSelected: (params: ElementIdParams) => Promise<BooleanResult>;
+	elementGetComputedRole: (
+		params: ElementIdParams,
+	) => Promise<ComputedRoleResult>;
+	elementGetComputedLabel: (
+		params: ElementIdParams,
+	) => Promise<ComputedLabelResult>;
+	elementGetShadowRoot: (params: ElementIdParams) => Promise<ShadowRootResult>;
+	findElementFromShadowRoot: (
+		params: FindElementFromShadowRootParams,
+	) => Promise<FindElementResult>;
+	findElementsFromShadowRoot: (
+		params: FindElementFromShadowRootParams,
+	) => Promise<FindElementsResult>;
 	elementTakeScreenshot: (params: ElementIdParams) => Promise<ScreenshotResult>;
 }
 
@@ -91,12 +125,31 @@ export interface CookieHandlers {
 	deleteAllCookies: () => Promise<void>;
 }
 
+export interface ContextHandlers {
+	getWindowHandle: () => Promise<WindowHandleResult>;
+	closeWindow: () => Promise<void>;
+	switchToWindow: (params: SwitchToWindowParams) => Promise<void>;
+	getWindowHandles: () => Promise<WindowHandlesResult>;
+	newWindow: (params: NewWindowParams) => Promise<NewWindowResult>;
+	switchToFrame: (params: SwitchToFrameParams) => Promise<void>;
+	switchToParentFrame: () => Promise<void>;
+}
+
 export interface WindowHandlers {
 	getWindowRect: () => Promise<Rect>;
 	setWindowRect: (params: SetWindowRectParams) => Promise<Rect>;
 	maximizeWindow: () => Promise<Rect>;
 	minimizeWindow: () => Promise<Rect>;
 	fullscreenWindow: () => Promise<Rect>;
+}
+
+export interface ActionHandlers {
+	performActions: (params: PerformActionsParams) => Promise<void>;
+	releaseActions: () => Promise<void>;
+}
+
+export interface PrintHandlers {
+	printPage: (params: PrintParams) => Promise<PrintResult>;
 }
 
 export interface ScreenshotHandlers {
@@ -122,11 +175,14 @@ export type Protocol = "webdriver" | "cdp";
 
 export type Driver = { readonly protocol: Protocol } & SessionHandlers &
 	NavigationHandlers &
+	ContextHandlers &
 	ElementHandlers &
 	ScriptHandlers &
 	CookieHandlers &
 	WindowHandlers &
+	ActionHandlers &
 	ScreenshotHandlers &
+	PrintHandlers &
 	AlertHandlers;
 
 // ---------------------------------------------------------------------------
@@ -146,11 +202,14 @@ export interface DriverComponents {
 	protocol: Protocol;
 	session: SessionHandlers;
 	navigation: NavigationHandlers;
+	context: ContextHandlers;
 	element: ElementHandlers;
 	script: ScriptHandlers;
 	cookie: CookieHandlers;
 	window: WindowHandlers;
+	action: ActionHandlers;
 	screenshot: ScreenshotHandlers;
+	print: PrintHandlers;
 	alert: AlertHandlers;
 }
 
@@ -159,11 +218,14 @@ export function createDriver(components: DriverComponents): Driver {
 		protocol: components.protocol,
 		...components.session,
 		...components.navigation,
+		...components.context,
 		...components.element,
 		...components.script,
 		...components.cookie,
 		...components.window,
+		...components.action,
 		...components.screenshot,
+		...components.print,
 		...components.alert,
 	};
 }

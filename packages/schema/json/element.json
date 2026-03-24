@@ -155,6 +155,47 @@
 			},
 			"required": ["data"],
 			"additionalProperties": false
+		},
+		"ActiveElementResult": {
+			"type": "object",
+			"properties": {
+				"elementId": { "type": "string" }
+			},
+			"required": ["elementId"],
+			"additionalProperties": false
+		},
+		"ComputedRoleResult": {
+			"type": "object",
+			"properties": {
+				"role": { "type": "string" }
+			},
+			"required": ["role"],
+			"additionalProperties": false
+		},
+		"ComputedLabelResult": {
+			"type": "object",
+			"properties": {
+				"label": { "type": "string" }
+			},
+			"required": ["label"],
+			"additionalProperties": false
+		},
+		"ShadowRootResult": {
+			"type": "object",
+			"properties": {
+				"shadowRootId": { "type": "string" }
+			},
+			"required": ["shadowRootId"],
+			"additionalProperties": false
+		},
+		"FindElementFromShadowRootParams": {
+			"type": "object",
+			"properties": {
+				"shadowRootId": { "type": "string" },
+				"locator": { "$ref": "#/definitions/Locator" }
+			},
+			"required": ["shadowRootId", "locator"],
+			"additionalProperties": false
 		}
 	}
 }

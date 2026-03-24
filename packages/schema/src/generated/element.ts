@@ -139,3 +139,39 @@ export interface BooleanResult {
 export interface ScreenshotResult {
 	data: string;
 }
+/**
+ * This interface was referenced by `WebdriverElement`'s JSON-Schema
+ * via the `definition` "ActiveElementResult".
+ */
+export interface ActiveElementResult {
+	elementId: string;
+}
+/**
+ * This interface was referenced by `WebdriverElement`'s JSON-Schema
+ * via the `definition` "ComputedRoleResult".
+ */
+export interface ComputedRoleResult {
+	role: string;
+}
+/**
+ * This interface was referenced by `WebdriverElement`'s JSON-Schema
+ * via the `definition` "ComputedLabelResult".
+ */
+export interface ComputedLabelResult {
+	label: string;
+}
+/**
+ * This interface was referenced by `WebdriverElement`'s JSON-Schema
+ * via the `definition` "ShadowRootResult".
+ */
+export interface ShadowRootResult {
+	shadowRootId: string;
+}
+/**
+ * This interface was referenced by `WebdriverElement`'s JSON-Schema
+ * via the `definition` "FindElementFromShadowRootParams".
+ */
+export interface FindElementFromShadowRootParams {
+	shadowRootId: string;
+	locator: Locator;
+}

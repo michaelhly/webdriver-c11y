@@ -27,3 +27,20 @@ export interface NewSessionParams {
 export interface NewSessionResult {
 	sessionId: string;
 }
+/**
+ * This interface was referenced by `WebdriverSession`'s JSON-Schema
+ * via the `definition` "StatusResult".
+ */
+export interface StatusResult {
+	ready: boolean;
+	message: string;
+}
+/**
+ * This interface was referenced by `WebdriverSession`'s JSON-Schema
+ * via the `definition` "Timeouts".
+ */
+export interface Timeouts {
+	script?: number | null;
+	pageLoad?: number;
+	implicit?: number;
+}
