@@ -1,0 +1,61 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "webdriver-bidi://log",
+	"definitions": {
+		"LogLevel": {
+			"type": "string",
+			"enum": ["debug", "info", "warn", "error"]
+		},
+		"StackFrame": {
+			"type": "object",
+			"properties": {
+				"columnNumber": { "type": "integer" },
+				"functionName": { "type": "string" },
+				"lineNumber": { "type": "integer" },
+				"url": { "type": "string" }
+			},
+			"required": ["columnNumber", "functionName", "lineNumber", "url"],
+			"additionalProperties": false
+		},
+		"StackTrace": {
+			"type": "object",
+			"properties": {
+				"callFrames": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/StackFrame" }
+				}
+			},
+			"required": ["callFrames"],
+			"additionalProperties": false
+		},
+		"LogEntry": {
+			"type": "object",
+			"properties": {
+				"level": { "$ref": "#/definitions/LogLevel" },
+				"source": {
+					"type": "object",
+					"properties": {
+						"realm": { "type": "string" },
+						"context": { "type": "string" }
+					},
+					"required": ["realm"],
+					"additionalProperties": false
+				},
+				"text": { "type": "string" },
+				"timestamp": { "type": "integer" },
+				"stackTrace": { "$ref": "#/definitions/StackTrace" },
+				"type": {
+					"type": "string",
+					"enum": ["console", "javascript"]
+				},
+				"method": { "type": "string" },
+				"args": {
+					"type": "array",
+					"items": {}
+				}
+			},
+			"required": ["level", "source", "timestamp", "type"],
+			"additionalProperties": false
+		}
+	}
+}
