@@ -2,7 +2,15 @@
 
 Shared schema and driver interface for WebDriver Classic and BiDi.
 
-Types are generated from JSON Schema definitions using [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript). The driver interface is functional — implementations provide independent handler groups that compose into a full `Driver`.
+Types are generated from JSON Schema definitions using [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript). Three driver interfaces are available depending on your needs.
+
+## Driver interfaces
+
+| Interface | Factory | Use case |
+|---|---|---|
+| `ClassicDriver` | `createClassicDriver()` | WebDriver Classic only (e.g. selenium-webdriver) |
+| `BidiDriver` | `createBidiDriver()` | WebDriver BiDi only (e.g. CDP-based) |
+| `Driver` | `createDriver()` | Combined Classic + BiDi |
 
 ## Project layout
 
@@ -30,23 +38,23 @@ json/bidi/                     # WebDriver BiDi-only schemas
 scripts/
 └── generate.ts                # json-schema-to-typescript codegen script
 src/
-├── generated/                 # Auto-generated TypeScript interfaces (do not edit)
-├── driver.ts                  # Handler group interfaces + createDriver
+├── generated/                 # Auto-generated Classic types (do not edit)
+├── generated/bidi/            # Auto-generated BiDi types (do not edit)
+├── driver.ts                  # Classic handler groups + createClassicDriver
+├── bidi-driver.ts             # BiDi handler groups + createBidiDriver + createDriver
 ├── errors.ts                  # Shared error hierarchy
 └── index.ts                   # Public API barrel
 ```
 
 ## Regenerating types
 
-After editing any `.json` file in `json/`:
+After editing any `.json` file in `json/` or `json/bidi/`:
 
 ```sh
 pnpm generate
 ```
 
-## Handler groups
-
-The driver is composed of 11 handler groups. Each group is an independent interface:
+## Classic handler groups
 
 | Group | Handlers |
 |---|---|
@@ -62,51 +70,90 @@ The driver is composed of 11 handler groups. Each group is an independent interf
 | `PrintHandlers` | `printPage` |
 | `AlertHandlers` | `getAlertText`, `acceptAlert`, `dismissAlert`, `sendAlertText` |
 
-`Driver` is the intersection of all groups:
+## BiDi handler groups
+
+| Group | Handlers |
+|---|---|
+| `BidiBrowsingContextHandlers` | `browsingContextCreate`, `browsingContextClose`, `browsingContextActivate`, `browsingContextNavigate`, `browsingContextReload`, `browsingContextTraverseHistory`, `browsingContextGetTree`, `browsingContextSetViewport`, `browsingContextPrint` |
+| `BidiNetworkHandlers` | `networkAddIntercept`, `networkRemoveIntercept`, `networkContinueRequest`, `networkContinueResponse`, `networkProvideResponse`, `networkFailRequest`, `networkContinueWithAuth`, `networkSetCacheBehavior` |
+| `BidiScriptHandlers` | `scriptEvaluate`, `scriptCallFunction`, `scriptAddPreloadScript`, `scriptRemovePreloadScript`, `scriptGetRealms`, `scriptDisown` |
+| `BidiLogHandlers` | `onLogEntry` |
+| `BidiInputHandlers` | `inputPerformActions`, `inputReleaseActions`, `inputSetFiles` |
+| `BidiStorageHandlers` | `storageGetCookies`, `storageSetCookie`, `storageDeleteCookies` |
+| `BidiBrowserHandlers` | `browserClose`, `browserCreateUserContext`, `browserGetUserContexts`, `browserRemoveUserContext`, `browserGetClientWindows`, `browserSetClientWindowState` |
+
+## Usage
+
+### Classic only
 
 ```ts
-type Driver = { readonly protocol: Protocol }
-  & SessionHandlers & NavigationHandlers & ContextHandlers
-  & ElementHandlers & ScriptHandlers & CookieHandlers
-  & WindowHandlers & ActionHandlers & ScreenshotHandlers
-  & PrintHandlers & AlertHandlers;
+import { createClassicDriver, type ClassicDriver } from "@michaelhly.webdriver-c11y/schema";
+
+const driver = createClassicDriver({
+  protocol: "webdriver",
+  session:    createSessionHandlers(wd),
+  navigation: createNavigationHandlers(wd),
+  context:    createContextHandlers(wd),
+  element:    createElementHandlers(wd),
+  script:     createScriptHandlers(wd),
+  cookie:     createCookieHandlers(wd),
+  window:     createWindowHandlers(wd),
+  action:     createActionHandlers(wd),
+  screenshot: createScreenshotHandlers(wd),
+  print:      createPrintHandlers(wd),
+  alert:      createAlertHandlers(wd),
+});
 ```
 
-## Implementing a driver
-
-Implementation packages (e.g. `selenium-impl`) provide factory functions that return handler groups, then compose them with `createDriver`.
+### BiDi only
 
 ```ts
-import { createDriver } from "@michaelhly.webdriver-c11y/schema";
+import { createBidiDriver, type BidiDriver } from "@michaelhly.webdriver-c11y/schema";
+
+const driver = createBidiDriver({
+  protocol: "cdp",
+  browsingContext: createBrowsingContextHandlers(session),
+  network:        createNetworkHandlers(session),
+  script:         createScriptHandlers(session),
+  log:            createLogHandlers(session),
+  input:          createInputHandlers(session),
+  storage:        createStorageHandlers(session),
+  browser:        createBrowserHandlers(session),
+});
+```
+
+### Combined (Classic + BiDi)
+
+```ts
+import { createDriver, type Driver } from "@michaelhly.webdriver-c11y/schema";
 
 const driver = createDriver({
   protocol: "webdriver",
-  session:    createSessionHandlers(webDriver),
-  navigation: createNavigationHandlers(webDriver),
-  context:    createContextHandlers(webDriver),
-  element:    createElementHandlers(webDriver),
-  script:     createScriptHandlers(webDriver),
-  cookie:     createCookieHandlers(webDriver),
-  window:     createWindowHandlers(webDriver),
-  action:     createActionHandlers(webDriver),
-  screenshot: createScreenshotHandlers(webDriver),
-  print:      createPrintHandlers(webDriver),
-  alert:      createAlertHandlers(webDriver),
+  classic: {
+    session:    createSessionHandlers(wd),
+    navigation: createNavigationHandlers(wd),
+    // ... all classic handler groups
+  },
+  bidi: {
+    browsingContext: createBrowsingContextHandlers(session),
+    network:        createNetworkHandlers(session),
+    // ... all bidi handler groups
+  },
 });
 ```
+
+### Consumer code
 
 Consumer code is backend-agnostic:
 
 ```ts
-async function run(driver: Driver) {
+async function run(driver: ClassicDriver) {
   await driver.navigateTo({ url: "https://example.com" });
-
   const { title } = await driver.getTitle();
   const { elementId } = await driver.findElement({
     locator: { using: "css", value: "h1" },
   });
   const { text } = await driver.elementGetText({ elementId });
-
   await driver.deleteSession();
 }
 ```
