@@ -170,10 +170,10 @@ export interface AlertHandlers {
 export type Protocol = "webdriver" | "cdp";
 
 // ---------------------------------------------------------------------------
-// Driver — the complete functional interface, composed from handler groups.
+// ClassicDriver — WebDriver Classic only.
 // ---------------------------------------------------------------------------
 
-export type Driver = { readonly protocol: Protocol } & SessionHandlers &
+export type ClassicDriver = { readonly protocol: Protocol } & SessionHandlers &
 	NavigationHandlers &
 	ContextHandlers &
 	ElementHandlers &
@@ -185,20 +185,7 @@ export type Driver = { readonly protocol: Protocol } & SessionHandlers &
 	PrintHandlers &
 	AlertHandlers;
 
-// ---------------------------------------------------------------------------
-// createDriver — assemble a Driver from individual handler groups.
-//
-// Usage in selenium-impl:
-//
-//   const driver = createDriver({
-//     session:    createSessionHandlers(webDriver),
-//     navigation: createNavigationHandlers(webDriver),
-//     element:    createElementHandlers(webDriver),
-//     ...
-//   });
-// ---------------------------------------------------------------------------
-
-export interface DriverComponents {
+export interface ClassicDriverComponents {
 	protocol: Protocol;
 	session: SessionHandlers;
 	navigation: NavigationHandlers;
@@ -213,7 +200,9 @@ export interface DriverComponents {
 	alert: AlertHandlers;
 }
 
-export function createDriver(components: DriverComponents): Driver {
+export function createClassicDriver(
+	components: ClassicDriverComponents,
+): ClassicDriver {
 	return {
 		protocol: components.protocol,
 		...components.session,

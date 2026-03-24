@@ -136,7 +136,12 @@ export interface BidiBrowserHandlers {
 // BidiDriver — the complete BiDi functional interface.
 // ---------------------------------------------------------------------------
 
-import type { Protocol } from "./driver.js";
+import {
+	type ClassicDriver,
+	type ClassicDriverComponents,
+	createClassicDriver,
+	type Protocol,
+} from "./driver.js";
 
 export type BidiDriver = {
 	readonly protocol: Protocol;
@@ -169,5 +174,25 @@ export function createBidiDriver(components: BidiDriverComponents): BidiDriver {
 		...components.input,
 		...components.storage,
 		...components.browser,
+	};
+}
+
+// ---------------------------------------------------------------------------
+// Driver — combined Classic + BiDi interface.
+// ---------------------------------------------------------------------------
+
+export type Driver = ClassicDriver & BidiDriver;
+
+export interface DriverComponents {
+	protocol: Protocol;
+	classic: Omit<ClassicDriverComponents, "protocol">;
+	bidi: Omit<BidiDriverComponents, "protocol">;
+}
+
+export function createDriver(components: DriverComponents): Driver {
+	const { protocol, classic, bidi } = components;
+	return {
+		...createClassicDriver({ protocol, ...classic }),
+		...createBidiDriver({ protocol, ...bidi }),
 	};
 }

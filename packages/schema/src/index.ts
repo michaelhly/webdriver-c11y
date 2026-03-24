@@ -1,6 +1,7 @@
 // Generated types — derived from JSON Schema via json-schema-to-typescript
 
-// BiDi driver interface
+// Combined driver (Classic + BiDi)
+// BiDi-only driver
 export {
 	type BidiBrowserHandlers,
 	type BidiBrowsingContextHandlers,
@@ -12,16 +13,20 @@ export {
 	type BidiScriptHandlers,
 	type BidiStorageHandlers,
 	createBidiDriver,
-} from "./bidi-driver.js";
-// Classic driver interface
-export {
-	type ActionHandlers,
-	type AlertHandlers,
-	type ContextHandlers,
-	type CookieHandlers,
 	createDriver,
 	type Driver,
 	type DriverComponents,
+} from "./bidi-driver.js";
+
+// Classic-only driver
+export {
+	type ActionHandlers,
+	type AlertHandlers,
+	type ClassicDriver,
+	type ClassicDriverComponents,
+	type ContextHandlers,
+	type CookieHandlers,
+	createClassicDriver,
 	type ElementHandlers,
 	type NavigationHandlers,
 	type PrintHandlers,
