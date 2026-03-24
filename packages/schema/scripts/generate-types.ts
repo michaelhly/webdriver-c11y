@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { quicktype, InputData, JSONSchemaInput } from "quicktype-core";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SCHEMA_DIR = resolve(__dirname, "../schema");
+const SCHEMA_DIR = resolve(__dirname, "../json");
 const OUT_FILE = resolve(__dirname, "../src/generated/types.ts");
 
 type SchemaObj = Record<string, unknown>;
@@ -63,7 +63,7 @@ async function main() {
 
 	const jsonInput = new JSONSchemaInput(undefined);
 	await jsonInput.addSource({
-		name: "C11ySchema",
+		name: "Schema",
 		schema: JSON.stringify(masterSchema),
 	});
 
@@ -85,13 +85,13 @@ async function main() {
 	// the individual definition types.
 	const lines = result.lines.join("\n");
 	const stripped = lines.replace(
-		/export interface C11[yY]Schema \{[^}]*\}\n*/s,
+		/export interface Schema \{[^}]*\}\n*/s,
 		"",
 	);
 
 	const header = [
 		"// -----------------------------------------------------------------------",
-		"// AUTO-GENERATED from JSON Schema files in schema/",
+		"// AUTO-GENERATED from JSON Schema files in json/",
 		"// Do not edit manually — run `pnpm generate` to regenerate.",
 		"// -----------------------------------------------------------------------",
 		"",

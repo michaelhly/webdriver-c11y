@@ -1,4 +1,4 @@
-# @michaelhly.webdriver-interop/c11y
+# @michaelhly.webdriver-interop/schema
 
 Compatibility interface between WebDriver Classic (`selenium-webdriver`) and WebDriver BiDi (`vibium`).
 
@@ -7,7 +7,7 @@ Types are generated from JSON Schema definitions using [quicktype](https://githu
 ## Project layout
 
 ```
-schema/                  # JSON Schema source of truth
+json/                    # JSON Schema source of truth
 ├── session.json         # Capabilities, NewSessionParams, NewSessionResult
 ├── navigation.json      # NavigateParams, GetCurrentUrlResult, ...
 ├── element.json         # Locator, LocatorStrategy, FindElementParams, ...
@@ -17,7 +17,7 @@ schema/                  # JSON Schema source of truth
 ├── screenshot.json      # TakeScreenshotParams
 └── alert.json           # SendAlertTextParams, AlertTextResult
 scripts/
-└── codegen.ts           # quicktype codegen script
+└── generate-types.ts    # quicktype codegen script
 src/
 ├── generated/types.ts   # Auto-generated TypeScript interfaces (do not edit)
 ├── driver.ts            # Functional handler group interfaces + createDriver
@@ -29,7 +29,7 @@ Each shared type lives in the domain that owns it (`Locator` in `element.json`, 
 
 ## Regenerating types
 
-After editing any `.json` file in `schema/`:
+After editing any `.json` file in `json/`:
 
 ```sh
 pnpm generate
@@ -68,7 +68,7 @@ Write a factory for each group that wraps the underlying library:
 
 ```ts
 // classic-impl/src/navigation.ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-interop/c11y";
+import type { NavigationHandlers } from "@michaelhly.webdriver-interop/schema";
 import type { WebDriver } from "selenium-webdriver";
 
 export function createNavigationHandlers(
@@ -104,7 +104,7 @@ The same group in the BiDi implementation:
 
 ```ts
 // vibium-impl/src/navigation.ts
-import type { NavigationHandlers } from "@michaelhly.webdriver-interop/c11y";
+import type { NavigationHandlers } from "@michaelhly.webdriver-interop/schema";
 import type { Page } from "vibium";
 
 export function createNavigationHandlers(page: Page): NavigationHandlers {
@@ -137,7 +137,7 @@ export function createNavigationHandlers(page: Page): NavigationHandlers {
 ### Step 2 — compose into a Driver
 
 ```ts
-import { createDriver } from "@michaelhly.webdriver-interop/c11y";
+import { createDriver } from "@michaelhly.webdriver-interop/schema";
 
 export function createClassicDriver(webDriver: WebDriver): Driver {
   return createDriver({
@@ -203,7 +203,7 @@ All implementations should throw errors from the shared hierarchy:
 import {
   NoSuchElementError,
   UnsupportedOperationError,
-} from "@michaelhly.webdriver-interop/c11y";
+} from "@michaelhly.webdriver-interop/schema";
 ```
 
 | Error | When to throw |

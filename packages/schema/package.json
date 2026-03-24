@@ -1,5 +1,5 @@
 {
-	"name": "@michaelhly.webdriver-interop/c11y",
+	"name": "@michaelhly.webdriver-interop/schema",
 	"version": "1.0.0",
 	"description": "",
 	"type": "module",
@@ -10,7 +10,7 @@
 		"lint": "biome lint",
 		"lint:fix": "biome lint --write",
 		"typecheck": "tsc --noEmit",
-		"generate": "tsx scripts/codegen.ts",
+		"generate": "tsx scripts/generate-types.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],

@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// AUTO-GENERATED from JSON Schema files in schema/
+// AUTO-GENERATED from JSON Schema files in json/
 // Do not edit manually — run `pnpm generate` to regenerate.
 // -----------------------------------------------------------------------
 export interface AddCookieParams {
