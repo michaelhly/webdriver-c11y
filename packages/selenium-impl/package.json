@@ -1,7 +1,8 @@
 {
-	"name": "@michaelhly.webdriver-c11y/classic-impl",
+	"name": "@michaelhly.webdriver-c11y/selenium-impl",
 	"version": "1.0.0",
 	"description": "",
+	"type": "module",
 	"main": "src/index.ts",
 	"scripts": {
 		"format": "biome format --write",
@@ -15,6 +16,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@michaelhly.webdriver-c11y/schemas": "workspace:^",
 		"selenium-webdriver": "^4.41.0"
 	},
 	"devDependencies": {

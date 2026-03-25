@@ -2,18 +2,66 @@
 	"$schema": "http://json-schema.org/draft-07/schema#",
 	"$id": "webdriver://session",
 	"definitions": {
+		"ProxyConfiguration": {
+			"type": "object",
+			"properties": {
+				"proxyType": {
+					"type": "string",
+					"enum": ["pac", "direct", "autodetect", "system", "manual"]
+				},
+				"proxyAutoconfigUrl": { "type": "string" },
+				"ftpProxy": { "type": "string" },
+				"httpProxy": { "type": "string" },
+				"noProxy": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"sslProxy": { "type": "string" },
+				"socksProxy": { "type": "string" },
+				"socksVersion": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 255
+				}
+			},
+			"additionalProperties": false
+		},
 		"Capabilities": {
 			"type": "object",
 			"properties": {
-				"browserName": {
+				"browserName": { "type": "string" },
+				"browserVersion": { "type": "string" },
+				"platformName": { "type": "string" },
+				"acceptInsecureCerts": { "type": "boolean" },
+				"pageLoadStrategy": {
 					"type": "string",
-					"enum": ["chrome", "firefox", "edge", "safari"]
+					"enum": ["none", "eager", "normal"]
 				},
-				"headless": { "type": "boolean" },
-				"executablePath": { "type": "string" },
-				"args": {
+				"proxy": { "$ref": "#/definitions/ProxyConfiguration" },
+				"timeouts": { "$ref": "#/definitions/Timeouts" },
+				"strictFileInteractability": { "type": "boolean" },
+				"unhandledPromptBehavior": {
+					"type": "string",
+					"enum": [
+						"dismiss",
+						"accept",
+						"dismiss and notify",
+						"accept and notify",
+						"ignore"
+					]
+				},
+				"userAgent": { "type": "string" }
+			},
+			"additionalProperties": true
+		},
+		"CapabilitiesRequest": {
+			"type": "object",
+			"properties": {
+				"alwaysMatch": { "$ref": "#/definitions/Capabilities" },
+				"firstMatch": {
 					"type": "array",
-					"items": { "type": "string" }
+					"items": { "$ref": "#/definitions/Capabilities" },
+					"minItems": 1
 				}
 			},
 			"additionalProperties": false
@@ -21,16 +69,17 @@
 		"NewSessionParams": {
 			"type": "object",
 			"properties": {
-				"capabilities": { "$ref": "#/definitions/Capabilities" }
+				"capabilities": { "$ref": "#/definitions/CapabilitiesRequest" }
 			},
 			"additionalProperties": false
 		},
 		"NewSessionResult": {
 			"type": "object",
 			"properties": {
-				"sessionId": { "type": "string" }
+				"sessionId": { "type": "string" },
+				"capabilities": { "$ref": "#/definitions/Capabilities" }
 			},
-			"required": ["sessionId"],
+			"required": ["sessionId", "capabilities"],
 			"additionalProperties": false
 		},
 		"StatusResult": {

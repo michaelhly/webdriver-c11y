@@ -43,6 +43,7 @@ export {
 	type BidiInputHandlers,
 	type BidiLogHandlers,
 	type BidiNetworkHandlers,
+	type BidiResponse,
 	type BidiScriptHandlers,
 	type BidiStorageHandlers,
 	createBidiDriver,
