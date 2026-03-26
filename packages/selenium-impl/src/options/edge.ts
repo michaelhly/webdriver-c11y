@@ -1,7 +1,7 @@
 import { Options } from "selenium-webdriver/edge.js";
 import {
-	ChromiumOptionsBuilder,
 	type ChromiumCapabilities,
+	ChromiumOptionsBuilder,
 } from "./chromium.js";
 
 export class EdgeOptionsBuilder extends ChromiumOptionsBuilder<Options> {

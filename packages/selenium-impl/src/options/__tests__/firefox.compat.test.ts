@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { Options as SeleniumFirefoxOptions } from "selenium-webdriver/firefox.js";
+import { describe, expect, it } from "vitest";
 import { FirefoxOptionsBuilder } from "../firefox.js";
 
 function getFirefoxOptions(

@@ -3,8 +3,8 @@ import type {
 	SessionHandlers,
 	Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { Browser, Builder } from "selenium-webdriver";
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
+import { Browser, Builder } from "selenium-webdriver";
 import { CAPABILITY_BUILDERS, OPTION_SETTERS } from "../options/registry.js";
 import type { ClassicContext } from "./context.js";
 

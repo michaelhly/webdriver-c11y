@@ -1,7 +1,7 @@
-import { Options, type IPerfLoggingPrefs } from "selenium-webdriver/chrome.js";
+import { type IPerfLoggingPrefs, Options } from "selenium-webdriver/chrome.js";
 import {
-	ChromiumOptionsBuilder,
 	type ChromiumCapabilities,
+	ChromiumOptionsBuilder,
 } from "./chromium.js";
 
 type ChromeCapabilities = ChromiumCapabilities & {

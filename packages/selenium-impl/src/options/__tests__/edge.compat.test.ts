@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { Options as SeleniumEdgeOptions } from "selenium-webdriver/edge.js";
+import { describe, expect, it } from "vitest";
 import { EdgeOptionsBuilder } from "../edge.js";
 
 function getEdgeOptions(opts: SeleniumEdgeOptions): Record<string, unknown> {

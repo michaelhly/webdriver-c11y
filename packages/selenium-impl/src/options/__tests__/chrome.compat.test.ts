@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { Options as SeleniumChromeOptions } from "selenium-webdriver/chrome.js";
+import { describe, expect, it } from "vitest";
 import { ChromeOptionsBuilder } from "../chrome.js";
 
 function getChromeOptions(
