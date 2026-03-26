@@ -17,7 +17,10 @@ import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
 import type { OptionsBuilder } from "../options/builder.js";
 
-export type SeleniumDriverOptions = Record<string, OptionsBuilder<unknown>>;
+export type SeleniumDriverOptions<TOptions> = Record<
+	string,
+	OptionsBuilder<TOptions>
+>;
 
 export function buildClassicComponents(ctx: ClassicContext) {
 	return {
@@ -35,17 +38,17 @@ export function buildClassicComponents(ctx: ClassicContext) {
 	};
 }
 
-export function applyBrowserOptions(
+export function applyBrowserOptions<TOptions>(
 	ctx: ClassicContext,
-	options: SeleniumDriverOptions,
+	options: SeleniumDriverOptions<TOptions>,
 ): void {
 	for (const [, builder] of Object.entries(options)) {
 		ctx.browserOptions.set(builder.vendor, builder.build());
 	}
 }
 
-export function createSeleniumClassicDriver(
-	options?: SeleniumDriverOptions,
+export function createSeleniumClassicDriver<TOptions>(
+	options?: SeleniumDriverOptions<TOptions>,
 ): ClassicDriver {
 	const ctx = createContext();
 	if (options) applyBrowserOptions(ctx, options);

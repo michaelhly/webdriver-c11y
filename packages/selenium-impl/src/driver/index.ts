@@ -11,7 +11,9 @@ export { createSeleniumBidiDriver } from "./bidi.js";
 export type { SeleniumDriverOptions } from "./classic.js";
 export { createSeleniumClassicDriver } from "./classic.js";
 
-export function createSeleniumDriver(options?: SeleniumDriverOptions): Driver {
+export function createSeleniumDriver<TOptions>(
+	options?: SeleniumDriverOptions<TOptions>,
+): Driver {
 	const ctx = createContext();
 	if (options) applyBrowserOptions(ctx, options);
 	return createDriver({

@@ -1,4 +1,3 @@
-import { Browser } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/firefox.js";
 import type { OptionsBuilder } from "./builder.js";
 
@@ -10,14 +9,14 @@ export interface FirefoxCapabilities {
 }
 
 export class FirefoxOptionsBuilder implements OptionsBuilder<Options> {
-	static readonly vendor = Browser.FIREFOX;
+	static readonly vendor = "moz:firefoxOptions";
 	readonly vendor = FirefoxOptionsBuilder.vendor;
 
-	private readonly args: string[] = [];
-	private readonly prefs = new Map<string, string | number | boolean>();
-	private readonly extensionPaths: string[] = [];
-	private binaryPath: string | null = null;
-	private profilePath: string | null = null;
+	private readonly _args: string[] = [];
+	private readonly _prefs = new Map<string, string | number | boolean>();
+	private readonly _extensions: string[] = [];
+	private _binary: string | null = null;
+	private _profile: string | null = null;
 
 	static fromCapabilities(caps: FirefoxCapabilities): FirefoxOptionsBuilder {
 		const builder = new FirefoxOptionsBuilder();
@@ -33,46 +32,46 @@ export class FirefoxOptionsBuilder implements OptionsBuilder<Options> {
 	}
 
 	addArguments(...args: string[]): this {
-		this.args.push(...args);
+		this._args.push(...args);
 		return this;
 	}
 
 	setPreference(key: string, value: string | number | boolean): this {
-		this.prefs.set(key, value);
+		this._prefs.set(key, value);
 		return this;
 	}
 
 	addExtensions(...paths: string[]): this {
-		this.extensionPaths.push(...paths);
+		this._extensions.push(...paths);
 		return this;
 	}
 
 	setBinary(path: string): this {
-		this.binaryPath = path;
+		this._binary = path;
 		return this;
 	}
 
 	setProfile(path: string): this {
-		this.profilePath = path;
+		this._profile = path;
 		return this;
 	}
 
 	build(): Options {
 		const options = new Options();
-		if (this.args.length > 0) {
-			options.addArguments(...this.args);
+		if (this._args.length > 0) {
+			options.addArguments(...this._args);
 		}
-		for (const [key, value] of this.prefs) {
+		for (const [key, value] of this._prefs) {
 			options.setPreference(key, value);
 		}
-		if (this.extensionPaths.length > 0) {
-			options.addExtensions(...this.extensionPaths);
+		if (this._extensions.length > 0) {
+			options.addExtensions(...this._extensions);
 		}
-		if (this.binaryPath) {
-			options.setBinary(this.binaryPath);
+		if (this._binary) {
+			options.setBinary(this._binary);
 		}
-		if (this.profilePath) {
-			options.setProfile(this.profilePath);
+		if (this._profile) {
+			options.setProfile(this._profile);
 		}
 		return options;
 	}

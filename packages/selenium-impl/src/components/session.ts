@@ -3,9 +3,18 @@ import type {
 	SessionHandlers,
 	Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { Builder } from "selenium-webdriver";
+import { Browser, Builder } from "selenium-webdriver";
+import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
 import { CAPABILITY_BUILDERS, OPTION_SETTERS } from "../options/registry.js";
 import type { ClassicContext } from "./context.js";
+
+const VALID_BROWSERS = new Set<string>([
+	Browser.CHROME,
+	Browser.EDGE,
+	Browser.FIREFOX,
+	Browser.INTERNET_EXPLORER,
+	Browser.SAFARI,
+]);
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 	return {
@@ -26,22 +35,28 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 
 			const builder = new Builder();
 
-			// Set browser via forBrowser for selenium's internal driver routing
+			// Validate and set browser name
 			if (merged.browserName) {
+				if (!VALID_BROWSERS.has(merged.browserName)) {
+					throw new SessionNotCreatedError(
+						`Unsupported browserName: '${merged.browserName}'. ` +
+							`Must be one of: ${[...VALID_BROWSERS].join(", ")}`,
+					);
+				}
 				builder.forBrowser(merged.browserName);
 			}
 
 			// Apply all capabilities including vendor extensions
 			builder.withCapabilities(merged);
 
-			// Build browser options from <vendor>:browserOptions capabilities
-			// when not already configured via SeleniumDriverOptions (explicit opts win).
+			// Build browser options from vendor-prefixed capabilities when not
+			// already configured via SeleniumDriverOptions (explicit opts win).
 			for (const { vendor, fromCaps } of CAPABILITY_BUILDERS) {
-				if (!ctx.browserOptions.has(vendor)) {
-					const caps = merged[`${vendor}:browserOptions`];
-					if (caps) {
-						ctx.browserOptions.set(vendor, fromCaps(caps as Record<string, unknown>).build());
-					}
+				if (!ctx.browserOptions.has(vendor) && merged[vendor]) {
+					ctx.browserOptions.set(
+						vendor,
+						fromCaps(merged[vendor] as Record<string, unknown>).build(),
+					);
 				}
 			}
 

@@ -1,4 +1,5 @@
 export type { OptionsBuilder } from "./options/builder.js";
+export { ChromiumOptionsBuilder } from "./options/chromium.js";
 export type { SeleniumDriverOptions } from "./driver/index.js";
 export {
 	createSeleniumBidiDriver,
@@ -8,4 +9,3 @@ export {
 export { ChromeOptionsBuilder } from "./options/chrome.js";
 export { EdgeOptionsBuilder } from "./options/edge.js";
 export { FirefoxOptionsBuilder } from "./options/firefox.js";
-export { SafariOptionsBuilder } from "./options/safari.js";
