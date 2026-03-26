@@ -3,7 +3,18 @@ import {
 	SessionNotCreatedError,
 } from "@michaelhly.webdriver-c11y/schemas";
 import type { WebDriver, WebElement } from "selenium-webdriver";
+import type { Options as ChromeOptions } from "selenium-webdriver/chrome.js";
+import type { Options as EdgeOptions } from "selenium-webdriver/edge.js";
+import type { Options as FirefoxOptions } from "selenium-webdriver/firefox.js";
 import type { ShadowRoot } from "selenium-webdriver/lib/webdriver.js";
+import type { Options as SafariOptions } from "selenium-webdriver/safari.js";
+
+export interface BrowserOptions {
+	chrome: ChromeOptions | null;
+	firefox: FirefoxOptions | null;
+	edge: EdgeOptions | null;
+	safari: SafariOptions | null;
+}
 
 export interface ClassicContext {
 	getDriver(): WebDriver;
@@ -11,6 +22,7 @@ export interface ClassicContext {
 	clearDriver(): void;
 	elements: Map<string, WebElement>;
 	shadowRoots: Map<string, ShadowRoot>;
+	browserOptions: BrowserOptions;
 }
 
 export function createContext(): ClassicContext {
@@ -33,6 +45,12 @@ export function createContext(): ClassicContext {
 		},
 		elements,
 		shadowRoots,
+		browserOptions: {
+			chrome: null,
+			firefox: null,
+			edge: null,
+			safari: null,
+		},
 	};
 }
 

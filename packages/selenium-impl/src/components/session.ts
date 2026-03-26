@@ -33,6 +33,12 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 			// Apply all capabilities including vendor extensions (e.g. "goog:chromeOptions")
 			builder.withCapabilities(merged);
 
+			const { chrome, firefox, edge, safari } = ctx.browserOptions;
+			if (chrome) builder.setChromeOptions(chrome);
+			if (firefox) builder.setFirefoxOptions(firefox);
+			if (edge) builder.setEdgeOptions(edge);
+			if (safari) builder.setSafariOptions(safari);
+
 			const driver = await builder.build();
 			ctx.setDriver(driver);
 
