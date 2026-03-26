@@ -1,11 +1,31 @@
 import { Options } from "selenium-webdriver/firefox.js";
 
+export interface FirefoxCapabilities {
+	binary?: string;
+	args?: string[];
+	profile?: string;
+	prefs?: Record<string, string | number | boolean>;
+}
+
 export class FirefoxOptionsBuilder {
 	private readonly args: string[] = [];
 	private readonly prefs = new Map<string, string | number | boolean>();
 	private readonly extensionPaths: string[] = [];
 	private binaryPath: string | null = null;
 	private profilePath: string | null = null;
+
+	static fromCapabilities(caps: FirefoxCapabilities): FirefoxOptionsBuilder {
+		const builder = new FirefoxOptionsBuilder();
+		if (caps.binary) builder.setBinary(caps.binary);
+		if (caps.args) builder.addArguments(...caps.args);
+		if (caps.profile) builder.setProfile(caps.profile);
+		if (caps.prefs) {
+			for (const [key, value] of Object.entries(caps.prefs)) {
+				builder.setPreference(key, value);
+			}
+		}
+		return builder;
+	}
 
 	addArguments(...args: string[]): this {
 		this.args.push(...args);

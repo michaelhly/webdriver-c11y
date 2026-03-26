@@ -1,10 +1,29 @@
 import { Options } from "selenium-webdriver/edge.js";
 
+export interface EdgeCapabilities {
+	binary?: string;
+	args?: string[];
+	extensions?: string[];
+	prefs?: Record<string, unknown>;
+	excludeSwitches?: string[];
+}
+
 export class EdgeOptionsBuilder {
 	private readonly args: string[] = [];
 	private readonly excluded: string[] = [];
 	private readonly packedExtensions: (string | Buffer)[] = [];
 	private prefs: Record<string, unknown> = {};
+	private binaryPath: string | null = null;
+
+	static fromCapabilities(caps: EdgeCapabilities): EdgeOptionsBuilder {
+		const builder = new EdgeOptionsBuilder();
+		if (caps.binary) builder.setBinaryPath(caps.binary);
+		if (caps.args) builder.addArguments(...caps.args);
+		if (caps.extensions) builder.addExtensions(...caps.extensions);
+		if (caps.prefs) builder.setUserPreferences(caps.prefs);
+		if (caps.excludeSwitches) builder.excludeSwitches(...caps.excludeSwitches);
+		return builder;
+	}
 
 	addArguments(...args: string[]): this {
 		this.args.push(...args);
@@ -26,8 +45,16 @@ export class EdgeOptionsBuilder {
 		return this;
 	}
 
+	setBinaryPath(path: string): this {
+		this.binaryPath = path;
+		return this;
+	}
+
 	build(): Options {
 		const options = new Options();
+		if (this.binaryPath) {
+			options.setEdgeChromiumBinaryPath(this.binaryPath);
+		}
 		if (this.args.length > 0) {
 			options.addArguments(...this.args);
 		}
