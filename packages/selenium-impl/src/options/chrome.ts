@@ -1,4 +1,6 @@
+import { Browser } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
+import type { OptionsBuilder } from "./builder.js";
 
 export interface ChromeCapabilities {
 	binary?: string;
@@ -8,7 +10,10 @@ export interface ChromeCapabilities {
 	excludeSwitches?: string[];
 }
 
-export class ChromeOptionsBuilder {
+export class ChromeOptionsBuilder implements OptionsBuilder<Options> {
+	static readonly vendor = Browser.CHROME;
+	readonly vendor = ChromeOptionsBuilder.vendor;
+
 	private readonly args: string[] = [];
 	private readonly excluded: string[] = [];
 	private readonly packedExtensions: (string | Buffer)[] = [];

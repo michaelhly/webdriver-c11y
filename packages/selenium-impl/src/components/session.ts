@@ -4,25 +4,8 @@ import type {
 	Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
 import { Builder } from "selenium-webdriver";
-import {
-	ChromeOptionsBuilder,
-	type ChromeCapabilities,
-} from "../options/chrome.js";
-import {
-	EdgeOptionsBuilder,
-	type EdgeCapabilities,
-} from "../options/edge.js";
-import {
-	FirefoxOptionsBuilder,
-	type FirefoxCapabilities,
-} from "../options/firefox.js";
+import { CAPABILITY_BUILDERS, OPTION_SETTERS } from "../options/registry.js";
 import type { ClassicContext } from "./context.js";
-
-const VENDOR_PREFIX = {
-	chrome: "goog:chromeOptions",
-	firefox: "moz:firefoxOptions",
-	edge: "ms:edgeOptions",
-} as const;
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 	return {
@@ -48,29 +31,24 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 				builder.forBrowser(merged.browserName);
 			}
 
-			// Apply all capabilities including vendor extensions (e.g. "goog:chromeOptions")
+			// Apply all capabilities including vendor extensions
 			builder.withCapabilities(merged);
 
-			// Build browser options from vendor-prefixed capabilities when not
-			// already configured via SeleniumDriverOptions (explicit opts win).
-			if (!ctx.browserOptions.chrome && merged[VENDOR_PREFIX.chrome]) {
-				const caps = merged[VENDOR_PREFIX.chrome] as ChromeCapabilities;
-				ctx.browserOptions.chrome = ChromeOptionsBuilder.fromCapabilities(caps).build();
-			}
-			if (!ctx.browserOptions.firefox && merged[VENDOR_PREFIX.firefox]) {
-				const caps = merged[VENDOR_PREFIX.firefox] as FirefoxCapabilities;
-				ctx.browserOptions.firefox = FirefoxOptionsBuilder.fromCapabilities(caps).build();
-			}
-			if (!ctx.browserOptions.edge && merged[VENDOR_PREFIX.edge]) {
-				const caps = merged[VENDOR_PREFIX.edge] as EdgeCapabilities;
-				ctx.browserOptions.edge = EdgeOptionsBuilder.fromCapabilities(caps).build();
+			// Build browser options from <vendor>:browserOptions capabilities
+			// when not already configured via SeleniumDriverOptions (explicit opts win).
+			for (const { vendor, fromCaps } of CAPABILITY_BUILDERS) {
+				if (!ctx.browserOptions.has(vendor)) {
+					const caps = merged[`${vendor}:browserOptions`];
+					if (caps) {
+						ctx.browserOptions.set(vendor, fromCaps(caps as Record<string, unknown>).build());
+					}
+				}
 			}
 
-			const { chrome, firefox, edge, safari } = ctx.browserOptions;
-			if (chrome) builder.setChromeOptions(chrome);
-			if (firefox) builder.setFirefoxOptions(firefox);
-			if (edge) builder.setEdgeOptions(edge);
-			if (safari) builder.setSafariOptions(safari);
+			// Apply all configured browser options to the builder
+			for (const [vendor, opts] of ctx.browserOptions) {
+				OPTION_SETTERS[vendor]?.(builder, opts);
+			}
 
 			const driver = await builder.build();
 			ctx.setDriver(driver);

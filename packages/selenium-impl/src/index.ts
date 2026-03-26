@@ -1,3 +1,4 @@
+export type { OptionsBuilder } from "./options/builder.js";
 export type { SeleniumDriverOptions } from "./driver/index.js";
 export {
 	createSeleniumBidiDriver,

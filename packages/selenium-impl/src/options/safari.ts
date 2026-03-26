@@ -1,6 +1,11 @@
+import { Browser } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/safari.js";
+import type { OptionsBuilder } from "./builder.js";
 
-export class SafariOptionsBuilder {
+export class SafariOptionsBuilder implements OptionsBuilder<Options> {
+	static readonly vendor = Browser.SAFARI;
+	readonly vendor = SafariOptionsBuilder.vendor;
+
 	private useTechnologyPreview = false;
 
 	setTechnologyPreview(use: boolean): this {

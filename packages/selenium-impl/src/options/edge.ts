@@ -1,4 +1,6 @@
+import { Browser } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/edge.js";
+import type { OptionsBuilder } from "./builder.js";
 
 export interface EdgeCapabilities {
 	binary?: string;
@@ -8,7 +10,10 @@ export interface EdgeCapabilities {
 	excludeSwitches?: string[];
 }
 
-export class EdgeOptionsBuilder {
+export class EdgeOptionsBuilder implements OptionsBuilder<Options> {
+	static readonly vendor = Browser.EDGE;
+	readonly vendor = EdgeOptionsBuilder.vendor;
+
 	private readonly args: string[] = [];
 	private readonly excluded: string[] = [];
 	private readonly packedExtensions: (string | Buffer)[] = [];

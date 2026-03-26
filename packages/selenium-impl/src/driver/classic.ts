@@ -15,17 +15,9 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
-import type { ChromeOptionsBuilder } from "../options/chrome.js";
-import type { EdgeOptionsBuilder } from "../options/edge.js";
-import type { FirefoxOptionsBuilder } from "../options/firefox.js";
-import type { SafariOptionsBuilder } from "../options/safari.js";
+import type { OptionsBuilder } from "../options/builder.js";
 
-export interface SeleniumDriverOptions {
-	chrome?: ChromeOptionsBuilder;
-	firefox?: FirefoxOptionsBuilder;
-	edge?: EdgeOptionsBuilder;
-	safari?: SafariOptionsBuilder;
-}
+export type SeleniumDriverOptions = Record<string, OptionsBuilder<unknown>>;
 
 export function buildClassicComponents(ctx: ClassicContext) {
 	return {
@@ -47,10 +39,9 @@ export function applyBrowserOptions(
 	ctx: ClassicContext,
 	options: SeleniumDriverOptions,
 ): void {
-	if (options.chrome) ctx.browserOptions.chrome = options.chrome.build();
-	if (options.firefox) ctx.browserOptions.firefox = options.firefox.build();
-	if (options.edge) ctx.browserOptions.edge = options.edge.build();
-	if (options.safari) ctx.browserOptions.safari = options.safari.build();
+	for (const [, builder] of Object.entries(options)) {
+		ctx.browserOptions.set(builder.vendor, builder.build());
+	}
 }
 
 export function createSeleniumClassicDriver(

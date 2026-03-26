@@ -1,4 +1,6 @@
+import { Browser } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/firefox.js";
+import type { OptionsBuilder } from "./builder.js";
 
 export interface FirefoxCapabilities {
 	binary?: string;
@@ -7,7 +9,10 @@ export interface FirefoxCapabilities {
 	prefs?: Record<string, string | number | boolean>;
 }
 
-export class FirefoxOptionsBuilder {
+export class FirefoxOptionsBuilder implements OptionsBuilder<Options> {
+	static readonly vendor = Browser.FIREFOX;
+	readonly vendor = FirefoxOptionsBuilder.vendor;
+
 	private readonly args: string[] = [];
 	private readonly prefs = new Map<string, string | number | boolean>();
 	private readonly extensionPaths: string[] = [];
