@@ -5,6 +5,10 @@ import type {
 } from "@michaelhly.webdriver-c11y/schemas";
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
 import { Browser, Builder } from "selenium-webdriver";
+import { Options as ChromeOptions } from "selenium-webdriver/chrome.js";
+import { Options as EdgeOptions } from "selenium-webdriver/edge.js";
+import { Options as FirefoxOptions } from "selenium-webdriver/firefox.js";
+import { BROWSER_OPTION_KEYS } from "../options.js";
 import type { ClassicContext } from "./context.js";
 
 const VALID_BROWSERS = new Set<string>([
@@ -13,6 +17,8 @@ const VALID_BROWSERS = new Set<string>([
 	Browser.FIREFOX,
 	Browser.INTERNET_EXPLORER,
 ]);
+
+const k = BROWSER_OPTION_KEYS;
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 	return {
@@ -49,19 +55,32 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 
 			// Build browser options from vendor-prefixed capabilities when not
 			// already configured via SeleniumDriverOptions (explicit opts win).
-			for (const { vendor, fromCaps } of CAPABILITY_BUILDERS) {
-				if (!ctx.browserOptions.has(vendor) && merged[vendor]) {
-					ctx.browserOptions.set(
-						vendor,
-						fromCaps(merged[vendor] as Record<string, unknown>).build(),
-					);
-				}
+			if (!ctx.browserOptions.has(k.chrome) && merged[k.chrome]) {
+				ctx.browserOptions.set(
+					k.chrome,
+					new ChromeOptions(merged[k.chrome] as object),
+				);
+			}
+			if (!ctx.browserOptions.has(k.firefox) && merged[k.firefox]) {
+				ctx.browserOptions.set(
+					k.firefox,
+					new FirefoxOptions(merged[k.firefox] as object),
+				);
+			}
+			if (!ctx.browserOptions.has(k.edge) && merged[k.edge]) {
+				ctx.browserOptions.set(
+					k.edge,
+					new EdgeOptions(merged[k.edge] as object),
+				);
 			}
 
 			// Apply all configured browser options to the builder
-			for (const [vendor, opts] of ctx.browserOptions) {
-				OPTION_SETTERS[vendor]?.(builder, opts);
-			}
+			const chromeOpts = ctx.browserOptions.get(k.chrome);
+			if (chromeOpts) builder.setChromeOptions(chromeOpts as ChromeOptions);
+			const firefoxOpts = ctx.browserOptions.get(k.firefox);
+			if (firefoxOpts) builder.setFirefoxOptions(firefoxOpts as FirefoxOptions);
+			const edgeOpts = ctx.browserOptions.get(k.edge);
+			if (edgeOpts) builder.setEdgeOptions(edgeOpts as EdgeOptions);
 
 			const driver = await builder.build();
 			ctx.setDriver(driver);

@@ -15,7 +15,7 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
-import { BROWSER_OPTION_KEYS } from "../options/registry.js";
+import { BROWSER_OPTION_KEYS } from "../options.js";
 import type { Options as ChromeWebOptions } from "selenium-webdriver/chrome.js";
 import type { Options as EdgeWebOptions } from "selenium-webdriver/edge.js";
 import type { Options as FirefoxWebOptions } from "selenium-webdriver/firefox.js";

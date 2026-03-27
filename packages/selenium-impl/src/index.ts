@@ -4,5 +4,5 @@ export {
 	createSeleniumClassicDriver,
 	createSeleniumDriver,
 } from "./driver/index.js";
-export type { OptionsBuilder } from "./options/builder.js";
-export { ChromeOptions } from "./options/chrome.js";
+
+export * from "./options.js";
