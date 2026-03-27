@@ -1,0 +1,22 @@
+{
+  "name": "@michaelhly.webdriver-c11y/playwright-impl",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@michaelhly.webdriver-c11y/schemas": "workspace:^",
+    "playwright": "^1.58.2"
+  }
+}
