@@ -1,3 +1,4 @@
+import type { V3Options } from "@browserbasehq/stagehand";
 import {
 	type ClassicDriver,
 	createClassicDriver,
@@ -16,9 +17,12 @@ import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
 
-export function buildClassicComponents(ctx: StagehandContext) {
+export function buildClassicComponents(
+	ctx: StagehandContext,
+	stagehandOptions: Partial<V3Options> = {},
+) {
 	return {
-		session: createSessionHandlers(ctx),
+		session: createSessionHandlers(ctx, stagehandOptions),
 		navigation: createNavigationHandlers(ctx),
 		context: createContextHandlers(ctx),
 		element: createElementHandlers(ctx),
@@ -32,10 +36,12 @@ export function buildClassicComponents(ctx: StagehandContext) {
 	};
 }
 
-export function createStagehandClassicDriver(): ClassicDriver {
+export function createStagehandClassicDriver(
+	stagehandOptions: Partial<V3Options> = {},
+): ClassicDriver {
 	const ctx = createContext();
 	return createClassicDriver({
 		protocol: "cdp",
-		...buildClassicComponents(ctx),
+		...buildClassicComponents(ctx, stagehandOptions),
 	});
 }
