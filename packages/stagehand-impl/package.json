@@ -18,5 +18,8 @@
   "dependencies": {
     "@browserbasehq/stagehand": "^3.2.0",
     "@michaelhly.webdriver-c11y/schemas": "workspace:^"
+  },
+  "devDependencies": {
+    "devtools-protocol": "^0.0.1604597"
   }
 }

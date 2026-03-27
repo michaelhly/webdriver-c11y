@@ -1,21 +1,23 @@
 import type { ContextHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
+import { sendCDP } from "../cdp.js";
 import type { StagehandContext } from "./context.js";
 
 export function createContextHandlers(ctx: StagehandContext): ContextHandlers {
   return {
     async getWindowHandle() {
-      // Use the page's target ID as the window handle
-      const { targetInfo } = await ctx
-        .getPage()
-        .sendCDP<{ targetInfo: { targetId: string } }>("Target.getTargetInfo");
+      const { targetInfo } = await sendCDP(
+        ctx.getPage(),
+        "Target.getTargetInfo",
+      );
       return { handle: targetInfo.targetId };
     },
     async closeWindow() {
-      const { targetInfo } = await ctx
-        .getPage()
-        .sendCDP<{ targetInfo: { targetId: string } }>("Target.getTargetInfo");
-      await ctx.getPage().sendCDP("Target.closeTarget", {
+      const { targetInfo } = await sendCDP(
+        ctx.getPage(),
+        "Target.getTargetInfo",
+      );
+      await sendCDP(ctx.getPage(), "Target.closeTarget", {
         targetId: targetInfo.targetId,
       });
     },
@@ -25,21 +27,21 @@ export function createContextHandlers(ctx: StagehandContext): ContextHandlers {
       );
     },
     async getWindowHandles() {
-      // Return all page targets
-      const { targetInfos } = await ctx.getPage().sendCDP<{
-        targetInfos: Array<{ targetId: string; type: string }>;
-      }>("Target.getTargets");
+      const { targetInfos } = await sendCDP(
+        ctx.getPage(),
+        "Target.getTargets",
+      );
       const handles = targetInfos
         .filter((t) => t.type === "page")
         .map((t) => t.targetId);
       return { handles };
     },
     async newWindow(_params) {
-      const { targetId } = await ctx
-        .getPage()
-        .sendCDP<{ targetId: string }>("Target.createTarget", {
-          url: "about:blank",
-        });
+      const { targetId } = await sendCDP(
+        ctx.getPage(),
+        "Target.createTarget",
+        { url: "about:blank" },
+      );
       return { handle: targetId, type: "tab" as const };
     },
     async switchToFrame({ id }) {

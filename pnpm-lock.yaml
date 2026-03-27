@@ -48,6 +48,10 @@ importers:
       '@michaelhly.webdriver-c11y/schemas':
         specifier: workspace:^
         version: link:../schemas
+    devDependencies:
+      devtools-protocol:
+        specifier: ^0.0.1604597
+        version: 0.0.1604597
 
 packages:
 
@@ -1549,6 +1553,10 @@ packages:
   /devtools-protocol@0.0.1464554:
     resolution: {integrity: sha512-CAoP3lYfwAGQTaAXYvA6JZR0fjGUb7qec1qf4mToyoH2TZgUFeIqYcjh6f9jNuhHfuZiEdH+PONHYrLhRQX6aw==}
     dev: false
+
+  /devtools-protocol@0.0.1604597:
+    resolution: {integrity: sha512-7DH4+FDIwg5AxeW+kvFb5qxJuDLSNK2S9FurqLpggMrUxS3tlvN/J2kP6uOghn584shRnvKheKSSvS4bgnzWYA==}
+    dev: true
 
   /dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}

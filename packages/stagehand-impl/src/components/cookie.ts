@@ -2,18 +2,10 @@ import type {
   Cookie,
   CookieHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
+import { sendCDP, type CDPResult } from "../cdp.js";
 import type { StagehandContext } from "./context.js";
 
-interface CdpCookie {
-  name: string;
-  value: string;
-  path: string;
-  domain: string;
-  secure: boolean;
-  httpOnly: boolean;
-  expires: number;
-  sameSite?: string;
-}
+type CdpCookie = CDPResult<"Network.getCookies">["cookies"][number];
 
 function toCookie(c: CdpCookie): Cookie {
   const cookie: Cookie = { name: c.name, value: c.value };
@@ -30,36 +22,32 @@ function toCookie(c: CdpCookie): Cookie {
 export function createCookieHandlers(ctx: StagehandContext): CookieHandlers {
   return {
     async getAllCookies() {
-      const { cookies } = await ctx
-        .getPage()
-        .sendCDP<{ cookies: CdpCookie[] }>("Network.getCookies");
+      const { cookies } = await sendCDP(ctx.getPage(), "Network.getCookies");
       return { cookies: cookies.map(toCookie) };
     },
     async getCookie({ name }) {
-      const { cookies } = await ctx
-        .getPage()
-        .sendCDP<{ cookies: CdpCookie[] }>("Network.getCookies");
+      const { cookies } = await sendCDP(ctx.getPage(), "Network.getCookies");
       const found = cookies.find((c) => c.name === name);
       if (!found) throw new Error(`Cookie not found: ${name}`);
       return { cookie: toCookie(found) };
     },
     async addCookie({ cookie }) {
-      await ctx.getPage().sendCDP("Network.setCookie", {
+      await sendCDP(ctx.getPage(), "Network.setCookie", {
         name: cookie.name,
         value: cookie.value,
-        path: cookie.path,
-        domain: cookie.domain,
-        secure: cookie.secure,
-        httpOnly: cookie.httpOnly,
-        sameSite: cookie.sameSite,
-        expires: cookie.expiry,
+        ...(cookie.path != null && { path: cookie.path }),
+        ...(cookie.domain != null && { domain: cookie.domain }),
+        ...(cookie.secure != null && { secure: cookie.secure }),
+        ...(cookie.httpOnly != null && { httpOnly: cookie.httpOnly }),
+        ...(cookie.sameSite != null && { sameSite: cookie.sameSite }),
+        ...(cookie.expiry != null && { expires: cookie.expiry }),
       });
     },
     async deleteCookie({ name }) {
-      await ctx.getPage().sendCDP("Network.deleteCookies", { name });
+      await sendCDP(ctx.getPage(), "Network.deleteCookies", { name });
     },
     async deleteAllCookies() {
-      await ctx.getPage().sendCDP("Network.clearBrowserCookies");
+      await sendCDP(ctx.getPage(), "Network.clearBrowserCookies");
     },
   };
 }
