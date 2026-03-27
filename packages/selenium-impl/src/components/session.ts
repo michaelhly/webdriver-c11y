@@ -4,19 +4,13 @@ import type {
 	Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
-import { Browser, Builder } from "selenium-webdriver";
+import { Builder } from "selenium-webdriver";
 import { Options as ChromeOptions } from "selenium-webdriver/chrome.js";
 import { Options as EdgeOptions } from "selenium-webdriver/edge.js";
 import { Options as FirefoxOptions } from "selenium-webdriver/firefox.js";
 import { BROWSER_OPTION_KEYS } from "../options.js";
 import type { ClassicContext } from "./context.js";
-
-const VALID_BROWSERS = new Set<string>([
-	Browser.CHROME,
-	Browser.EDGE,
-	Browser.FIREFOX,
-	Browser.INTERNET_EXPLORER,
-]);
+import { VALID_BROWSERS } from "../constants.js";
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 	return {
