@@ -11,6 +11,7 @@ export interface ClassicContext {
 	clearDriver(): void;
 	elements: Map<string, WebElement>;
 	shadowRoots: Map<string, ShadowRoot>;
+	browserOptions: Map<string, unknown>;
 }
 
 export function createContext(): ClassicContext {
@@ -33,6 +34,7 @@ export function createContext(): ClassicContext {
 		},
 		elements,
 		shadowRoots,
+		browserOptions: new Map(),
 	};
 }
 
