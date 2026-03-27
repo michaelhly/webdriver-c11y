@@ -8,170 +8,170 @@
  * via the `definition` "LocatorStrategy".
  */
 export type LocatorStrategy =
-	| "css"
-	| "xpath"
-	| "id"
-	| "name"
-	| "tag-name"
-	| "class-name"
-	| "link-text"
-	| "partial-link-text"
-	| "text"
-	| "role"
-	| "label"
-	| "placeholder";
+  | "css"
+  | "xpath"
+  | "id"
+  | "name"
+  | "tag-name"
+  | "class-name"
+  | "link-text"
+  | "partial-link-text"
+  | "text"
+  | "role"
+  | "label"
+  | "placeholder";
 
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "Locator".
  */
 export interface Locator {
-	using: LocatorStrategy;
-	value: string;
+  using: LocatorStrategy;
+  value: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "FindElementParams".
  */
 export interface FindElementParams {
-	locator: Locator;
-	fromElement?: string;
+  locator: Locator;
+  fromElement?: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "FindElementResult".
  */
 export interface FindElementResult {
-	elementId: string;
+  elementId: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "FindElementsResult".
  */
 export interface FindElementsResult {
-	elementIds: string[];
+  elementIds: string[];
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "ElementIdParams".
  */
 export interface ElementIdParams {
-	elementId: string;
+  elementId: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "SendKeysParams".
  */
 export interface SendKeysParams {
-	elementId: string;
-	text: string;
+  elementId: string;
+  text: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "GetAttributeParams".
  */
 export interface GetAttributeParams {
-	elementId: string;
-	name: string;
+  elementId: string;
+  name: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "GetPropertyParams".
  */
 export interface GetPropertyParams {
-	elementId: string;
-	name: string;
+  elementId: string;
+  name: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "GetCssValueParams".
  */
 export interface GetCssValueParams {
-	elementId: string;
-	propertyName: string;
+  elementId: string;
+  propertyName: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "TextResult".
  */
 export interface TextResult {
-	text: string;
+  text: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "AttributeResult".
  */
 export interface AttributeResult {
-	value: string | null;
+  value: string | null;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "PropertyResult".
  */
 export interface PropertyResult {
-	value: unknown;
+  value: unknown;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "CssValueResult".
  */
 export interface CssValueResult {
-	value: string;
+  value: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "TagNameResult".
  */
 export interface TagNameResult {
-	tagName: string;
+  tagName: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "BooleanResult".
  */
 export interface BooleanResult {
-	value: boolean;
+  value: boolean;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "ScreenshotResult".
  */
 export interface ScreenshotResult {
-	data: string;
+  data: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "ActiveElementResult".
  */
 export interface ActiveElementResult {
-	elementId: string;
+  elementId: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "ComputedRoleResult".
  */
 export interface ComputedRoleResult {
-	role: string;
+  role: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "ComputedLabelResult".
  */
 export interface ComputedLabelResult {
-	label: string;
+  label: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "ShadowRootResult".
  */
 export interface ShadowRootResult {
-	shadowRootId: string;
+  shadowRootId: string;
 }
 /**
  * This interface was referenced by `WebdriverElement`'s JSON-Schema
  * via the `definition` "FindElementFromShadowRootParams".
  */
 export interface FindElementFromShadowRootParams {
-	shadowRootId: string;
-	locator: Locator;
+  shadowRootId: string;
+  locator: Locator;
 }

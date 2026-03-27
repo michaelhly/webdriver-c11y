@@ -1,25 +1,25 @@
 {
-	"name": "@michaelhly.webdriver-c11y/selenium-impl",
-	"version": "1.0.0",
-	"description": "",
-	"type": "module",
-	"main": "src/index.ts",
-	"scripts": {
-		"format": "biome format --write",
-		"lint": "biome lint",
-		"lint:fix": "biome lint --write",
-		"typecheck": "tsc --noEmit",
-		"build": "tsc",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"@michaelhly.webdriver-c11y/schemas": "workspace:^",
-		"selenium-webdriver": "^4.41.0"
-	},
-	"devDependencies": {
-		"@types/selenium-webdriver": "^4.35.5"
-	}
+  "name": "@michaelhly.webdriver-c11y/selenium-impl",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@michaelhly.webdriver-c11y/schemas": "workspace:^",
+    "selenium-webdriver": "^4.41.0"
+  },
+  "devDependencies": {
+    "@types/selenium-webdriver": "^4.35.5"
+  }
 }

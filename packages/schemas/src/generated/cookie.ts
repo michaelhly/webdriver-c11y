@@ -8,47 +8,47 @@
  * via the `definition` "Cookie".
  */
 export interface Cookie {
-	name: string;
-	value: string;
-	path?: string;
-	domain?: string;
-	secure?: boolean;
-	httpOnly?: boolean;
-	expiry?: number;
-	sameSite?: "Strict" | "Lax" | "None";
+  name: string;
+  value: string;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  httpOnly?: boolean;
+  expiry?: number;
+  sameSite?: "Strict" | "Lax" | "None";
 }
 /**
  * This interface was referenced by `WebdriverCookie`'s JSON-Schema
  * via the `definition` "GetCookieParams".
  */
 export interface GetCookieParams {
-	name: string;
+  name: string;
 }
 /**
  * This interface was referenced by `WebdriverCookie`'s JSON-Schema
  * via the `definition` "GetAllCookiesResult".
  */
 export interface GetAllCookiesResult {
-	cookies: Cookie[];
+  cookies: Cookie[];
 }
 /**
  * This interface was referenced by `WebdriverCookie`'s JSON-Schema
  * via the `definition` "GetCookieResult".
  */
 export interface GetCookieResult {
-	cookie: Cookie;
+  cookie: Cookie;
 }
 /**
  * This interface was referenced by `WebdriverCookie`'s JSON-Schema
  * via the `definition` "AddCookieParams".
  */
 export interface AddCookieParams {
-	cookie: Cookie;
+  cookie: Cookie;
 }
 /**
  * This interface was referenced by `WebdriverCookie`'s JSON-Schema
  * via the `definition` "DeleteCookieParams".
  */
 export interface DeleteCookieParams {
-	name: string;
+  name: string;
 }

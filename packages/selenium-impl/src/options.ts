@@ -1,8 +1,8 @@
 /** W3C vendor capability keys understood by selenium-webdriver `Builder`. */
 export const BROWSER_OPTION_KEYS = {
-	chrome: "goog:chromeOptions",
-	firefox: "moz:firefoxOptions",
-	edge: "ms:edgeOptions",
+  chrome: "goog:chromeOptions",
+  firefox: "moz:firefoxOptions",
+  edge: "ms:edgeOptions",
 } as const;
 
 // Convenience aliases for selenium-webdriver `Options` (same classes, stable names for consumers).

@@ -1,216 +1,216 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "webdriver-bidi://network",
-	"definitions": {
-		"Intercept": {
-			"type": "string",
-			"description": "Opaque intercept ID"
-		},
-		"Request": {
-			"type": "string",
-			"description": "Opaque request ID"
-		},
-		"InterceptPhase": {
-			"type": "string",
-			"enum": ["beforeRequestSent", "responseStarted", "authRequired"]
-		},
-		"UrlPattern": {
-			"type": "object",
-			"properties": {
-				"type": {
-					"type": "string",
-					"enum": ["string", "pattern"]
-				},
-				"pattern": { "type": "string" },
-				"protocol": { "type": "string" },
-				"hostname": { "type": "string" },
-				"port": { "type": "string" },
-				"pathname": { "type": "string" },
-				"search": { "type": "string" }
-			},
-			"required": ["type"],
-			"additionalProperties": false
-		},
-		"Header": {
-			"type": "object",
-			"properties": {
-				"name": { "type": "string" },
-				"value": {
-					"type": "object",
-					"properties": {
-						"type": {
-							"type": "string",
-							"enum": ["string", "base64"]
-						},
-						"value": { "type": "string" }
-					},
-					"required": ["type", "value"],
-					"additionalProperties": false
-				}
-			},
-			"required": ["name", "value"],
-			"additionalProperties": false
-		},
-		"AddInterceptParams": {
-			"type": "object",
-			"properties": {
-				"phases": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/InterceptPhase" }
-				},
-				"contexts": {
-					"type": "array",
-					"items": { "type": "string" }
-				},
-				"urlPatterns": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/UrlPattern" }
-				}
-			},
-			"required": ["phases"],
-			"additionalProperties": false
-		},
-		"AddInterceptResult": {
-			"type": "object",
-			"properties": {
-				"intercept": { "$ref": "#/definitions/Intercept" }
-			},
-			"required": ["intercept"],
-			"additionalProperties": false
-		},
-		"RemoveInterceptParams": {
-			"type": "object",
-			"properties": {
-				"intercept": { "$ref": "#/definitions/Intercept" }
-			},
-			"required": ["intercept"],
-			"additionalProperties": false
-		},
-		"ContinueRequestParams": {
-			"type": "object",
-			"properties": {
-				"request": { "$ref": "#/definitions/Request" },
-				"body": {
-					"type": "object",
-					"properties": {
-						"type": {
-							"type": "string",
-							"enum": ["string", "base64"]
-						},
-						"value": { "type": "string" }
-					},
-					"required": ["type", "value"],
-					"additionalProperties": false
-				},
-				"cookies": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/Header" }
-				},
-				"headers": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/Header" }
-				},
-				"method": { "type": "string" },
-				"url": { "type": "string" }
-			},
-			"required": ["request"],
-			"additionalProperties": false
-		},
-		"ContinueResponseParams": {
-			"type": "object",
-			"properties": {
-				"request": { "$ref": "#/definitions/Request" },
-				"cookies": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/Header" }
-				},
-				"headers": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/Header" }
-				},
-				"reasonPhrase": { "type": "string" },
-				"statusCode": { "type": "integer" }
-			},
-			"required": ["request"],
-			"additionalProperties": false
-		},
-		"ProvideResponseParams": {
-			"type": "object",
-			"properties": {
-				"request": { "$ref": "#/definitions/Request" },
-				"body": {
-					"type": "object",
-					"properties": {
-						"type": {
-							"type": "string",
-							"enum": ["string", "base64"]
-						},
-						"value": { "type": "string" }
-					},
-					"required": ["type", "value"],
-					"additionalProperties": false
-				},
-				"cookies": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/Header" }
-				},
-				"headers": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/Header" }
-				},
-				"reasonPhrase": { "type": "string" },
-				"statusCode": { "type": "integer" }
-			},
-			"required": ["request"],
-			"additionalProperties": false
-		},
-		"FailRequestParams": {
-			"type": "object",
-			"properties": {
-				"request": { "$ref": "#/definitions/Request" }
-			},
-			"required": ["request"],
-			"additionalProperties": false
-		},
-		"ContinueWithAuthParams": {
-			"type": "object",
-			"properties": {
-				"request": { "$ref": "#/definitions/Request" },
-				"action": {
-					"type": "string",
-					"enum": ["provideCredentials", "default", "cancel"]
-				},
-				"credentials": {
-					"type": "object",
-					"properties": {
-						"type": {
-							"type": "string",
-							"enum": ["password"]
-						},
-						"username": { "type": "string" },
-						"password": { "type": "string" }
-					},
-					"required": ["type", "username", "password"],
-					"additionalProperties": false
-				}
-			},
-			"required": ["request", "action"],
-			"additionalProperties": false
-		},
-		"SetCacheBehaviorParams": {
-			"type": "object",
-			"properties": {
-				"cacheBehavior": {
-					"type": "string",
-					"enum": ["default", "bypass"]
-				},
-				"contexts": {
-					"type": "array",
-					"items": { "type": "string" }
-				}
-			},
-			"required": ["cacheBehavior"],
-			"additionalProperties": false
-		}
-	}
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "webdriver-bidi://network",
+  "definitions": {
+    "Intercept": {
+      "type": "string",
+      "description": "Opaque intercept ID"
+    },
+    "Request": {
+      "type": "string",
+      "description": "Opaque request ID"
+    },
+    "InterceptPhase": {
+      "type": "string",
+      "enum": ["beforeRequestSent", "responseStarted", "authRequired"]
+    },
+    "UrlPattern": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["string", "pattern"]
+        },
+        "pattern": { "type": "string" },
+        "protocol": { "type": "string" },
+        "hostname": { "type": "string" },
+        "port": { "type": "string" },
+        "pathname": { "type": "string" },
+        "search": { "type": "string" }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "Header": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "value": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["string", "base64"]
+            },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["name", "value"],
+      "additionalProperties": false
+    },
+    "AddInterceptParams": {
+      "type": "object",
+      "properties": {
+        "phases": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/InterceptPhase" }
+        },
+        "contexts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "urlPatterns": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/UrlPattern" }
+        }
+      },
+      "required": ["phases"],
+      "additionalProperties": false
+    },
+    "AddInterceptResult": {
+      "type": "object",
+      "properties": {
+        "intercept": { "$ref": "#/definitions/Intercept" }
+      },
+      "required": ["intercept"],
+      "additionalProperties": false
+    },
+    "RemoveInterceptParams": {
+      "type": "object",
+      "properties": {
+        "intercept": { "$ref": "#/definitions/Intercept" }
+      },
+      "required": ["intercept"],
+      "additionalProperties": false
+    },
+    "ContinueRequestParams": {
+      "type": "object",
+      "properties": {
+        "request": { "$ref": "#/definitions/Request" },
+        "body": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["string", "base64"]
+            },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        },
+        "cookies": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Header" }
+        },
+        "headers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Header" }
+        },
+        "method": { "type": "string" },
+        "url": { "type": "string" }
+      },
+      "required": ["request"],
+      "additionalProperties": false
+    },
+    "ContinueResponseParams": {
+      "type": "object",
+      "properties": {
+        "request": { "$ref": "#/definitions/Request" },
+        "cookies": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Header" }
+        },
+        "headers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Header" }
+        },
+        "reasonPhrase": { "type": "string" },
+        "statusCode": { "type": "integer" }
+      },
+      "required": ["request"],
+      "additionalProperties": false
+    },
+    "ProvideResponseParams": {
+      "type": "object",
+      "properties": {
+        "request": { "$ref": "#/definitions/Request" },
+        "body": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["string", "base64"]
+            },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        },
+        "cookies": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Header" }
+        },
+        "headers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Header" }
+        },
+        "reasonPhrase": { "type": "string" },
+        "statusCode": { "type": "integer" }
+      },
+      "required": ["request"],
+      "additionalProperties": false
+    },
+    "FailRequestParams": {
+      "type": "object",
+      "properties": {
+        "request": { "$ref": "#/definitions/Request" }
+      },
+      "required": ["request"],
+      "additionalProperties": false
+    },
+    "ContinueWithAuthParams": {
+      "type": "object",
+      "properties": {
+        "request": { "$ref": "#/definitions/Request" },
+        "action": {
+          "type": "string",
+          "enum": ["provideCredentials", "default", "cancel"]
+        },
+        "credentials": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["password"]
+            },
+            "username": { "type": "string" },
+            "password": { "type": "string" }
+          },
+          "required": ["type", "username", "password"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["request", "action"],
+      "additionalProperties": false
+    },
+    "SetCacheBehaviorParams": {
+      "type": "object",
+      "properties": {
+        "cacheBehavior": {
+          "type": "string",
+          "enum": ["default", "bypass"]
+        },
+        "contexts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["cacheBehavior"],
+      "additionalProperties": false
+    }
+  }
 }

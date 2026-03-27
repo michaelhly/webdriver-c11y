@@ -8,41 +8,41 @@
  * via the `definition` "WindowHandleResult".
  */
 export interface WindowHandleResult {
-	handle: string;
+  handle: string;
 }
 /**
  * This interface was referenced by `WebdriverContext`'s JSON-Schema
  * via the `definition` "WindowHandlesResult".
  */
 export interface WindowHandlesResult {
-	handles: string[];
+  handles: string[];
 }
 /**
  * This interface was referenced by `WebdriverContext`'s JSON-Schema
  * via the `definition` "SwitchToWindowParams".
  */
 export interface SwitchToWindowParams {
-	handle: string;
+  handle: string;
 }
 /**
  * This interface was referenced by `WebdriverContext`'s JSON-Schema
  * via the `definition` "NewWindowParams".
  */
 export interface NewWindowParams {
-	type?: "tab" | "window";
+  type?: "tab" | "window";
 }
 /**
  * This interface was referenced by `WebdriverContext`'s JSON-Schema
  * via the `definition` "NewWindowResult".
  */
 export interface NewWindowResult {
-	handle: string;
-	type: "tab" | "window";
+  handle: string;
+  type: "tab" | "window";
 }
 /**
  * This interface was referenced by `WebdriverContext`'s JSON-Schema
  * via the `definition` "SwitchToFrameParams".
  */
 export interface SwitchToFrameParams {
-	id: unknown;
+  id: unknown;
 }

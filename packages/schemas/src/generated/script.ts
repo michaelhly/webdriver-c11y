@@ -8,13 +8,13 @@
  * via the `definition` "ExecuteScriptParams".
  */
 export interface ExecuteScriptParams {
-	script: string;
-	args?: unknown[];
+  script: string;
+  args?: unknown[];
 }
 /**
  * This interface was referenced by `WebdriverScript`'s JSON-Schema
  * via the `definition` "ScriptResult".
  */
 export interface ScriptResult {
-	value: unknown;
+  value: unknown;
 }

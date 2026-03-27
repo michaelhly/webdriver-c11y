@@ -19,66 +19,66 @@ export type PointerType = "mouse" | "pen" | "touch";
  * via the `definition` "NullAction".
  */
 export interface NullAction {
-	type: "pause";
-	duration?: number;
+  type: "pause";
+  duration?: number;
 }
 /**
  * This interface was referenced by `WebdriverActions`'s JSON-Schema
  * via the `definition` "KeyAction".
  */
 export interface KeyAction {
-	type: "keyDown" | "keyUp" | "pause";
-	value?: string;
-	duration?: number;
+  type: "keyDown" | "keyUp" | "pause";
+  value?: string;
+  duration?: number;
 }
 /**
  * This interface was referenced by `WebdriverActions`'s JSON-Schema
  * via the `definition` "PointerAction".
  */
 export interface PointerAction {
-	type: "pointerDown" | "pointerUp" | "pointerMove" | "pointerCancel" | "pause";
-	button?: number;
-	x?: number;
-	y?: number;
-	duration?: number;
-	width?: number;
-	height?: number;
-	pressure?: number;
-	tangentialPressure?: number;
-	twist?: number;
-	altitudeAngle?: number;
-	azimuthAngle?: number;
-	origin?: unknown;
+  type: "pointerDown" | "pointerUp" | "pointerMove" | "pointerCancel" | "pause";
+  button?: number;
+  x?: number;
+  y?: number;
+  duration?: number;
+  width?: number;
+  height?: number;
+  pressure?: number;
+  tangentialPressure?: number;
+  twist?: number;
+  altitudeAngle?: number;
+  azimuthAngle?: number;
+  origin?: unknown;
 }
 /**
  * This interface was referenced by `WebdriverActions`'s JSON-Schema
  * via the `definition` "WheelAction".
  */
 export interface WheelAction {
-	type: "scroll" | "pause";
-	x?: number;
-	y?: number;
-	deltaX?: number;
-	deltaY?: number;
-	duration?: number;
-	origin?: unknown;
+  type: "scroll" | "pause";
+  x?: number;
+  y?: number;
+  deltaX?: number;
+  deltaY?: number;
+  duration?: number;
+  origin?: unknown;
 }
 /**
  * This interface was referenced by `WebdriverActions`'s JSON-Schema
  * via the `definition` "ActionSequence".
  */
 export interface ActionSequence {
-	type: SourceActionType;
-	id: string;
-	parameters?: {
-		pointerType?: PointerType;
-	};
-	actions: unknown[];
+  type: SourceActionType;
+  id: string;
+  parameters?: {
+    pointerType?: PointerType;
+  };
+  actions: unknown[];
 }
 /**
  * This interface was referenced by `WebdriverActions`'s JSON-Schema
  * via the `definition` "PerformActionsParams".
  */
 export interface PerformActionsParams {
-	actions: ActionSequence[];
+  actions: ActionSequence[];
 }

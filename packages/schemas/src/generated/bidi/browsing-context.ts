@@ -33,132 +33,132 @@ export type CreateType = "tab" | "window";
  * via the `definition` "CreateParams".
  */
 export interface CreateParams {
-	type: CreateType;
-	referenceContext?: BrowsingContext;
-	background?: boolean;
-	userContext?: string;
+  type: CreateType;
+  referenceContext?: BrowsingContext;
+  background?: boolean;
+  userContext?: string;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "CreateResult".
  */
 export interface CreateResult {
-	context: BrowsingContext;
+  context: BrowsingContext;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "CloseParams".
  */
 export interface CloseParams {
-	context: BrowsingContext;
-	promptUnload?: boolean;
+  context: BrowsingContext;
+  promptUnload?: boolean;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "ActivateParams".
  */
 export interface ActivateParams {
-	context: BrowsingContext;
+  context: BrowsingContext;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "NavigateParams".
  */
 export interface NavigateParams {
-	context: BrowsingContext;
-	url: string;
-	wait?: ReadinessState;
+  context: BrowsingContext;
+  url: string;
+  wait?: ReadinessState;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "NavigateResult".
  */
 export interface NavigateResult {
-	navigation?: Navigation;
-	url: string;
+  navigation?: Navigation;
+  url: string;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "ReloadParams".
  */
 export interface ReloadParams {
-	context: BrowsingContext;
-	ignoreCache?: boolean;
-	wait?: ReadinessState;
+  context: BrowsingContext;
+  ignoreCache?: boolean;
+  wait?: ReadinessState;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "TraverseHistoryParams".
  */
 export interface TraverseHistoryParams {
-	context: BrowsingContext;
-	delta: number;
+  context: BrowsingContext;
+  delta: number;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "GetTreeParams".
  */
 export interface GetTreeParams {
-	maxDepth?: number;
-	root?: BrowsingContext;
+  maxDepth?: number;
+  root?: BrowsingContext;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "InfoListResult".
  */
 export interface InfoListResult {
-	contexts: Info[];
+  contexts: Info[];
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "Info".
  */
 export interface Info {
-	context: BrowsingContext;
-	url: string;
-	parent?: BrowsingContext;
-	children: Info[];
-	userContext?: string;
-	originalOpener?: BrowsingContext;
+  context: BrowsingContext;
+  url: string;
+  parent?: BrowsingContext;
+  children: Info[];
+  userContext?: string;
+  originalOpener?: BrowsingContext;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "SetViewportParams".
  */
 export interface SetViewportParams {
-	context: BrowsingContext;
-	viewport?: {
-		width: number;
-		height: number;
-	};
-	devicePixelRatio?: number;
+  context: BrowsingContext;
+  viewport?: {
+    width: number;
+    height: number;
+  };
+  devicePixelRatio?: number;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "PrintParams".
  */
 export interface PrintParams {
-	context: BrowsingContext;
-	background?: boolean;
-	orientation?: "portrait" | "landscape";
-	page?: {
-		width?: number;
-		height?: number;
-	};
-	margin?: {
-		top?: number;
-		bottom?: number;
-		left?: number;
-		right?: number;
-	};
-	pageRanges?: unknown[];
-	scale?: number;
-	shrinkToFit?: boolean;
+  context: BrowsingContext;
+  background?: boolean;
+  orientation?: "portrait" | "landscape";
+  page?: {
+    width?: number;
+    height?: number;
+  };
+  margin?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
+  pageRanges?: unknown[];
+  scale?: number;
+  shrinkToFit?: boolean;
 }
 /**
  * This interface was referenced by `WebdriverBidiBrowsingContext`'s JSON-Schema
  * via the `definition` "PrintResult".
  */
 export interface PrintResult {
-	data: string;
+  data: string;
 }
