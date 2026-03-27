@@ -10,7 +10,7 @@
 		"lint:fix": "biome lint --write",
 		"typecheck": "tsc --noEmit",
 		"build": "tsc",
-		"test": "vitest run"
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",

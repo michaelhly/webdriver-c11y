@@ -20,7 +20,6 @@
 		"@biomejs/biome": "2.4.8",
 		"@types/node": "^25.5.0",
 		"tsx": "^4.21.0",
-		"typescript": "^6.0.2",
-		"vitest": "1.6.1"
+		"typescript": "^6.0.2"
 	}
 }

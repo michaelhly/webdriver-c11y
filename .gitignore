@@ -41,6 +41,7 @@ storage
 
 yarn.lock
 
+
 RELEASE.md
 
 .jest-cache
@@ -49,6 +50,7 @@ RELEASE.md
 .eslintcache
 .claude
 .local-settings
+.pnpm-store
 .pnpm-typecheck.json
 
 ## custom modules-dir fixture
