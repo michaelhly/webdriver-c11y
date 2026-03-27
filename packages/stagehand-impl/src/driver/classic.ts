@@ -1,7 +1,7 @@
 import type { V3Options } from "@browserbasehq/stagehand";
 import {
-	type ClassicDriver,
-	createClassicDriver,
+  type ClassicDriver,
+  createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
 import { createActionHandlers } from "../components/action.js";
 import { createAlertHandlers } from "../components/alert.js";
@@ -18,30 +18,30 @@ import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
 
 export function buildClassicComponents(
-	ctx: StagehandContext,
-	stagehandOptions: Partial<V3Options> = {},
+  ctx: StagehandContext,
+  stagehandOptions: Partial<V3Options> = {},
 ) {
-	return {
-		session: createSessionHandlers(ctx, stagehandOptions),
-		navigation: createNavigationHandlers(ctx),
-		context: createContextHandlers(ctx),
-		element: createElementHandlers(ctx),
-		script: createScriptHandlers(ctx),
-		cookie: createCookieHandlers(ctx),
-		window: createWindowHandlers(ctx),
-		action: createActionHandlers(ctx),
-		screenshot: createScreenshotHandlers(ctx),
-		print: createPrintHandlers(ctx),
-		alert: createAlertHandlers(ctx),
-	};
+  return {
+    session: createSessionHandlers(ctx, stagehandOptions),
+    navigation: createNavigationHandlers(ctx),
+    context: createContextHandlers(ctx),
+    element: createElementHandlers(ctx),
+    script: createScriptHandlers(ctx),
+    cookie: createCookieHandlers(ctx),
+    window: createWindowHandlers(ctx),
+    action: createActionHandlers(ctx),
+    screenshot: createScreenshotHandlers(ctx),
+    print: createPrintHandlers(ctx),
+    alert: createAlertHandlers(ctx),
+  };
 }
 
 export function createStagehandClassicDriver(
-	stagehandOptions: Partial<V3Options> = {},
+  stagehandOptions: Partial<V3Options> = {},
 ): ClassicDriver {
-	const ctx = createContext();
-	return createClassicDriver({
-		protocol: "cdp",
-		...buildClassicComponents(ctx, stagehandOptions),
-	});
+  const ctx = createContext();
+  return createClassicDriver({
+    protocol: "cdp",
+    ...buildClassicComponents(ctx, stagehandOptions),
+  });
 }

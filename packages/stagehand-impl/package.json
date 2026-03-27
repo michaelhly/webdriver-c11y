@@ -1,22 +1,22 @@
 {
-	"name": "@michaelhly.webdriver-c11y/stagehand-impl",
-	"version": "1.0.0",
-	"description": "",
-	"type": "module",
-	"main": "src/index.ts",
-	"scripts": {
-		"format": "biome format --write",
-		"lint": "biome lint",
-		"lint:fix": "biome lint --write",
-		"typecheck": "tsc --noEmit",
-		"build": "tsc",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"@browserbasehq/stagehand": "^3.2.0",
-		"@michaelhly.webdriver-c11y/schemas": "workspace:^"
-	}
+  "name": "@michaelhly.webdriver-c11y/stagehand-impl",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@browserbasehq/stagehand": "^3.2.0",
+    "@michaelhly.webdriver-c11y/schemas": "workspace:^"
+  }
 }
