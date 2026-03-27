@@ -1,45 +1,16 @@
-import { type IPerfLoggingPrefs, Options } from "selenium-webdriver/chrome.js";
-import {
-	type ChromiumCapabilities,
-	ChromiumOptionsBuilder,
-} from "./chromium.js";
+import { Options } from "selenium-webdriver/chrome.js";
+import type { SeleniumBrowserOptions } from "./interface.js";
+import type { Capabilities } from "@michaelhly.webdriver-c11y/schemas";
 
-type ChromeCapabilities = ChromiumCapabilities & {
-	perfLoggingPrefs?: IPerfLoggingPrefs;
-};
+export class ChromeOptions extends Options implements SeleniumBrowserOptions<Options> {
+	readonly capKey = "goog:chromeOptions";
 
-export class ChromeOptionsBuilder extends ChromiumOptionsBuilder<Options> {
-	static readonly vendor = "goog:chromeOptions";
-	readonly vendor = ChromeOptionsBuilder.vendor;
-
-	private _perfLoggingPrefs: IPerfLoggingPrefs = {};
-
-	static fromCapabilities(caps: ChromeCapabilities): ChromeOptionsBuilder {
-		const builder = new ChromeOptionsBuilder();
-		builder.applyCapabilities(caps);
-		if (caps.perfLoggingPrefs)
-			builder.setPerfLoggingPrefs(caps.perfLoggingPrefs);
-		return builder;
-	}
-
-	setPerfLoggingPrefs(prefs: IPerfLoggingPrefs): this {
-		Object.assign(this._perfLoggingPrefs, prefs);
-		return this;
-	}
-
-	build(): Options {
-		const options = new Options();
-		this.applyTo(options);
-		if (Object.keys(this._perfLoggingPrefs).length > 0) {
-			options.setPerfLoggingPrefs({
-				enableNetwork: this._perfLoggingPrefs.enableNetwork ?? false,
-				enablePage: this._perfLoggingPrefs.enablePage ?? false,
-				enableTimeline: this._perfLoggingPrefs.enableTimeline ?? false,
-				traceCategories: this._perfLoggingPrefs.traceCategories ?? "browser",
-				bufferUsageReportingInterval:
-					this._perfLoggingPrefs.bufferUsageReportingInterval ?? 0,
-			});
+    fromCapabilities(caps: Capabilities): Options {
+		const browserOpts = caps[this.capKey];
+		if (!browserOpts) {
+			throw new Error(`Browser options not found for key: ${this.capKey}`);
 		}
-		return options;
-	}
+
+		return new Options(browserOpts);
+    }
 }

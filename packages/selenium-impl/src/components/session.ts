@@ -13,7 +13,6 @@ const VALID_BROWSERS = new Set<string>([
 	Browser.EDGE,
 	Browser.FIREFOX,
 	Browser.INTERNET_EXPLORER,
-	Browser.SAFARI,
 ]);
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {

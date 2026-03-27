@@ -15,12 +15,10 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
-import type { OptionsBuilder } from "../options/builder.js";
-
-export type SeleniumDriverOptions<TOptions> = Record<
-	string,
-	OptionsBuilder<TOptions>
->;
+import { BROWSER_OPTION_KEYS } from "../options/registry.js";
+import type { Options as ChromeWebOptions } from "selenium-webdriver/chrome.js";
+import type { Options as EdgeWebOptions } from "selenium-webdriver/edge.js";
+import type { Options as FirefoxWebOptions } from "selenium-webdriver/firefox.js";
 
 export function buildClassicComponents(ctx: ClassicContext) {
 	return {
@@ -38,17 +36,29 @@ export function buildClassicComponents(ctx: ClassicContext) {
 	};
 }
 
-export function applyBrowserOptions<TOptions>(
+export interface SeleniumDriverOptions {
+	chrome?: ChromeWebOptions;
+	firefox?: FirefoxWebOptions;
+	edge?: EdgeWebOptions;
+}
+
+export function applyBrowserOptions(
 	ctx: ClassicContext,
-	options: SeleniumDriverOptions<TOptions>,
+	options: SeleniumDriverOptions,
 ): void {
-	for (const [, builder] of Object.entries(options)) {
-		ctx.browserOptions.set(builder.vendor, builder.build());
+	if (options.chrome !== undefined) {
+		ctx.browserOptions.set(BROWSER_OPTION_KEYS.chrome, options.chrome);
+	}
+	if (options.firefox !== undefined) {
+		ctx.browserOptions.set(BROWSER_OPTION_KEYS.firefox, options.firefox);
+	}
+	if (options.edge !== undefined) {
+		ctx.browserOptions.set(BROWSER_OPTION_KEYS.edge, options.edge);
 	}
 }
 
-export function createSeleniumClassicDriver<TOptions>(
-	options?: SeleniumDriverOptions<TOptions>,
+export function createSeleniumClassicDriver(
+	options?: SeleniumDriverOptions,
 ): ClassicDriver {
 	const ctx = createContext();
 	if (options) applyBrowserOptions(ctx, options);

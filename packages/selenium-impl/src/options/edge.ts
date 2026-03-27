@@ -1,22 +1,16 @@
 import { Options } from "selenium-webdriver/edge.js";
-import {
-	type ChromiumCapabilities,
-	ChromiumOptionsBuilder,
-} from "./chromium.js";
+import type { SeleniumBrowserOptions } from "./interface.js";
+import type { Capabilities } from "@michaelhly.webdriver-c11y/schemas";
 
-export class EdgeOptionsBuilder extends ChromiumOptionsBuilder<Options> {
-	static readonly vendor = "ms:edgeOptions";
-	readonly vendor = EdgeOptionsBuilder.vendor;
+export class EdgeOptions extends Options implements SeleniumBrowserOptions<Options> {
+	readonly capKey = "ms:edgeOptions";
 
-	static fromCapabilities(caps: ChromiumCapabilities): EdgeOptionsBuilder {
-		const builder = new EdgeOptionsBuilder();
-		builder.applyCapabilities(caps);
-		return builder;
-	}
+    fromCapabilities(caps: Capabilities): Options {
+		const browserOpts = caps[this.capKey];
+		if (!browserOpts) {
+			throw new Error(`Browser options not found for key: ${this.capKey}`);
+		}
 
-	build(): Options {
-		const options = new Options();
-		this.applyTo(options);
-		return options;
-	}
+		return new Options(browserOpts);
+    }
 }
