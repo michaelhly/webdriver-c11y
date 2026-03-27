@@ -1,4 +1,4 @@
-import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { StagehandContext } from "./context.js";
 
 export function createNavigationHandlers(

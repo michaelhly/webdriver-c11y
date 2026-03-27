@@ -1,5 +1,5 @@
-import type { AlertHandlers } from "@michaelhly.webdriver-c11y/schema";
-import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schema";
+import type { AlertHandlers } from "@michaelhly.webdriver-c11y/schemas";
+import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import type { StagehandContext } from "./context.js";
 
 export function createAlertHandlers(ctx: StagehandContext): AlertHandlers {

@@ -1,4 +1,4 @@
-import type { ScriptHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { ScriptHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { StagehandContext } from "./context.js";
 
 export function createScriptHandlers(ctx: StagehandContext): ScriptHandlers {

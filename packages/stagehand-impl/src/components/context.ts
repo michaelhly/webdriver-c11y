@@ -2,7 +2,7 @@ import type { Stagehand } from "@browserbasehq/stagehand";
 import {
 	NoSuchElementError,
 	SessionNotCreatedError,
-} from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
 
 // Page/Locator types are not re-exported from stagehand's public API
 type Page = NonNullable<ReturnType<Stagehand["context"]["activePage"]>>;

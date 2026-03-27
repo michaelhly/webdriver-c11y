@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "webdriver://navigation",
+  "definitions": {
+    "NavigateParams": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "format": "uri" }
+      },
+      "required": ["url"],
+      "additionalProperties": false
+    },
+    "GetCurrentUrlResult": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" }
+      },
+      "required": ["url"],
+      "additionalProperties": false
+    },
+    "GetTitleResult": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" }
+      },
+      "required": ["title"],
+      "additionalProperties": false
+    },
+    "GetPageSourceResult": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" }
+      },
+      "required": ["source"],
+      "additionalProperties": false
+    }
+  }
+}

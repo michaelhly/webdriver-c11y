@@ -1,0 +1,201 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "webdriver://element",
+  "definitions": {
+    "LocatorStrategy": {
+      "type": "string",
+      "enum": [
+        "css",
+        "xpath",
+        "id",
+        "name",
+        "tag-name",
+        "class-name",
+        "link-text",
+        "partial-link-text",
+        "text",
+        "role",
+        "label",
+        "placeholder"
+      ]
+    },
+    "Locator": {
+      "type": "object",
+      "properties": {
+        "using": { "$ref": "#/definitions/LocatorStrategy" },
+        "value": { "type": "string" }
+      },
+      "required": ["using", "value"],
+      "additionalProperties": false
+    },
+    "FindElementParams": {
+      "type": "object",
+      "properties": {
+        "locator": { "$ref": "#/definitions/Locator" },
+        "fromElement": { "type": "string" }
+      },
+      "required": ["locator"],
+      "additionalProperties": false
+    },
+    "FindElementResult": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" }
+      },
+      "required": ["elementId"],
+      "additionalProperties": false
+    },
+    "FindElementsResult": {
+      "type": "object",
+      "properties": {
+        "elementIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["elementIds"],
+      "additionalProperties": false
+    },
+    "ElementIdParams": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" }
+      },
+      "required": ["elementId"],
+      "additionalProperties": false
+    },
+    "SendKeysParams": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" },
+        "text": { "type": "string" }
+      },
+      "required": ["elementId", "text"],
+      "additionalProperties": false
+    },
+    "GetAttributeParams": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "required": ["elementId", "name"],
+      "additionalProperties": false
+    },
+    "GetPropertyParams": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "required": ["elementId", "name"],
+      "additionalProperties": false
+    },
+    "GetCssValueParams": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" },
+        "propertyName": { "type": "string" }
+      },
+      "required": ["elementId", "propertyName"],
+      "additionalProperties": false
+    },
+    "TextResult": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" }
+      },
+      "required": ["text"],
+      "additionalProperties": false
+    },
+    "AttributeResult": {
+      "type": "object",
+      "properties": {
+        "value": { "type": ["string", "null"] }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "PropertyResult": {
+      "type": "object",
+      "properties": {
+        "value": {}
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "CssValueResult": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "string" }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "TagNameResult": {
+      "type": "object",
+      "properties": {
+        "tagName": { "type": "string" }
+      },
+      "required": ["tagName"],
+      "additionalProperties": false
+    },
+    "BooleanResult": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "boolean" }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "ScreenshotResult": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "string" }
+      },
+      "required": ["data"],
+      "additionalProperties": false
+    },
+    "ActiveElementResult": {
+      "type": "object",
+      "properties": {
+        "elementId": { "type": "string" }
+      },
+      "required": ["elementId"],
+      "additionalProperties": false
+    },
+    "ComputedRoleResult": {
+      "type": "object",
+      "properties": {
+        "role": { "type": "string" }
+      },
+      "required": ["role"],
+      "additionalProperties": false
+    },
+    "ComputedLabelResult": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" }
+      },
+      "required": ["label"],
+      "additionalProperties": false
+    },
+    "ShadowRootResult": {
+      "type": "object",
+      "properties": {
+        "shadowRootId": { "type": "string" }
+      },
+      "required": ["shadowRootId"],
+      "additionalProperties": false
+    },
+    "FindElementFromShadowRootParams": {
+      "type": "object",
+      "properties": {
+        "shadowRootId": { "type": "string" },
+        "locator": { "$ref": "#/definitions/Locator" }
+      },
+      "required": ["shadowRootId", "locator"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import type { Cookie, CookieHandlers } from "@michaelhly.webdriver-c11y/schema";
+import type { Cookie, CookieHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { StagehandContext } from "./context.js";
 
 interface CdpCookie {

@@ -1,5 +1,5 @@
-import type { ActionHandlers } from "@michaelhly.webdriver-c11y/schema";
-import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schema";
+import type { ActionHandlers } from "@michaelhly.webdriver-c11y/schemas";
+import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import type { StagehandContext } from "./context.js";
 
 export function createActionHandlers(_ctx: StagehandContext): ActionHandlers {

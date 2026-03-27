@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "webdriver-bidi://storage",
+  "definitions": {
+    "PartitionKey": {
+      "type": "object",
+      "properties": {
+        "userContext": { "type": "string" },
+        "sourceOrigin": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "CookieFilter": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "domain": { "type": "string" },
+        "path": { "type": "string" },
+        "httpOnly": { "type": "boolean" },
+        "secure": { "type": "boolean" },
+        "sameSite": {
+          "type": "string",
+          "enum": ["strict", "lax", "none"]
+        },
+        "size": { "type": "integer" },
+        "value": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["string", "base64"]
+            },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "PartitionDescriptor": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["context", "storageKey"]
+        },
+        "context": { "type": "string" },
+        "userContext": { "type": "string" },
+        "sourceOrigin": { "type": "string" }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "GetCookiesParams": {
+      "type": "object",
+      "properties": {
+        "filter": { "$ref": "#/definitions/CookieFilter" },
+        "partition": { "$ref": "#/definitions/PartitionDescriptor" }
+      },
+      "additionalProperties": false
+    },
+    "GetCookiesResult": {
+      "type": "object",
+      "properties": {
+        "cookies": {
+          "type": "array",
+          "items": {}
+        },
+        "partitionKey": { "$ref": "#/definitions/PartitionKey" }
+      },
+      "required": ["cookies", "partitionKey"],
+      "additionalProperties": false
+    },
+    "SetCookieParams": {
+      "type": "object",
+      "properties": {
+        "cookie": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "value": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["string", "base64"]
+                },
+                "value": { "type": "string" }
+              },
+              "required": ["type", "value"],
+              "additionalProperties": false
+            },
+            "domain": { "type": "string" },
+            "path": { "type": "string" },
+            "httpOnly": { "type": "boolean" },
+            "secure": { "type": "boolean" },
+            "sameSite": {
+              "type": "string",
+              "enum": ["strict", "lax", "none"]
+            },
+            "expiry": { "type": "integer" }
+          },
+          "required": ["name", "value", "domain"],
+          "additionalProperties": false
+        },
+        "partition": { "$ref": "#/definitions/PartitionDescriptor" }
+      },
+      "required": ["cookie"],
+      "additionalProperties": false
+    },
+    "SetCookieResult": {
+      "type": "object",
+      "properties": {
+        "partitionKey": { "$ref": "#/definitions/PartitionKey" }
+      },
+      "required": ["partitionKey"],
+      "additionalProperties": false
+    },
+    "DeleteCookiesParams": {
+      "type": "object",
+      "properties": {
+        "filter": { "$ref": "#/definitions/CookieFilter" },
+        "partition": { "$ref": "#/definitions/PartitionDescriptor" }
+      },
+      "additionalProperties": false
+    },
+    "DeleteCookiesResult": {
+      "type": "object",
+      "properties": {
+        "partitionKey": { "$ref": "#/definitions/PartitionKey" }
+      },
+      "required": ["partitionKey"],
+      "additionalProperties": false
+    }
+  }
+}

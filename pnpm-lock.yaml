@@ -18,10 +18,10 @@ importers:
         specifier: ^4.21.0
         version: 4.21.0
       typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
+        specifier: ^6.0.2
+        version: 6.0.2
 
-  packages/schema:
+  packages/schemas:
     devDependencies:
       json-schema-to-typescript:
         specifier: ^15.0.4
@@ -29,9 +29,9 @@ importers:
 
   packages/selenium-impl:
     dependencies:
-      '@michaelhly.webdriver-c11y/schema':
+      '@michaelhly.webdriver-c11y/schemas':
         specifier: workspace:^
-        version: link:../schema
+        version: link:../schemas
       selenium-webdriver:
         specifier: ^4.41.0
         version: 4.41.0
@@ -45,9 +45,9 @@ importers:
       '@browserbasehq/stagehand':
         specifier: ^3.2.0
         version: 3.2.0(deepmerge@4.3.1)(zod@4.3.6)
-      '@michaelhly.webdriver-c11y/schema':
+      '@michaelhly.webdriver-c11y/schemas':
         specifier: workspace:^
-        version: link:../schema
+        version: link:../schemas
 
 packages:
 
@@ -3265,8 +3265,8 @@ packages:
       mime-types: 3.0.2
     dev: false
 
-  /typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+  /typescript@6.0.2:
+    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true

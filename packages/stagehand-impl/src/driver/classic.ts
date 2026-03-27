@@ -1,7 +1,7 @@
 import {
 	type ClassicDriver,
 	createClassicDriver,
-} from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
 import { createActionHandlers } from "../components/action.js";
 import { createAlertHandlers } from "../components/alert.js";
 import type { StagehandContext } from "../components/context.js";

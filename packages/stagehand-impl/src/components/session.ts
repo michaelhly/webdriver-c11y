@@ -2,7 +2,7 @@ import { Stagehand } from "@browserbasehq/stagehand";
 import type {
 	SessionHandlers,
 	Timeouts,
-} from "@michaelhly.webdriver-c11y/schema";
+} from "@michaelhly.webdriver-c11y/schemas";
 import type { StagehandContext } from "./context.js";
 
 export function createSessionHandlers(ctx: StagehandContext): SessionHandlers {

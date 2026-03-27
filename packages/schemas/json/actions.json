@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "webdriver://actions",
+  "definitions": {
+    "SourceActionType": {
+      "type": "string",
+      "enum": ["none", "key", "pointer", "wheel"]
+    },
+    "PointerType": {
+      "type": "string",
+      "enum": ["mouse", "pen", "touch"]
+    },
+    "NullAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["pause"]
+        },
+        "duration": { "type": "integer" }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "KeyAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["keyDown", "keyUp", "pause"]
+        },
+        "value": { "type": "string" },
+        "duration": { "type": "integer" }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "PointerAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "pointerDown",
+            "pointerUp",
+            "pointerMove",
+            "pointerCancel",
+            "pause"
+          ]
+        },
+        "button": { "type": "integer" },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "duration": { "type": "integer" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "pressure": { "type": "number" },
+        "tangentialPressure": { "type": "number" },
+        "twist": { "type": "integer" },
+        "altitudeAngle": { "type": "number" },
+        "azimuthAngle": { "type": "number" },
+        "origin": {}
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "WheelAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["scroll", "pause"]
+        },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "deltaX": { "type": "integer" },
+        "deltaY": { "type": "integer" },
+        "duration": { "type": "integer" },
+        "origin": {}
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "ActionSequence": {
+      "type": "object",
+      "properties": {
+        "type": { "$ref": "#/definitions/SourceActionType" },
+        "id": { "type": "string" },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "pointerType": { "$ref": "#/definitions/PointerType" }
+          },
+          "additionalProperties": false
+        },
+        "actions": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": ["type", "id", "actions"],
+      "additionalProperties": false
+    },
+    "PerformActionsParams": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ActionSequence" }
+        }
+      },
+      "required": ["actions"],
+      "additionalProperties": false
+    }
+  }
+}
