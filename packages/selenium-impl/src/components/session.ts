@@ -18,8 +18,6 @@ const VALID_BROWSERS = new Set<string>([
 	Browser.INTERNET_EXPLORER,
 ]);
 
-const k = BROWSER_OPTION_KEYS;
-
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 	return {
 		async status() {
@@ -55,6 +53,7 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 
 			// Build browser options from vendor-prefixed capabilities when not
 			// already configured via SeleniumDriverOptions (explicit opts win).
+			const k = BROWSER_OPTION_KEYS;
 			if (!ctx.browserOptions.has(k.chrome) && merged[k.chrome]) {
 				ctx.browserOptions.set(
 					k.chrome,
