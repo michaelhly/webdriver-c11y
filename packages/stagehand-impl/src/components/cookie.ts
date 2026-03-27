@@ -2,7 +2,7 @@ import type {
   Cookie,
   CookieHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { sendCDP, type CDPResult } from "../cdp.js";
+import { sendCDP, type CDPResult } from "./shared/cdp.js";
 import type { StagehandContext } from "./context.js";
 
 type CdpCookie = CDPResult<"Network.getCookies">["cookies"][number];

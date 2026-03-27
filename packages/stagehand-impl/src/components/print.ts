@@ -1,5 +1,5 @@
 import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { sendCDP } from "../cdp.js";
+import { sendCDP } from "./shared/cdp.js";
 import type { StagehandContext } from "./context.js";
 
 export function createPrintHandlers(ctx: StagehandContext): PrintHandlers {

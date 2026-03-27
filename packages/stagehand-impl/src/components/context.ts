@@ -3,10 +3,7 @@ import {
   NoSuchElementError,
   SessionNotCreatedError,
 } from "@michaelhly.webdriver-c11y/schemas";
-
-// Page/Locator types are not re-exported from stagehand's public API
-type Page = NonNullable<ReturnType<Stagehand["context"]["activePage"]>>;
-type Locator = ReturnType<Page["locator"]>;
+import type { Locator, Page } from "./shared/types.js";
 
 export type { Locator, Page };
 
