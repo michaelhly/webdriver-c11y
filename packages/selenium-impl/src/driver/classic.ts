@@ -2,6 +2,9 @@ import {
 	type ClassicDriver,
 	createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
+import type { Options as ChromeWebOptions } from "selenium-webdriver/chrome.js";
+import type { Options as EdgeWebOptions } from "selenium-webdriver/edge.js";
+import type { Options as FirefoxWebOptions } from "selenium-webdriver/firefox.js";
 import { createActionHandlers } from "../components/action.js";
 import { createAlertHandlers } from "../components/alert.js";
 import type { ClassicContext } from "../components/context.js";
@@ -16,9 +19,6 @@ import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
 import { BROWSER_OPTION_KEYS } from "../options.js";
-import type { Options as ChromeWebOptions } from "selenium-webdriver/chrome.js";
-import type { Options as EdgeWebOptions } from "selenium-webdriver/edge.js";
-import type { Options as FirefoxWebOptions } from "selenium-webdriver/firefox.js";
 
 export function buildClassicComponents(ctx: ClassicContext) {
 	return {

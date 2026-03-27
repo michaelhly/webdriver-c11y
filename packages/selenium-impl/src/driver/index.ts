@@ -12,9 +12,7 @@ export type { SeleniumDriverOptions } from "./classic.js";
 export { createSeleniumClassicDriver } from "./classic.js";
 
 /** WebDriver classic + BiDi driver; forwards `SeleniumDriverOptions` to the Selenium `Builder`. */
-export function createSeleniumDriver(
-	options?: SeleniumDriverOptions,
-): Driver {
+export function createSeleniumDriver(options?: SeleniumDriverOptions): Driver {
 	const ctx = createContext();
 	if (options) applyBrowserOptions(ctx, options);
 	return createDriver({

@@ -8,9 +8,9 @@ import { Builder } from "selenium-webdriver";
 import { Options as ChromeOptions } from "selenium-webdriver/chrome.js";
 import { Options as EdgeOptions } from "selenium-webdriver/edge.js";
 import { Options as FirefoxOptions } from "selenium-webdriver/firefox.js";
+import { VALID_BROWSERS } from "../constants.js";
 import { BROWSER_OPTION_KEYS } from "../options.js";
 import type { ClassicContext } from "./context.js";
-import { VALID_BROWSERS } from "../constants.js";
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
 	return {

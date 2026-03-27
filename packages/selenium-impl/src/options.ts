@@ -9,4 +9,3 @@ export const BROWSER_OPTION_KEYS = {
 export { Options as ChromeOptions } from "selenium-webdriver/chrome.js";
 export { Options as EdgeOptions } from "selenium-webdriver/edge.js";
 export { Options as FirefoxOptions } from "selenium-webdriver/firefox.js";
-
