@@ -10,7 +10,7 @@
 		"lint": "biome lint .",
 		"typecheck": "pnpm -r run typecheck",
 		"build": "pnpm -r run build",
-		"test": "pnpm -r run test"
+		"test":"echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",
