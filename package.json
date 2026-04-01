@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "WebDriver Compatibility Monorepo",
   "main": "index.js",
+  "type": "module",
   "private": true,
   "scripts": {
     "format": "biome check --write .",

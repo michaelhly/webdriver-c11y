@@ -1,7 +1,17 @@
-import { expect, test } from 'vitest'
+import { expect, test } from "vitest";
+import { createSeleniumDriver } from "../src/index.js";
 
-const sum = (a: number, b: number) => a + b;
+test("Basic", async () => {
+    const driver = createSeleniumDriver();
+    const session = await driver.newSession({
+        capabilities: { alwaysMatch: { browserName: "chrome" } },
+    });
+    expect(session.capabilities.browserName).toBe("chrome");
 
-test("adds 1 + 2 to equal 3", () => {
-  expect(sum(1, 2)).toBe(3);
+    await driver.navigateTo({ url: "https://selenium.dev" });
+
+    const { title } = await driver.getTitle();
+    expect(title).toBe("Selenium");
+
+    await driver.deleteSession()
 });

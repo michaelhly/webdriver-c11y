@@ -10,7 +10,7 @@
     "lint:fix": "biome lint --write",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "test": "vitest --config vitest.config.unit.ts"
+    "test": "vitest --config vitest.config.ts"
   },
   "keywords": [],
   "author": "",
