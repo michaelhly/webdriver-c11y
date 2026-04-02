@@ -55,7 +55,7 @@ import type {
   Timeouts,
 } from "../generated/session.js";
 import type { Rect, SetWindowRectParams } from "../generated/window.js";
-import type { ExecuteScriptParams, ScriptResult } from "../generics/script.js";
+import type { ExecuteScriptParams, ScriptResult } from "../sugar/script.js";
 import type { Protocol } from "./index.js";
 
 // ---------------------------------------------------------------------------

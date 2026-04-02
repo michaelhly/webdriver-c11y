@@ -218,4 +218,4 @@ export type {
   ExecuteScriptParams,
   ScriptExpression,
   ScriptResult,
-} from "./generics/script.js";
+} from "./sugar/script.js";
