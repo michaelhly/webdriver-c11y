@@ -3,7 +3,7 @@ import type {
   CookieHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { evaluate } from "../exec.js";
+import { evaluate } from "../eval.js";
 
 function toCookie(c: {
   name: string;

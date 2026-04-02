@@ -12,6 +12,7 @@ export type PageFunction<Arg, R> = (
   args: Arg,
 ) => Promise<R> | R;
 
+export async function evaluate<R>(ctx: KernelContext, fn: string): Promise<R>;
 export async function evaluate<R>(
   ctx: KernelContext,
   fn: PageFunction<void, R>,
@@ -23,13 +24,17 @@ export async function evaluate<Arg, R>(
 ): Promise<R>;
 export async function evaluate<R>(
   ctx: KernelContext,
-  fn: PageFunction<void, R> | PageFunction<unknown, R>,
+  fn: string | PageFunction<void, R> | PageFunction<unknown, R>,
   args?: unknown,
 ): Promise<R> {
-  const code =
-    args !== undefined
-      ? `return await (${fn.toString()})(page, context, ${JSON.stringify(args)});`
-      : `return await (${fn.toString()})(page, context);`;
+  let code: string;
+  if (typeof fn === "string") {
+    code = fn;
+  } else if (args !== undefined) {
+    code = `return await (${fn.toString()})(page, context, ${JSON.stringify(args)});`;
+  } else {
+    code = `return await (${fn.toString()})(page, context);`;
+  }
   const response = await ctx
     .getClient()
     .browsers.playwright.execute(ctx.getSessionId(), { code });

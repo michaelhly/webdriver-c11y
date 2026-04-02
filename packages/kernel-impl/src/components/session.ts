@@ -6,7 +6,7 @@ import type {
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
 import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
 import type { KernelContext } from "./context.js";
-import { evaluate } from "../exec.js";
+import { evaluate } from "../eval.js";
 
 export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
   return {

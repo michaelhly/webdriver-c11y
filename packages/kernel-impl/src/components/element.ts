@@ -5,7 +5,7 @@ import {
   type KernelContext,
   toPlaywrightSelector,
 } from "./context.js";
-import { evaluate } from "../exec.js";
+import { evaluate } from "../eval.js";
 
 /** Selector string for finding an element by its kernel element ID. */
 function eidSelector(elementId: string): string {
