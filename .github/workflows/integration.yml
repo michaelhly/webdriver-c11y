@@ -1,0 +1,40 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  grid-tests:
+    name: Selenium Grid Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Start Selenium Grid
+        run: docker compose up -d selenium-hub chromium
+      - name: Wait for Selenium Hub
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:4444/wd/hub/status | jq -e '.value.ready == true' > /dev/null 2>&1; then
+              echo "Selenium Hub is ready"
+              exit 0
+            fi
+            echo "Waiting for Selenium Hub... ($i/30)"
+            sleep 2
+          done
+          echo "Selenium Hub did not become ready"
+          docker compose logs
+          exit 1
+      - name: Run grid tests
+        run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
+      - name: Stop Selenium Grid
+        if: always()
+        run: docker compose down

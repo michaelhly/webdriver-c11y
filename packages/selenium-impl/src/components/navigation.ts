@@ -1,5 +1,5 @@
 import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import type { ClassicContext } from "./context.js";
+import type { ClassicContext } from "../context.js";
 
 export function createNavigationHandlers(
   ctx: ClassicContext,

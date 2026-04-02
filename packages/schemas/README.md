@@ -68,7 +68,7 @@ const driver = createClassicDriver({
   protocol: "webdriver",
   session:    createSessionHandlers(wd),
   navigation: createNavigationHandlers(wd),
-  context:    createContextHandlers(wd),
+  browsingContext: createBrowsingContextHandlers(wd),
   element:    createElementHandlers(wd),
   script:     createScriptHandlers(wd),
   cookie:     createCookieHandlers(wd),
