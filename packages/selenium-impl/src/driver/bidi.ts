@@ -11,8 +11,8 @@ import {
   createBidiScriptHandlers,
   createBidiStorageHandlers,
 } from "../components/bidi/index.js";
-import type { ClassicContext } from "../components/context.js";
-import { createContext } from "../components/context.js";
+import type { ClassicContext } from "../context.js";
+import { createContext } from "../context.js";
 
 export function buildBidiComponents(ctx: ClassicContext) {
   return {

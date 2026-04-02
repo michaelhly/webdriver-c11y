@@ -1,6 +1,6 @@
 import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import { Command } from "selenium-webdriver/lib/command.js";
-import type { ClassicContext } from "./context.js";
+import type { ClassicContext } from "../context.js";
 
 // PRINT_PAGE exists at runtime but is missing from @types/selenium-webdriver
 const PRINT_PAGE: string = "printPage";

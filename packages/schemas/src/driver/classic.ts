@@ -10,7 +10,7 @@ import type {
   SwitchToWindowParams,
   WindowHandleResult,
   WindowHandlesResult,
-} from "../generated/context.js";
+} from "../generated/browsing-context.js";
 import type {
   AddCookieParams,
   DeleteCookieParams,
@@ -129,7 +129,7 @@ export interface CookieHandlers {
   deleteAllCookies: () => Promise<void>;
 }
 
-export interface ContextHandlers {
+export interface BrowsingContextHandlers {
   getWindowHandle: () => Promise<WindowHandleResult>;
   closeWindow: () => Promise<void>;
   switchToWindow: (params: SwitchToWindowParams) => Promise<void>;
@@ -173,7 +173,7 @@ export interface AlertHandlers {
 
 export type ClassicDriver = { readonly protocol: Protocol } & SessionHandlers &
   NavigationHandlers &
-  ContextHandlers &
+  BrowsingContextHandlers &
   ElementHandlers &
   ScriptHandlers &
   CookieHandlers &
@@ -187,7 +187,7 @@ export interface ClassicDriverComponents {
   protocol: Protocol;
   session: SessionHandlers;
   navigation: NavigationHandlers;
-  context: ContextHandlers;
+  browsingContext: BrowsingContextHandlers;
   element: ElementHandlers;
   script: ScriptHandlers;
   cookie: CookieHandlers;
@@ -205,7 +205,7 @@ export function createClassicDriver(
     protocol: components.protocol,
     ...components.session,
     ...components.navigation,
-    ...components.context,
+    ...components.browsingContext,
     ...components.element,
     ...components.script,
     ...components.cookie,
