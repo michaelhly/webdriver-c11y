@@ -1,5 +1,5 @@
 /** W3C vendor capability keys understood by selenium-webdriver `Builder`. */
-export const BROWSER_OPTION_KEYS = {
+export const BROWSER_CAPABILITY_KEYS = {
   chrome: "goog:chromeOptions",
   firefox: "moz:firefoxOptions",
   edge: "ms:edgeOptions",

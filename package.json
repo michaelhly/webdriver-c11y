@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "WebDriver Compatibility Monorepo",
   "main": "index.js",
+  "type": "module",
   "private": true,
   "scripts": {
     "format": "biome check --write .",
@@ -10,16 +11,20 @@
     "lint": "biome lint .",
     "typecheck": "pnpm -r run typecheck",
     "build": "pnpm -r run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:unit": "pnpm -r run test:unit"
   },
   "keywords": [],
-  "author": "",
+  "author": "Michael Huang <michaelhly@gmail.com>",
   "license": "ISC",
-  "packageManager": "pnpm@8.10.2",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "packageManager": "pnpm@9.15.9",
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
     "@types/node": "^25.5.0",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
   }
 }
