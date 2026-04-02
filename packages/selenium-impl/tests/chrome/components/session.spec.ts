@@ -6,7 +6,7 @@ import {
   normalizeSeleniumCapabilities,
 } from "../../../src/index.js";
 
-describe("Session component", () => {
+describe("Chrome session", () => {
   test("#newSession", async () => {
     const driver = createSeleniumDriver();
     const session = await driver.newSession({
