@@ -1,6 +1,6 @@
 import type { BrowserContext, Page } from "playwright-core";
 import { DriverError } from "@michaelhly.webdriver-c11y/schemas";
-import type { KernelContext } from "./context.js";
+import type { KernelContext } from "./components/context.js";
 
 type RemoteFn<T> = (page: Page, context: BrowserContext) => Promise<T> | T;
 type RemoteFnWithArgs<T, A> = (

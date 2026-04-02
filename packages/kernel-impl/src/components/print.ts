@@ -1,6 +1,6 @@
 import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { execFn } from "./exec.js";
+import { execFn } from "../exec.js";
 
 export function createPrintHandlers(ctx: KernelContext): PrintHandlers {
   return {
