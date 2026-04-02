@@ -3,43 +3,65 @@ import type {
   ScriptHandlers,
   ScriptResult,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "./context.js";
+import type { KernelContext } from "./context.js";
+import { execFn } from "./exec.js";
 
 export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {
   return {
     async executeScript<R = unknown>(
       params: ExecuteScriptParams<R>,
     ): Promise<ScriptResult<R>> {
+      const script =
+        typeof params.script === "function"
+          ? `return (${params.script.toString()}).apply(null, arguments);`
+          : params.script;
       const args = params.args ?? [];
-      const value = await exec<R>(
+      const value = await execFn<R, { script: string; args: unknown[] }>(
         ctx,
-        `
-        const fn = new Function(${JSON.stringify(params.script)});
-        return await page.evaluate(fn, ...${JSON.stringify(args)});
-      `,
+        async (page, _context, a) => {
+          return page.evaluate(
+            ({ s, a: evalArgs }) => {
+              const fn = new Function(s);
+              return fn(...evalArgs);
+            },
+            { s: a.script, a: a.args },
+          ) as Promise<R>;
+        },
+        { script, args },
       );
       return { value };
     },
     async executeAsyncScript<R = unknown>(
       params: ExecuteScriptParams<R>,
     ): Promise<ScriptResult<R>> {
+      const script =
+        typeof params.script === "function"
+          ? `return (${params.script.toString()}).apply(null, arguments);`
+          : params.script;
       const args = params.args ?? [];
-      const value = await exec<R>(
+      const value = await execFn<R, { script: string; args: unknown[] }>(
         ctx,
-        `
-        const scriptBody = ${JSON.stringify(params.script)};
-        const args = ${JSON.stringify(args)};
-        return await page.evaluate(({ scriptBody, args }) => {
-          return new Promise((resolve, reject) => {
-            try {
-              const fn = new Function(...args.map((_, i) => 'a' + i).concat(['callback', scriptBody]));
-              fn(...args, resolve);
-            } catch (e) {
-              reject(e);
-            }
-          });
-        }, { scriptBody, args });
-      `,
+        async (page, _context, a) => {
+          return page.evaluate(
+            ({ scriptBody, args }) => {
+              return new Promise<unknown>((resolve, reject) => {
+                try {
+                  const paramNames = args.map(
+                    (_: unknown, i: number) => `a${i}`,
+                  );
+                  paramNames.push("callback");
+                  paramNames.push(scriptBody);
+                  const fn = new Function(...paramNames);
+                  fn(...args, resolve);
+                } catch (e) {
+                  reject(e);
+                }
+              });
+            },
+            { scriptBody: a.script, args: a.args },
+          ) as Promise<R>;
+        },
+        { script, args },
       );
       return { value };
     },

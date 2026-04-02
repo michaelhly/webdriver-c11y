@@ -1,16 +1,15 @@
-import type { ElementHandlers } from "@michaelhly.webdriver-c11y/schemas";
+import type { ElementHandlers, Rect } from "@michaelhly.webdriver-c11y/schemas";
 import { NoSuchElementError } from "@michaelhly.webdriver-c11y/schemas";
 import {
   EID_ATTR,
   type KernelContext,
-  esc,
-  exec,
   toPlaywrightSelector,
 } from "./context.js";
+import { execFn } from "./exec.js";
 
-/** Playwright locator expression for an element tagged with the given ID. */
-function loc(elementId: string): string {
-  return `page.locator('[${EID_ATTR}=${esc(elementId)}]')`;
+/** Selector string for finding an element by its kernel element ID. */
+function eidSelector(elementId: string): string {
+  return `[${EID_ATTR}="${elementId}"]`;
 }
 
 export function createElementHandlers(ctx: KernelContext): ElementHandlers {
@@ -18,20 +17,27 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async findElement({ locator, fromElement }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const eid = ctx.nextElementId();
-      const fromSelector = fromElement
-        ? `[${EID_ATTR}=${esc(fromElement)}]`
-        : null;
 
-      const found = await exec<boolean>(
+      const found = await execFn(
         ctx,
-        `
-        const root = ${fromSelector ? `page.locator(${esc(fromSelector)})` : "page"};
-        const el = root.locator(${esc(selector)}).first();
-        const count = await el.count();
-        if (count === 0) return false;
-        await el.evaluate((node, id) => node.setAttribute(${esc(EID_ATTR)}, id), ${esc(eid)});
-        return true;
-      `,
+        async (page, _context, args) => {
+          const root = args.fromSelector
+            ? page.locator(args.fromSelector)
+            : page;
+          const el = root.locator(args.selector).first();
+          if ((await el.count()) === 0) return false;
+          await el.evaluate(
+            (node, { attr, id }) => node.setAttribute(attr, id),
+            { attr: args.eidAttr, id: args.eid },
+          );
+          return true;
+        },
+        {
+          selector,
+          eid,
+          eidAttr: EID_ATTR,
+          fromSelector: fromElement ? eidSelector(fromElement) : null,
+        },
       );
 
       if (!found) {
@@ -45,24 +51,34 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async findElements({ locator, fromElement }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const prefix = ctx.nextElementId();
-      const fromSelector = fromElement
-        ? `[${EID_ATTR}=${esc(fromElement)}]`
-        : null;
 
-      const ids = await exec<string[]>(
+      const ids = await execFn(
         ctx,
-        `
-        const root = ${fromSelector ? `page.locator(${esc(fromSelector)})` : "page"};
-        const els = root.locator(${esc(selector)});
-        const count = await els.count();
-        const ids = [];
-        for (let i = 0; i < count; i++) {
-          const id = ${esc(prefix)} + '-' + i;
-          await els.nth(i).evaluate((node, id) => node.setAttribute(${esc(EID_ATTR)}, id), id);
-          ids.push(id);
-        }
-        return ids;
-      `,
+        async (page, _context, args) => {
+          const root = args.fromSelector
+            ? page.locator(args.fromSelector)
+            : page;
+          const els = root.locator(args.selector);
+          const count = await els.count();
+          const ids: string[] = [];
+          for (let i = 0; i < count; i++) {
+            const id = `${args.prefix}-${i}`;
+            await els
+              .nth(i)
+              .evaluate((node, { attr, id }) => node.setAttribute(attr, id), {
+                attr: args.eidAttr,
+                id,
+              });
+            ids.push(id);
+          }
+          return ids;
+        },
+        {
+          selector,
+          prefix,
+          eidAttr: EID_ATTR,
+          fromSelector: fromElement ? eidSelector(fromElement) : null,
+        },
       );
 
       return { elementIds: ids };
@@ -70,137 +86,217 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
 
     async getActiveElement() {
       const eid = ctx.nextElementId();
-      await exec(
+      await execFn(
         ctx,
-        `
-        await page.evaluate((attr, id) => {
-          const el = document.activeElement;
-          if (el) el.setAttribute(attr, id);
-        }, ${esc(EID_ATTR)}, ${esc(eid)});
-        return undefined;
-      `,
+        async (page, _context, args) => {
+          await page.evaluate(
+            ({ attr, id }) => {
+              const el = document.activeElement;
+              if (el) el.setAttribute(attr, id);
+            },
+            { attr: args.eidAttr, id: args.eid },
+          );
+        },
+        { eidAttr: EID_ATTR, eid },
       );
       return { elementId: eid };
     },
 
     async elementClick({ elementId }) {
-      await exec(ctx, `await ${loc(elementId)}.click(); return undefined;`);
+      await execFn(
+        ctx,
+        async (page, _context, args) => {
+          await page.locator(args.selector).click();
+        },
+        { selector: eidSelector(elementId) },
+      );
     },
 
     async elementSendKeys({ elementId, text }) {
-      await exec(
+      await execFn(
         ctx,
-        `await ${loc(elementId)}.pressSequentially(${esc(text)}); return undefined;`,
+        async (page, _context, args) => {
+          await page.locator(args.selector).pressSequentially(args.text);
+        },
+        { selector: eidSelector(elementId), text },
       );
     },
 
     async elementClear({ elementId }) {
-      await exec(ctx, `await ${loc(elementId)}.clear(); return undefined;`);
+      await execFn(
+        ctx,
+        async (page, _context, args) => {
+          await page.locator(args.selector).clear();
+        },
+        { selector: eidSelector(elementId) },
+      );
     },
 
     async elementGetText({ elementId }) {
-      const text = await exec<string>(
+      const text = await execFn(
         ctx,
-        `return await ${loc(elementId)}.innerText();`,
+        async (page, _context, args) => {
+          return page.locator(args.selector).innerText();
+        },
+        { selector: eidSelector(elementId) },
       );
       return { text };
     },
 
     async elementGetAttribute({ elementId, name }) {
-      const value = await exec<string | null>(
+      const value = await execFn(
         ctx,
-        `return await ${loc(elementId)}.getAttribute(${esc(name)});`,
+        async (page, _context, args) => {
+          return page.locator(args.selector).getAttribute(args.name);
+        },
+        { selector: eidSelector(elementId), name },
       );
       return { value };
     },
 
     async elementGetProperty({ elementId, name }) {
-      const value = await exec<unknown>(
+      const value = await execFn(
         ctx,
-        `return await ${loc(elementId)}.evaluate((el, prop) => (el as any)[prop], ${esc(name)});`,
+        async (page, _context, args) => {
+          return page
+            .locator(args.selector)
+            .evaluate(
+              (el, prop) => (el as unknown as Record<string, unknown>)[prop],
+              args.name,
+            );
+        },
+        { selector: eidSelector(elementId), name },
       );
       return { value };
     },
 
     async elementGetCssValue({ elementId, propertyName }) {
-      const value = await exec<string>(
+      const value = await execFn(
         ctx,
-        `return await ${loc(elementId)}.evaluate((el, prop) => getComputedStyle(el).getPropertyValue(prop), ${esc(propertyName)});`,
+        async (page, _context, args) => {
+          return page
+            .locator(args.selector)
+            .evaluate(
+              (el, prop) => getComputedStyle(el).getPropertyValue(prop),
+              args.propertyName,
+            );
+        },
+        { selector: eidSelector(elementId), propertyName },
       );
       return { value };
     },
 
     async elementGetTagName({ elementId }) {
-      const tagName = await exec<string>(
+      const tagName = await execFn(
         ctx,
-        `return await ${loc(elementId)}.evaluate(el => el.tagName.toLowerCase());`,
+        async (page, _context, args) => {
+          return page
+            .locator(args.selector)
+            .evaluate((el) => el.tagName.toLowerCase());
+        },
+        { selector: eidSelector(elementId) },
       );
       return { tagName };
     },
 
     async elementGetRect({ elementId }) {
-      return await exec(
+      return await execFn<Rect, { selector: string }>(
         ctx,
-        `
-        const box = await ${loc(elementId)}.boundingBox();
-        return box ? { x: box.x, y: box.y, width: box.width, height: box.height }
-                   : { x: 0, y: 0, width: 0, height: 0 };
-      `,
+        async (page, _context, args) => {
+          const box = await page.locator(args.selector).boundingBox();
+          return box
+            ? { x: box.x, y: box.y, width: box.width, height: box.height }
+            : { x: 0, y: 0, width: 0, height: 0 };
+        },
+        { selector: eidSelector(elementId) },
       );
     },
 
     async elementIsDisplayed({ elementId }) {
-      const value = await exec<boolean>(
+      const value = await execFn(
         ctx,
-        `return await ${loc(elementId)}.isVisible();`,
+        async (page, _context, args) => {
+          return page.locator(args.selector).isVisible();
+        },
+        { selector: eidSelector(elementId) },
       );
       return { value };
     },
 
     async elementIsEnabled({ elementId }) {
-      const value = await exec<boolean>(
+      const value = await execFn(
         ctx,
-        `return await ${loc(elementId)}.isEnabled();`,
+        async (page, _context, args) => {
+          return page.locator(args.selector).isEnabled();
+        },
+        { selector: eidSelector(elementId) },
       );
       return { value };
     },
 
     async elementIsSelected({ elementId }) {
-      const value = await exec<boolean>(
+      const value = await execFn(
         ctx,
-        `return await ${loc(elementId)}.isChecked();`,
+        async (page, _context, args) => {
+          return page.locator(args.selector).isChecked();
+        },
+        { selector: eidSelector(elementId) },
       );
       return { value };
     },
 
     async elementGetComputedRole({ elementId }) {
-      const role = await exec<string>(
+      const role = await execFn(
         ctx,
-        `return await ${loc(elementId)}.evaluate(el => el.computedRole ?? el.getAttribute('role') ?? '');`,
+        async (page, _context, args) => {
+          return page
+            .locator(args.selector)
+            .evaluate(
+              (el) =>
+                (el as unknown as { computedRole?: string }).computedRole ??
+                el.getAttribute("role") ??
+                "",
+            );
+        },
+        { selector: eidSelector(elementId) },
       );
       return { role };
     },
 
     async elementGetComputedLabel({ elementId }) {
-      const label = await exec<string>(
+      const label = await execFn(
         ctx,
-        `return await ${loc(elementId)}.evaluate(el => (el as any).computedLabel ?? el.getAttribute('aria-label') ?? '');`,
+        async (page, _context, args) => {
+          return page
+            .locator(args.selector)
+            .evaluate(
+              (el) =>
+                (el as unknown as { computedLabel?: string }).computedLabel ??
+                el.getAttribute("aria-label") ??
+                "",
+            );
+        },
+        { selector: eidSelector(elementId) },
       );
       return { label };
     },
 
     async elementGetShadowRoot({ elementId }) {
       const srId = ctx.nextShadowRootId();
-      const found = await exec<boolean>(
+      const found = await execFn(
         ctx,
-        `
-        return await ${loc(elementId)}.evaluate((el, args) => {
-          const sr = el.shadowRoot;
-          if (!sr) return false;
-          (el as any).__kernel_shadow_root_id = args.srId;
-          return true;
-        }, { srId: ${esc(srId)} });
-      `,
+        async (page, _context, args) => {
+          return page.locator(args.selector).evaluate(
+            (el, { srId, attr }) => {
+              const sr = el.shadowRoot;
+              if (!sr) return false;
+              (el as unknown as Record<string, unknown>)[attr] = srId;
+              return true;
+            },
+            { srId: args.srId, attr: "__kernel_shadow_root_id" },
+          );
+        },
+        { selector: eidSelector(elementId), srId },
       );
       if (!found) {
         throw new NoSuchElementError("Element does not have a shadow root");
@@ -211,25 +307,31 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async findElementFromShadowRoot({ shadowRootId, locator }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const eid = ctx.nextElementId();
-      const found = await exec<boolean>(
+      const found = await execFn(
         ctx,
-        `
-        const host = await page.evaluateHandle((srId) => {
-          const all = document.querySelectorAll('*');
-          for (const el of all) {
-            if ((el as any).__kernel_shadow_root_id === srId && el.shadowRoot) {
-              return el.shadowRoot;
+        async (page, _context, args) => {
+          const host = await page.evaluateHandle((srId) => {
+            for (const el of document.querySelectorAll("*")) {
+              if (
+                (el as unknown as Record<string, unknown>)
+                  .__kernel_shadow_root_id === srId &&
+                el.shadowRoot
+              ) {
+                return el.shadowRoot;
+              }
             }
-          }
-          return null;
-        }, ${esc(shadowRootId)});
-        if (!host) return false;
-        const el = page.locator(${esc(selector)}).first();
-        const count = await el.count();
-        if (count === 0) return false;
-        await el.evaluate((node, id) => node.setAttribute(${esc(EID_ATTR)}, id), ${esc(eid)});
-        return true;
-      `,
+            return null;
+          }, args.shadowRootId);
+          if (!host) return false;
+          const el = page.locator(args.selector).first();
+          if ((await el.count()) === 0) return false;
+          await el.evaluate(
+            (node, { attr, id }) => node.setAttribute(attr, id),
+            { attr: args.eidAttr, id: args.eid },
+          );
+          return true;
+        },
+        { shadowRootId, selector, eid, eidAttr: EID_ATTR },
       );
       if (!found) {
         throw new NoSuchElementError(
@@ -242,39 +344,50 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async findElementsFromShadowRoot({ shadowRootId, locator }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const prefix = ctx.nextElementId();
-      const ids = await exec<string[]>(
+      const ids = await execFn(
         ctx,
-        `
-        const host = await page.evaluateHandle((srId) => {
-          const all = document.querySelectorAll('*');
-          for (const el of all) {
-            if ((el as any).__kernel_shadow_root_id === srId && el.shadowRoot) {
-              return el.shadowRoot;
+        async (page, _context, args) => {
+          const host = await page.evaluateHandle((srId) => {
+            for (const el of document.querySelectorAll("*")) {
+              if (
+                (el as unknown as Record<string, unknown>)
+                  .__kernel_shadow_root_id === srId &&
+                el.shadowRoot
+              ) {
+                return el.shadowRoot;
+              }
             }
+            return null;
+          }, args.shadowRootId);
+          void host;
+          const els = page.locator(args.selector);
+          const count = await els.count();
+          const ids: string[] = [];
+          for (let i = 0; i < count; i++) {
+            const id = `${args.prefix}-${i}`;
+            await els
+              .nth(i)
+              .evaluate((node, { attr, id }) => node.setAttribute(attr, id), {
+                attr: args.eidAttr,
+                id,
+              });
+            ids.push(id);
           }
-          return null;
-        }, ${esc(shadowRootId)});
-        const els = page.locator(${esc(selector)});
-        const count = await els.count();
-        const ids = [];
-        for (let i = 0; i < count; i++) {
-          const id = ${esc(prefix)} + '-' + i;
-          await els.nth(i).evaluate((node, id) => node.setAttribute(${esc(EID_ATTR)}, id), id);
-          ids.push(id);
-        }
-        return ids;
-      `,
+          return ids;
+        },
+        { shadowRootId, selector, prefix, eidAttr: EID_ATTR },
       );
       return { elementIds: ids };
     },
 
     async elementTakeScreenshot({ elementId }) {
-      const data = await exec<string>(
+      const data = await execFn(
         ctx,
-        `
-        const buf = await ${loc(elementId)}.screenshot();
-        return buf.toString('base64');
-      `,
+        async (page, _context, args) => {
+          const buf = await page.locator(args.selector).screenshot();
+          return buf.toString("base64");
+        },
+        { selector: eidSelector(elementId) },
       );
       return { data };
     },

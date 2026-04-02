@@ -1,5 +1,6 @@
 import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "./context.js";
+import type { KernelContext } from "./context.js";
+import { execFn } from "./exec.js";
 
 export function createPrintHandlers(ctx: KernelContext): PrintHandlers {
   return {
@@ -29,12 +30,13 @@ export function createPrintHandlers(ctx: KernelContext): PrintHandlers {
       if (params.pageRanges !== undefined)
         opts.pageRanges = params.pageRanges.join(",");
 
-      const data = await exec<string>(
+      const data = await execFn(
         ctx,
-        `
-        const buf = await page.pdf(${JSON.stringify(opts)});
-        return buf.toString('base64');
-      `,
+        async (page, _context, args) => {
+          const buf = await page.pdf(args.opts);
+          return buf.toString("base64");
+        },
+        { opts },
       );
       return { data };
     },

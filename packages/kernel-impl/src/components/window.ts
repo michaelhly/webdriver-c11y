@@ -1,25 +1,18 @@
-import type { WindowHandlers } from "@michaelhly.webdriver-c11y/schemas";
+import type { Rect, WindowHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
+import { execFn } from "./exec.js";
 
 export function createWindowHandlers(ctx: KernelContext): WindowHandlers {
-  async function getWindowRect() {
-    const viewport = await ctx
-      .getClient()
-      .browsers.playwright.execute(ctx.getSessionId(), {
-        code: `
-          const size = page.viewportSize();
-          return { x: 0, y: 0, width: size?.width ?? 0, height: size?.height ?? 0 };
-        `,
-      });
-    if (!viewport.success) {
-      return { x: 0, y: 0, width: 0, height: 0 };
-    }
-    return viewport.result as {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    };
+  async function getWindowRect(): Promise<Rect> {
+    return await execFn<Rect>(ctx, (page) => {
+      const size = page.viewportSize();
+      return {
+        x: 0,
+        y: 0,
+        width: size?.width ?? 0,
+        height: size?.height ?? 0,
+      };
+    });
   }
 
   return {

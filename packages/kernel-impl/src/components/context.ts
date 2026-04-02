@@ -1,8 +1,5 @@
 import Kernel from "@onkernel/sdk";
-import type {
-  LocatorStrategy,
-  ScriptExpression,
-} from "@michaelhly.webdriver-c11y/schemas";
+import type { LocatorStrategy } from "@michaelhly.webdriver-c11y/schemas";
 import {
   DriverError,
   UnsupportedOperationError,
@@ -28,9 +25,8 @@ export interface KernelDriverOptions {
 export interface KernelContext {
   getClient(): Kernel;
   getSessionId(): string;
-  setSession(sessionId: string, bidiWsUrl: string): void;
+  setSession(sessionId: string): void;
   clearSession(): void;
-  getBidiWsUrl(): string;
   nextElementId(): string;
   nextShadowRootId(): string;
   getOptions(): KernelDriverOptions;
@@ -41,7 +37,6 @@ export function createContext(
 ): KernelContext {
   const client = new Kernel({ apiKey: options.apiKey });
   let sessionId: string | null = null;
-  let bidiWsUrl: string | null = null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
@@ -51,19 +46,13 @@ export function createContext(
       if (!sessionId) throw new DriverError("No active session");
       return sessionId;
     },
-    setSession: (id, wsUrl) => {
+    setSession: (id) => {
       sessionId = id;
-      bidiWsUrl = wsUrl;
     },
     clearSession: () => {
       sessionId = null;
-      bidiWsUrl = null;
       elementCounter = 0;
       shadowRootCounter = 0;
-    },
-    getBidiWsUrl: () => {
-      if (!bidiWsUrl) throw new DriverError("No BiDi WebSocket URL available");
-      return bidiWsUrl;
     },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,
@@ -72,31 +61,9 @@ export function createContext(
 }
 
 // ---------------------------------------------------------------------------
-// Playwright code execution helper — used only for DOM queries and operations
-// that the computer API cannot perform.
+// Data attribute used to tag DOM elements with stable IDs across calls.
 // ---------------------------------------------------------------------------
 
-function normalizeCode(code: ScriptExpression): string {
-  if (typeof code === "string") return code;
-  return `return (${code.toString()})();`;
-}
-
-export async function exec<T>(
-  ctx: KernelContext,
-  code: ScriptExpression,
-): Promise<T> {
-  const response = await ctx
-    .getClient()
-    .browsers.playwright.execute(ctx.getSessionId(), {
-      code: normalizeCode(code),
-    });
-  if (!response.success) {
-    throw new DriverError(response.error ?? "Playwright execution failed");
-  }
-  return response.result as T;
-}
-
-/** data attribute used to tag DOM elements with stable IDs across calls. */
 export const EID_ATTR = "data-kernel-eid";
 
 // ---------------------------------------------------------------------------
@@ -137,12 +104,4 @@ export function toPlaywrightSelector(
         `Unsupported locator strategy: ${using as string}`,
       );
   }
-}
-
-// ---------------------------------------------------------------------------
-// JSON-safe string escaping for injecting into Playwright code templates.
-// ---------------------------------------------------------------------------
-
-export function esc(value: string): string {
-  return JSON.stringify(value);
 }

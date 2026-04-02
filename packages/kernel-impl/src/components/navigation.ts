@@ -1,36 +1,46 @@
 import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "./context.js";
+import type { KernelContext } from "./context.js";
+import { execFn } from "./exec.js";
 
 export function createNavigationHandlers(
   ctx: KernelContext,
 ): NavigationHandlers {
   return {
     async navigateTo({ url }) {
-      await exec(
+      await execFn(
         ctx,
-        `await page.goto(${JSON.stringify(url)}); return undefined;`,
+        async (page, _context, args) => {
+          await page.goto(args.url);
+        },
+        { url },
       );
     },
     async getCurrentUrl() {
-      const url = await exec<string>(ctx, `return page.url();`);
+      const url = await execFn(ctx, (page) => page.url());
       return { url };
     },
     async getTitle() {
-      const title = await exec<string>(ctx, `return await page.title();`);
+      const title = await execFn(ctx, (page) => page.title());
       return { title };
     },
     async getPageSource() {
-      const source = await exec<string>(ctx, `return await page.content();`);
+      const source = await execFn(ctx, (page) => page.content());
       return { source };
     },
     async back() {
-      await exec(ctx, `await page.goBack(); return undefined;`);
+      await execFn(ctx, async (page) => {
+        await page.goBack();
+      });
     },
     async forward() {
-      await exec(ctx, `await page.goForward(); return undefined;`);
+      await execFn(ctx, async (page) => {
+        await page.goForward();
+      });
     },
     async refresh() {
-      await exec(ctx, `await page.reload(); return undefined;`);
+      await execFn(ctx, async (page) => {
+        await page.reload();
+      });
     },
   };
 }

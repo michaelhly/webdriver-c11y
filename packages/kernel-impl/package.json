@@ -17,5 +17,8 @@
   "dependencies": {
     "@michaelhly.webdriver-c11y/schemas": "workspace:^",
     "@onkernel/sdk": "^0.45.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.59.1"
   }
 }
