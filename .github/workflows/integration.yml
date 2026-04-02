@@ -19,17 +19,20 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Start Selenium Grid
+        run: docker compose up -d selenium-hub chromium
+      - name: Wait for Selenium Hub
         run: |
-          docker compose up -d selenium-hub
           for i in $(seq 1 30); do
-            if curl -sf http://localhost:4444/wd/hub/status | grep -q '"ready":true'; then
+            if curl -sf http://localhost:4444/wd/hub/status | jq -e '.value.ready == true' > /dev/null 2>&1; then
               echo "Selenium Hub is ready"
-              break
+              exit 0
             fi
             echo "Waiting for Selenium Hub... ($i/30)"
             sleep 2
           done
-          docker compose up -d chromium
+          echo "Selenium Hub did not become ready"
+          docker compose logs
+          exit 1
       - name: Run grid tests
         run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
       - name: Stop Selenium Grid
