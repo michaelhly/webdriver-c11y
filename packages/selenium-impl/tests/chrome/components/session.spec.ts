@@ -59,8 +59,14 @@ describe("Session component", () => {
         capabilities: { alwaysMatch: { browserName: "chrome" } },
       });
 
-      const { value: dim } = await driver.executeScript<{width: number, height: number}>({
-        script: () => ({ width: window.outerWidth, height: window.outerHeight }),
+      const { value: dim } = await driver.executeScript<{
+        width: number;
+        height: number;
+      }>({
+        script: () => ({
+          width: window.outerWidth,
+          height: window.outerHeight,
+        }),
       });
       expect(dim).toEqual({ width: 1920, height: 1058 });
       await driver.deleteSession();
