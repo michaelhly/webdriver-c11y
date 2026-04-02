@@ -11,10 +11,10 @@ describe("Chrome session", () => {
     });
     expect(session.capabilities.browserName).toBe("chrome");
 
-    await driver.navigateTo({ url: "https://selenium.dev" });
+    await driver.navigateTo({ url: "https://www.w3.org/TR/webdriver2/" });
 
     const { title } = await driver.getTitle();
-    expect(title).toBe("Selenium");
+    expect(title).toBe("WebDriver");
 
     await driver.deleteSession();
   });
