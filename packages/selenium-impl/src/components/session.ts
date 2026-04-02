@@ -32,9 +32,9 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
       if (merged.browserName && !VALID_BROWSERS.has(merged.browserName)) {
         throw new SessionNotCreatedError(
           `Unsupported browserName: '${merged.browserName}'. ` +
-            `Must be one of: ${[...VALID_BROWSERS].join(", ")}`,        );
+            `Must be one of: ${[...VALID_BROWSERS].join(", ")}`,
+        );
       }
-
 
       const builder = new Builder();
       // Apply all capabilities including vendor extensions      // Apply all capabilities including vendor extensions

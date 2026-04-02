@@ -27,9 +27,8 @@ describe("Capabilities with selenium options", async () => {
     });
 
     const { value: userAgent } = await driver.executeScript({
-      script: () => navigator.userAgent
+      script: () => navigator.userAgent,
     });
     expect(userAgent).toContain("HeadlessChrome");
   });
 });
-
