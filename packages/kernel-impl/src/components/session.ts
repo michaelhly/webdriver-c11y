@@ -27,12 +27,17 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
         const createParams: Record<string, unknown> = {
           headless: options.headless ?? true,
         };
-        if (options.stealth !== undefined) createParams.stealth = options.stealth;
+        if (options.stealth !== undefined)
+          createParams.stealth = options.stealth;
         if (options.gpu !== undefined) createParams.gpu = options.gpu;
-        if (options.viewport !== undefined) createParams.viewport = options.viewport;
-        if (options.timeoutSeconds !== undefined) createParams.timeout_seconds = options.timeoutSeconds;
+        if (options.viewport !== undefined)
+          createParams.viewport = options.viewport;
+        if (options.timeoutSeconds !== undefined)
+          createParams.timeout_seconds = options.timeoutSeconds;
 
-        const browser = await ctx.getClient().browsers.create(createParams as BrowserCreateParams);
+        const browser = await ctx
+          .getClient()
+          .browsers.create(createParams as BrowserCreateParams);
 
         ctx.setSession(browser.session_id, browser.webdriver_ws_url);
 
@@ -54,7 +59,9 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
       ctx.clearSession();
     },
     async getTimeouts() {
-      return await exec(ctx, `
+      return await exec(
+        ctx,
+        `
         const timeouts = await page.evaluate(() => {
           return (window as any).__webdriver_timeouts || {};
         });
@@ -63,13 +70,16 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
           pageLoad: timeouts.pageLoad ?? 300000,
           implicit: timeouts.implicit ?? 0,
         };
-      `);
+      `,
+      );
     },
     async setTimeouts(params) {
       const script = params.script ?? null;
       const pageLoad = params.pageLoad ?? undefined;
       const implicit = params.implicit ?? undefined;
-      await exec(ctx, `
+      await exec(
+        ctx,
+        `
         const timeouts = {
           script: ${script === null ? "null" : String(script)},
           pageLoad: ${pageLoad === undefined ? "undefined" : String(pageLoad)},
@@ -82,7 +92,8 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
           await page.setDefaultTimeout(timeouts.implicit);
         }
         return undefined;
-      `);
+      `,
+      );
     },
   };
 }

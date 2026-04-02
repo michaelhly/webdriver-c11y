@@ -1,10 +1,15 @@
-import type { Cookie, CookieHandlers } from "@michaelhly.webdriver-c11y/schemas";
+import type {
+  Cookie,
+  CookieHandlers,
+} from "@michaelhly.webdriver-c11y/schemas";
 import { type KernelContext, exec } from "./context.js";
 
 export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
   return {
     async getAllCookies() {
-      const cookies = await exec<Cookie[]>(ctx, `
+      const cookies = await exec<Cookie[]>(
+        ctx,
+        `
         const raw = await context.cookies();
         return raw.map(c => ({
           name: c.name,
@@ -16,11 +21,14 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
           expiry: c.expires !== -1 ? Math.floor(c.expires) : undefined,
           sameSite: c.sameSite !== 'None' ? c.sameSite : undefined,
         }));
-      `);
+      `,
+      );
       return { cookies };
     },
     async getCookie({ name }) {
-      const cookie = await exec<Cookie>(ctx, `
+      const cookie = await exec<Cookie>(
+        ctx,
+        `
         const raw = await context.cookies();
         const c = raw.find(c => c.name === ${JSON.stringify(name)});
         if (!c) throw new Error('No such cookie: ' + ${JSON.stringify(name)});
@@ -34,11 +42,14 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
           expiry: c.expires !== -1 ? Math.floor(c.expires) : undefined,
           sameSite: c.sameSite !== 'None' ? c.sameSite : undefined,
         };
-      `);
+      `,
+      );
       return { cookie };
     },
     async addCookie({ cookie }) {
-      await exec(ctx, `
+      await exec(
+        ctx,
+        `
         const c = ${JSON.stringify(cookie)};
         await context.addCookies([{
           name: c.name,
@@ -52,10 +63,13 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
           sameSite: c.sameSite ?? 'Lax',
         }]);
         return undefined;
-      `);
+      `,
+      );
     },
     async deleteCookie({ name }) {
-      await exec(ctx, `
+      await exec(
+        ctx,
+        `
         const url = page.url();
         const cookies = await context.cookies(url);
         const target = cookies.find(c => c.name === ${JSON.stringify(name)});
@@ -63,13 +77,17 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
           await context.clearCookies({ name: ${JSON.stringify(name)} });
         }
         return undefined;
-      `);
+      `,
+      );
     },
     async deleteAllCookies() {
-      await exec(ctx, `
+      await exec(
+        ctx,
+        `
         await context.clearCookies();
         return undefined;
-      `);
+      `,
+      );
     },
   };
 }

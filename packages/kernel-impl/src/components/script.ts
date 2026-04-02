@@ -11,17 +11,22 @@ export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {
       params: ExecuteScriptParams<R>,
     ): Promise<ScriptResult<R>> {
       const args = params.args ?? [];
-      const value = await exec<R>(ctx, `
+      const value = await exec<R>(
+        ctx,
+        `
         const fn = new Function(${JSON.stringify(params.script)});
         return await page.evaluate(fn, ...${JSON.stringify(args)});
-      `);
+      `,
+      );
       return { value };
     },
     async executeAsyncScript<R = unknown>(
       params: ExecuteScriptParams<R>,
     ): Promise<ScriptResult<R>> {
       const args = params.args ?? [];
-      const value = await exec<R>(ctx, `
+      const value = await exec<R>(
+        ctx,
+        `
         const scriptBody = ${JSON.stringify(params.script)};
         const args = ${JSON.stringify(args)};
         return await page.evaluate(({ scriptBody, args }) => {
@@ -34,7 +39,8 @@ export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {
             }
           });
         }, { scriptBody, args });
-      `);
+      `,
+      );
       return { value };
     },
   };

@@ -14,7 +14,12 @@ export function createWindowHandlers(ctx: KernelContext): WindowHandlers {
     if (!viewport.success) {
       return { x: 0, y: 0, width: 0, height: 0 };
     }
-    return viewport.result as { x: number; y: number; width: number; height: number };
+    return viewport.result as {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
   }
 
   return {

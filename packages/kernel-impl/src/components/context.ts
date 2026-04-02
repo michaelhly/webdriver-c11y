@@ -33,7 +33,9 @@ export interface KernelContext {
   getOptions(): KernelDriverOptions;
 }
 
-export function createContext(options: KernelDriverOptions = {}): KernelContext {
+export function createContext(
+  options: KernelDriverOptions = {},
+): KernelContext {
   const client = new Kernel({ apiKey: options.apiKey });
   let sessionId: string | null = null;
   let bidiWsUrl: string | null = null;
@@ -89,11 +91,14 @@ export async function getElementRect(
   ctx: KernelContext,
   elementId: string,
 ): Promise<Rect> {
-  return await exec<Rect>(ctx, `
+  return await exec<Rect>(
+    ctx,
+    `
     const box = await page.locator('[${EID_ATTR}=${JSON.stringify(elementId)}]').boundingBox();
     return box ? { x: box.x, y: box.y, width: box.width, height: box.height }
                : { x: 0, y: 0, width: 0, height: 0 };
-  `);
+  `,
+  );
 }
 
 export function elementCenter(rect: Rect): { x: number; y: number } {

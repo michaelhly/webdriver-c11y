@@ -4,9 +4,7 @@ import type { KernelContext } from "./context.js";
 
 type BatchAction = ComputerBatchParams["actions"][number];
 
-function buttonName(
-  button: number | undefined,
-): "left" | "right" | "middle" {
+function buttonName(button: number | undefined): "left" | "right" | "middle" {
   if (button === 1) return "middle";
   if (button === 2) return "right";
   return "left";
@@ -75,16 +73,15 @@ export function createActionHandlers(ctx: KernelContext): ActionHandlers {
             }
           } else if (seq.type === "wheel") {
             if (type === "scroll") {
-              const scrollAction: BatchAction = {
-                type: "scroll",
-                scroll: {
-                  x: (action.x as number) ?? 0,
-                  y: (action.y as number) ?? 0,
-                },
+              const scroll: NonNullable<BatchAction["scroll"]> = {
+                x: (action.x as number) ?? 0,
+                y: (action.y as number) ?? 0,
               };
-              if (action.deltaX != null) scrollAction.scroll!.delta_x = action.deltaX as number;
-              if (action.deltaY != null) scrollAction.scroll!.delta_y = action.deltaY as number;
-              batch.push(scrollAction);
+              if (action.deltaX != null)
+                scroll.delta_x = action.deltaX as number;
+              if (action.deltaY != null)
+                scroll.delta_y = action.deltaY as number;
+              batch.push({ type: "scroll", scroll });
             } else if (type === "pause" && action.duration) {
               batch.push({
                 type: "sleep",

@@ -6,7 +6,10 @@ export function createNavigationHandlers(
 ): NavigationHandlers {
   return {
     async navigateTo({ url }) {
-      await exec(ctx, `await page.goto(${JSON.stringify(url)}); return undefined;`);
+      await exec(
+        ctx,
+        `await page.goto(${JSON.stringify(url)}); return undefined;`,
+      );
     },
     async getCurrentUrl() {
       const url = await exec<string>(ctx, `return page.url();`);
@@ -17,10 +20,7 @@ export function createNavigationHandlers(
       return { title };
     },
     async getPageSource() {
-      const source = await exec<string>(
-        ctx,
-        `return await page.content();`,
-      );
+      const source = await exec<string>(ctx, `return await page.content();`);
       return { source };
     },
     async back() {
