@@ -1,5 +1,9 @@
 import Kernel from "@onkernel/sdk";
-import type { LocatorStrategy, Rect } from "@michaelhly.webdriver-c11y/schemas";
+import type {
+  LocatorStrategy,
+  Rect,
+  ScriptExpression,
+} from "@michaelhly.webdriver-c11y/schemas";
 import {
   DriverError,
   UnsupportedOperationError,
@@ -73,10 +77,20 @@ export function createContext(
 // that the computer API cannot perform.
 // ---------------------------------------------------------------------------
 
-export async function exec<T>(ctx: KernelContext, code: string): Promise<T> {
+function normalizeCode(code: ScriptExpression): string {
+  if (typeof code === "string") return code;
+  return `return (${code.toString()})();`;
+}
+
+export async function exec<T>(
+  ctx: KernelContext,
+  code: ScriptExpression,
+): Promise<T> {
   const response = await ctx
     .getClient()
-    .browsers.playwright.execute(ctx.getSessionId(), { code });
+    .browsers.playwright.execute(ctx.getSessionId(), {
+      code: normalizeCode(code),
+    });
   if (!response.success) {
     throw new DriverError(response.error ?? "Playwright execution failed");
   }
