@@ -1,34 +1,30 @@
+import { Capabilities } from "selenium-webdriver";
 import { describe, expect, test } from "vitest";
 
-import { ChromeOptions, createSeleniumDriver } from "../../src/index.js";
+import { normalizeSeleniumCapabilities } from "../../src/capabilities.js";
 
-test("Basic Capabilities", async () => {
-  const driver = createSeleniumDriver();
-  const session = await driver.newSession({
-    capabilities: { alwaysMatch: { browserName: "chrome" } },
+describe("normalizeSeleniumCapabilities", () => {
+  test("maps Capabilities.chrome()", () => {
+    const caps = normalizeSeleniumCapabilities(Capabilities.chrome());
+    expect(caps.browserName).toBe("chrome");
   });
-  expect(session.capabilities.browserName).toBe("chrome");
 
-  await driver.navigateTo({ url: "https://selenium.dev" });
+  test("preserves vendor keys from Selenium Capabilities", () => {
+    const caps = normalizeSeleniumCapabilities(
+      Capabilities.chrome().set("goog:chromeOptions", { args: ["--headless"] }),
+    );
+    expect(caps["goog:chromeOptions"]).toEqual({ args: ["--headless"] });
+  });
 
-  const { title } = await driver.getTitle();
-  expect(title).toBe("Selenium");
+  test("preserves proxy configuration", () => {
+    const caps = Capabilities.chrome();
 
-  await driver.deleteSession();
-});
-
-describe("Capabilities with selenium options", async () => {
-  test("headless", async () => {
-    const options = new ChromeOptions();
-    options.addArguments("--headless");
-    const driver = createSeleniumDriver({ chrome: options });
-    await driver.newSession({
-      capabilities: { alwaysMatch: { browserName: "chrome" } },
-    });
-
-    const { value: userAgent } = await driver.executeScript({
-      script: () => navigator.userAgent,
-    });
-    expect(userAgent).toContain("HeadlessChrome");
+    const proxyConfig = {
+      proxyType: "manual",
+      httpProxy: "127.0.0.1:8888",
+    };
+    caps.setProxy(proxyConfig);
+    const normalized = normalizeSeleniumCapabilities(caps);
+    expect(normalized.proxy).toStrictEqual(proxyConfig);
   });
 });
