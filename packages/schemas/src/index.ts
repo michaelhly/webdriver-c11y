@@ -204,7 +204,6 @@ export type {
 } from "./generated/navigation.js";
 export type { PrintParams, PrintResult } from "./generated/print.js";
 export type { TakeScreenshotParams } from "./generated/screenshot.js";
-export type { ExecuteScriptParams, ScriptResult } from "./generated/script.js";
 export type {
   Capabilities,
   CapabilitiesRequest,
@@ -215,3 +214,8 @@ export type {
   Timeouts,
 } from "./generated/session.js";
 export type { Rect, SetWindowRectParams } from "./generated/window.js";
+export type {
+  ExecuteScriptParams,
+  ScriptExpression,
+  ScriptResult,
+} from "./sugar/script.js";
