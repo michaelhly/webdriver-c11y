@@ -18,7 +18,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
       - name: Start Selenium Grid
         run: docker compose up --wait || (docker compose logs && exit 1)
       - name: Run grid tests
