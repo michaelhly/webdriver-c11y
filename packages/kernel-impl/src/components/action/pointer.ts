@@ -1,3 +1,4 @@
+import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import type { ComputerBatchParams } from "@onkernel/sdk/resources/browsers/computer.js";
 
 type BatchAction = ComputerBatchParams["actions"][number];
@@ -8,9 +9,7 @@ function buttonName(button: number | undefined): "left" | "right" | "middle" {
   return "left";
 }
 
-export function mapPointerAction(
-  action: Record<string, unknown>,
-): BatchAction | undefined {
+export function mapPointerAction(action: Record<string, unknown>): BatchAction {
   switch (action.type) {
     case "pointerMove":
       return {
@@ -41,13 +40,13 @@ export function mapPointerAction(
         },
       };
     case "pause":
-      if (action.duration)
-        return {
-          type: "sleep",
-          sleep: { duration_ms: action.duration as number },
-        };
-      return undefined;
+      return {
+        type: "sleep",
+        sleep: { duration_ms: (action.duration as number) ?? 0 },
+      };
     default:
-      return undefined;
+      throw new UnsupportedOperationError(
+        `Unsupported pointer action type: ${action.type as string}`,
+      );
   }
 }

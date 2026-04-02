@@ -1,4 +1,5 @@
 import type { ActionHandlers } from "@michaelhly.webdriver-c11y/schemas";
+import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import type { ComputerBatchParams } from "@onkernel/sdk/resources/browsers/computer.js";
 import type { KernelContext } from "../context.js";
 import { mapKeyAction } from "./key.js";
@@ -11,7 +12,7 @@ type BatchAction = ComputerBatchParams["actions"][number];
 function mapAction(
   seqType: string,
   action: Record<string, unknown>,
-): BatchAction | undefined {
+): BatchAction {
   switch (seqType) {
     case "pointer":
       return mapPointerAction(action);
@@ -22,7 +23,9 @@ function mapAction(
     case "none":
       return mapNoneAction(action);
     default:
-      return undefined;
+      throw new UnsupportedOperationError(
+        `Unsupported action sequence type: ${seqType}`,
+      );
   }
 }
 
@@ -36,8 +39,7 @@ export function createActionHandlers(ctx: KernelContext): ActionHandlers {
 
       for (const seq of actions) {
         for (const action of seq.actions as Record<string, unknown>[]) {
-          const mapped = mapAction(seq.type, action);
-          if (mapped) batch.push(mapped);
+          batch.push(mapAction(seq.type, action));
         }
       }
 
