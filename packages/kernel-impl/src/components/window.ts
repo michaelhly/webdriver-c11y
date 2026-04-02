@@ -1,10 +1,10 @@
 import type { Rect, WindowHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 export function createWindowHandlers(ctx: KernelContext): WindowHandlers {
   async function getWindowRect(): Promise<Rect> {
-    return await execFn<Rect>(ctx, (page) => {
+    return await evaluate<Rect>(ctx, (page) => {
       const size = page.viewportSize();
       return {
         x: 0,

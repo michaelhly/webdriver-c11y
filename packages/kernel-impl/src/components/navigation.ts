@@ -1,13 +1,13 @@
 import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 export function createNavigationHandlers(
   ctx: KernelContext,
 ): NavigationHandlers {
   return {
     async navigateTo({ url }) {
-      await execFn(
+      await evaluate(
         ctx,
         async (page, _context, args) => {
           await page.goto(args.url);
@@ -16,29 +16,29 @@ export function createNavigationHandlers(
       );
     },
     async getCurrentUrl() {
-      const url = await execFn(ctx, (page) => page.url());
+      const url = await evaluate(ctx, (page) => page.url());
       return { url };
     },
     async getTitle() {
-      const title = await execFn(ctx, (page) => page.title());
+      const title = await evaluate(ctx, (page) => page.title());
       return { title };
     },
     async getPageSource() {
-      const source = await execFn(ctx, (page) => page.content());
+      const source = await evaluate(ctx, (page) => page.content());
       return { source };
     },
     async back() {
-      await execFn(ctx, async (page) => {
+      await evaluate(ctx, async (page) => {
         await page.goBack();
       });
     },
     async forward() {
-      await execFn(ctx, async (page) => {
+      await evaluate(ctx, async (page) => {
         await page.goForward();
       });
     },
     async refresh() {
-      await execFn(ctx, async (page) => {
+      await evaluate(ctx, async (page) => {
         await page.reload();
       });
     },

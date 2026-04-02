@@ -1,6 +1,6 @@
 import type { PrintHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 export function createPrintHandlers(ctx: KernelContext): PrintHandlers {
   return {
@@ -30,7 +30,7 @@ export function createPrintHandlers(ctx: KernelContext): PrintHandlers {
       if (params.pageRanges !== undefined)
         opts.pageRanges = params.pageRanges.join(",");
 
-      const data = await execFn(
+      const data = await evaluate(
         ctx,
         async (page, _context, args) => {
           const buf = await page.pdf(args.opts);

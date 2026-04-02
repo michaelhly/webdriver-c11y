@@ -5,7 +5,7 @@ import {
   type KernelContext,
   toPlaywrightSelector,
 } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 /** Selector string for finding an element by its kernel element ID. */
 function eidSelector(elementId: string): string {
@@ -18,7 +18,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const eid = ctx.nextElementId();
 
-      const found = await execFn(
+      const found = await evaluate(
         ctx,
         async (page, _context, args) => {
           const root = args.fromSelector
@@ -52,7 +52,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const prefix = ctx.nextElementId();
 
-      const ids = await execFn(
+      const ids = await evaluate(
         ctx,
         async (page, _context, args) => {
           const root = args.fromSelector
@@ -86,7 +86,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
 
     async getActiveElement() {
       const eid = ctx.nextElementId();
-      await execFn(
+      await evaluate(
         ctx,
         async (page, _context, args) => {
           await page.evaluate(
@@ -103,7 +103,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementClick({ elementId }) {
-      await execFn(
+      await evaluate(
         ctx,
         async (page, _context, args) => {
           await page.locator(args.selector).click();
@@ -113,7 +113,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementSendKeys({ elementId, text }) {
-      await execFn(
+      await evaluate(
         ctx,
         async (page, _context, args) => {
           await page.locator(args.selector).pressSequentially(args.text);
@@ -123,7 +123,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementClear({ elementId }) {
-      await execFn(
+      await evaluate(
         ctx,
         async (page, _context, args) => {
           await page.locator(args.selector).clear();
@@ -133,7 +133,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetText({ elementId }) {
-      const text = await execFn(
+      const text = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page.locator(args.selector).innerText();
@@ -144,7 +144,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetAttribute({ elementId, name }) {
-      const value = await execFn(
+      const value = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page.locator(args.selector).getAttribute(args.name);
@@ -155,7 +155,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetProperty({ elementId, name }) {
-      const value = await execFn(
+      const value = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page
@@ -171,7 +171,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetCssValue({ elementId, propertyName }) {
-      const value = await execFn(
+      const value = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page
@@ -187,7 +187,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetTagName({ elementId }) {
-      const tagName = await execFn(
+      const tagName = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page
@@ -200,7 +200,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetRect({ elementId }) {
-      return await execFn<Rect, { selector: string }>(
+      return await evaluate<{ selector: string }, Rect>(
         ctx,
         async (page, _context, args) => {
           const box = await page.locator(args.selector).boundingBox();
@@ -213,7 +213,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementIsDisplayed({ elementId }) {
-      const value = await execFn(
+      const value = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page.locator(args.selector).isVisible();
@@ -224,7 +224,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementIsEnabled({ elementId }) {
-      const value = await execFn(
+      const value = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page.locator(args.selector).isEnabled();
@@ -235,7 +235,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementIsSelected({ elementId }) {
-      const value = await execFn(
+      const value = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page.locator(args.selector).isChecked();
@@ -246,7 +246,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetComputedRole({ elementId }) {
-      const role = await execFn(
+      const role = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page
@@ -264,7 +264,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementGetComputedLabel({ elementId }) {
-      const label = await execFn(
+      const label = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page
@@ -283,7 +283,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
 
     async elementGetShadowRoot({ elementId }) {
       const srId = ctx.nextShadowRootId();
-      const found = await execFn(
+      const found = await evaluate(
         ctx,
         async (page, _context, args) => {
           return page.locator(args.selector).evaluate(
@@ -307,7 +307,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async findElementFromShadowRoot({ shadowRootId, locator }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const eid = ctx.nextElementId();
-      const found = await execFn(
+      const found = await evaluate(
         ctx,
         async (page, _context, args) => {
           const host = await page.evaluateHandle((srId) => {
@@ -344,7 +344,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async findElementsFromShadowRoot({ shadowRootId, locator }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const prefix = ctx.nextElementId();
-      const ids = await execFn(
+      const ids = await evaluate(
         ctx,
         async (page, _context, args) => {
           const host = await page.evaluateHandle((srId) => {
@@ -381,7 +381,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     },
 
     async elementTakeScreenshot({ elementId }) {
-      const data = await execFn(
+      const data = await evaluate(
         ctx,
         async (page, _context, args) => {
           const buf = await page.locator(args.selector).screenshot();

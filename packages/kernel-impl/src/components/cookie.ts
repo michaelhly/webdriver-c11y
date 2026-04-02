@@ -3,7 +3,7 @@ import type {
   CookieHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 function toCookie(c: {
   name: string;
@@ -28,13 +28,13 @@ function toCookie(c: {
 export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
   return {
     async getAllCookies() {
-      const raw = await execFn(ctx, async (_page, context) => {
+      const raw = await evaluate(ctx, async (_page, context) => {
         return context.cookies();
       });
       return { cookies: raw.map(toCookie) };
     },
     async getCookie({ name }) {
-      const raw = await execFn(
+      const raw = await evaluate(
         ctx,
         async (_page, context, args) => {
           const cookies = await context.cookies();
@@ -47,7 +47,7 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
       return { cookie: toCookie(raw) };
     },
     async addCookie({ cookie }) {
-      await execFn(
+      await evaluate(
         ctx,
         async (page, context, args) => {
           const c = args.cookie;
@@ -71,7 +71,7 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
       );
     },
     async deleteCookie({ name }) {
-      await execFn(
+      await evaluate(
         ctx,
         async (_page, context, args) => {
           await context.clearCookies({ name: args.name });
@@ -80,7 +80,7 @@ export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
       );
     },
     async deleteAllCookies() {
-      await execFn(ctx, async (_page, context) => {
+      await evaluate(ctx, async (_page, context) => {
         await context.clearCookies();
       });
     },

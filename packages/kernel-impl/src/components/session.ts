@@ -6,7 +6,7 @@ import type {
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
 import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
 import type { KernelContext } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
   return {
@@ -61,7 +61,7 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
       ctx.clearSession();
     },
     async getTimeouts() {
-      return await execFn<Timeouts>(ctx, async (page) => {
+      return await evaluate<Timeouts>(ctx, async (page) => {
         const timeouts = await page.evaluate(() => {
           const w = window as unknown as Record<string, unknown>;
           return w.__webdriver_timeouts as Record<string, unknown> | undefined;
@@ -74,7 +74,7 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
       });
     },
     async setTimeouts(params) {
-      await execFn(
+      await evaluate(
         ctx,
         async (page, _context, args) => {
           await page.evaluate((t) => {

@@ -4,7 +4,7 @@ import type {
   ScriptResult,
 } from "@michaelhly.webdriver-c11y/schemas";
 import type { KernelContext } from "./context.js";
-import { execFn } from "../exec.js";
+import { evaluate } from "../exec.js";
 
 export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {
   return {
@@ -16,7 +16,7 @@ export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {
           ? `return (${params.script.toString()}).apply(null, arguments);`
           : params.script;
       const args = params.args ?? [];
-      const value = await execFn<R, { script: string; args: unknown[] }>(
+      const value = await evaluate<{ script: string; args: unknown[] }, R>(
         ctx,
         async (page, _context, a) => {
           return page.evaluate(
@@ -39,7 +39,7 @@ export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {
           ? `return (${params.script.toString()}).apply(null, arguments);`
           : params.script;
       const args = params.args ?? [];
-      const value = await execFn<R, { script: string; args: unknown[] }>(
+      const value = await evaluate<{ script: string; args: unknown[] }, R>(
         ctx,
         async (page, _context, a) => {
           return page.evaluate(
