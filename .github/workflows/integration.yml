@@ -19,7 +19,21 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Start Selenium Grid
-        run: docker compose up --wait selenium-hub chromium
+        run: |
+          docker compose up -d selenium-hub chromium
+          docker compose logs -f &
+          LOGS_PID=$!
+          for i in $(seq 1 30); do
+            if docker inspect --format='{{.State.Health.Status}}' selenium-hub 2>/dev/null | grep -q healthy; then
+              echo "Selenium Hub is healthy"
+              kill $LOGS_PID 2>/dev/null || true
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Selenium Hub did not become healthy"
+          kill $LOGS_PID 2>/dev/null || true
+          exit 1
       - name: Run grid tests
         run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
       - name: Stop Selenium Grid
