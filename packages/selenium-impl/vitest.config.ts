@@ -1,12 +1,9 @@
 import { defineConfig } from "vitest/config";
 
+/** Default workspace / CI: specs colocated under `src` (no Selenium Grid). */
 export default defineConfig({
   test: {
+    include: ["src/**/*.spec.ts"],
     environment: "node",
-    testTimeout: 30_000,
-    bail: 1,
-    env: {
-      SELENIUM_REMOTE_URL: "http://localhost:4444",
-    },
   },
 });

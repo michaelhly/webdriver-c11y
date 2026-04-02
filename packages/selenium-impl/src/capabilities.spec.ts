@@ -1,7 +1,7 @@
 import { Capabilities } from "selenium-webdriver";
 import { describe, expect, test } from "vitest";
 
-import { normalizeSeleniumCapabilities } from "../../src/capabilities.js";
+import { normalizeSeleniumCapabilities } from "./capabilities.js";
 
 describe("normalizeSeleniumCapabilities", () => {
   test("maps Capabilities.chrome()", () => {
