@@ -9,7 +9,7 @@ import { Options as ChromeOptions } from "selenium-webdriver/chrome.js";
 import { Options as EdgeOptions } from "selenium-webdriver/edge.js";
 import { Options as FirefoxOptions } from "selenium-webdriver/firefox.js";
 import { VALID_BROWSERS } from "../constants.js";
-import { BROWSER_OPTION_KEYS } from "../options.js";
+import { BROWSER_CAPABILITY_KEYS } from "../options.js";
 import type { ClassicContext } from "./context.js";
 
 export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
@@ -37,12 +37,12 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
       }
 
       const builder = new Builder();
-      // Apply all capabilities including vendor extensions      // Apply all capabilities including vendor extensions
+      // Apply all capabilities including vendor extensions
       builder.withCapabilities(merged);
 
       // Build browser options from vendor-prefixed capabilities when not
       // already configured via SeleniumDriverOptions (explicit opts win).
-      const k = BROWSER_OPTION_KEYS;
+      const k = BROWSER_CAPABILITY_KEYS;
       if (!ctx.browserOptions.has(k.chrome) && merged[k.chrome]) {
         ctx.browserOptions.set(
           k.chrome,

@@ -18,7 +18,7 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
-import { BROWSER_OPTION_KEYS } from "../options.js";
+import { BROWSER_CAPABILITY_KEYS } from "../options.js";
 
 export function buildClassicComponents(ctx: ClassicContext) {
   return {
@@ -47,13 +47,13 @@ export function applyBrowserOptions(
   options: SeleniumDriverOptions,
 ): void {
   if (options.chrome !== undefined) {
-    ctx.browserOptions.set(BROWSER_OPTION_KEYS.chrome, options.chrome);
+    ctx.browserOptions.set(BROWSER_CAPABILITY_KEYS.chrome, options.chrome);
   }
   if (options.firefox !== undefined) {
-    ctx.browserOptions.set(BROWSER_OPTION_KEYS.firefox, options.firefox);
+    ctx.browserOptions.set(BROWSER_CAPABILITY_KEYS.firefox, options.firefox);
   }
   if (options.edge !== undefined) {
-    ctx.browserOptions.set(BROWSER_OPTION_KEYS.edge, options.edge);
+    ctx.browserOptions.set(BROWSER_CAPABILITY_KEYS.edge, options.edge);
   }
 }
 
