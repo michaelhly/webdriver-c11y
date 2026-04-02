@@ -50,5 +50,20 @@ describe("Session component", () => {
       expect(userAgent).toContain("HeadlessChrome");
       await driver.deleteSession();
     });
+
+    test("start maximized", async () => {
+      const options = new ChromeOptions();
+      options.addArguments("--start-maximized");
+      const driver = createSeleniumDriver({ chrome: options });
+      await driver.newSession({
+        capabilities: { alwaysMatch: { browserName: "chrome" } },
+      });
+
+      const { value: dim } = await driver.executeScript<{width: number, height: number}>({
+        script: () => ({ width: window.outerWidth, height: window.outerHeight }),
+      });
+      expect(dim).toEqual({ width: 1920, height: 1058 });
+      await driver.deleteSession();
+    });
   });
 });

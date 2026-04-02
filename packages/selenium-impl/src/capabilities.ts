@@ -4,9 +4,9 @@ import type { Capabilities as SeleniumCapabilities } from "selenium-webdriver";
 export const normalizeSeleniumCapabilities = (
   caps: SeleniumCapabilities,
 ): Capabilities => {
-  const out: Capabilities = {};
+  const normalized: Capabilities = {};
   for (const key of caps.keys()) {
-    out[key] = caps.get(key);
+    normalized[key] = caps.get(key);
   }
-  return out;
+  return normalized;
 };
