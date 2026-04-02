@@ -48,7 +48,6 @@ import type {
 } from "../generated/navigation.js";
 import type { PrintParams, PrintResult } from "../generated/print.js";
 import type { TakeScreenshotParams } from "../generated/screenshot.js";
-import type { ExecuteScriptParams, ScriptResult } from "../generated/script.js";
 import type {
   NewSessionParams,
   NewSessionResult,
@@ -56,6 +55,7 @@ import type {
   Timeouts,
 } from "../generated/session.js";
 import type { Rect, SetWindowRectParams } from "../generated/window.js";
+import type { ExecuteScriptParams, ScriptResult } from "../sugar/script.js";
 import type { Protocol } from "./index.js";
 
 // ---------------------------------------------------------------------------
@@ -113,8 +113,12 @@ export interface ElementHandlers {
 }
 
 export interface ScriptHandlers {
-  executeScript: (params: ExecuteScriptParams) => Promise<ScriptResult>;
-  executeAsyncScript: (params: ExecuteScriptParams) => Promise<ScriptResult>;
+  executeScript: <R = unknown>(
+    params: ExecuteScriptParams<R>,
+  ) => Promise<ScriptResult<R>>;
+  executeAsyncScript: <R = unknown>(
+    params: ExecuteScriptParams<R>,
+  ) => Promise<ScriptResult<R>>;
 }
 
 export interface CookieHandlers {
