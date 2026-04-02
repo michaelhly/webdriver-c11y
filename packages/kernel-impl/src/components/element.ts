@@ -3,20 +3,18 @@ import { NoSuchElementError } from "@michaelhly.webdriver-c11y/schemas";
 import {
   EID_ATTR,
   type KernelContext,
-  elementCenter,
   esc,
   exec,
-  getElementRect,
   toPlaywrightSelector,
 } from "./context.js";
 
+/** Playwright locator expression for an element tagged with the given ID. */
+function loc(elementId: string): string {
+  return `page.locator('[${EID_ATTR}=${esc(elementId)}]')`;
+}
+
 export function createElementHandlers(ctx: KernelContext): ElementHandlers {
-  const computer = () => ctx.getClient().browsers.computer;
-  const sid = () => ctx.getSessionId();
-
   return {
-    // -- DOM queries (playwright) ----------------------------------------
-
     async findElement({ locator, fromElement }) {
       const selector = toPlaywrightSelector(locator.using, locator.value);
       const eid = ctx.nextElementId();
@@ -85,35 +83,25 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
       return { elementId: eid };
     },
 
-    // -- Input operations (computer API) ---------------------------------
-
     async elementClick({ elementId }) {
-      const rect = await getElementRect(ctx, elementId);
-      const { x, y } = elementCenter(rect);
-      await computer().clickMouse(sid(), { x, y });
+      await exec(ctx, `await ${loc(elementId)}.click(); return undefined;`);
     },
 
     async elementSendKeys({ elementId, text }) {
-      const rect = await getElementRect(ctx, elementId);
-      const { x, y } = elementCenter(rect);
-      await computer().clickMouse(sid(), { x, y });
-      await computer().typeText(sid(), { text });
+      await exec(
+        ctx,
+        `await ${loc(elementId)}.pressSequentially(${esc(text)}); return undefined;`,
+      );
     },
 
     async elementClear({ elementId }) {
-      const rect = await getElementRect(ctx, elementId);
-      const { x, y } = elementCenter(rect);
-      await computer().clickMouse(sid(), { x, y });
-      await computer().pressKey(sid(), { keys: ["ctrl+a"] });
-      await computer().pressKey(sid(), { keys: ["BackSpace"] });
+      await exec(ctx, `await ${loc(elementId)}.clear(); return undefined;`);
     },
-
-    // -- DOM property reads (playwright) ---------------------------------
 
     async elementGetText({ elementId }) {
       const text = await exec<string>(
         ctx,
-        `return await page.locator('[${EID_ATTR}=${esc(elementId)}]').innerText();`,
+        `return await ${loc(elementId)}.innerText();`,
       );
       return { text };
     },
@@ -121,7 +109,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementGetAttribute({ elementId, name }) {
       const value = await exec<string | null>(
         ctx,
-        `return await page.locator('[${EID_ATTR}=${esc(elementId)}]').getAttribute(${esc(name)});`,
+        `return await ${loc(elementId)}.getAttribute(${esc(name)});`,
       );
       return { value };
     },
@@ -129,11 +117,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementGetProperty({ elementId, name }) {
       const value = await exec<unknown>(
         ctx,
-        `
-        return await page.locator('[${EID_ATTR}=${esc(elementId)}]').evaluate(
-          (el, prop) => (el as any)[prop], ${esc(name)}
-        );
-      `,
+        `return await ${loc(elementId)}.evaluate((el, prop) => (el as any)[prop], ${esc(name)});`,
       );
       return { value };
     },
@@ -141,11 +125,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementGetCssValue({ elementId, propertyName }) {
       const value = await exec<string>(
         ctx,
-        `
-        return await page.locator('[${EID_ATTR}=${esc(elementId)}]').evaluate(
-          (el, prop) => getComputedStyle(el).getPropertyValue(prop), ${esc(propertyName)}
-        );
-      `,
+        `return await ${loc(elementId)}.evaluate((el, prop) => getComputedStyle(el).getPropertyValue(prop), ${esc(propertyName)});`,
       );
       return { value };
     },
@@ -153,23 +133,26 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementGetTagName({ elementId }) {
       const tagName = await exec<string>(
         ctx,
-        `
-        return await page.locator('[${EID_ATTR}=${esc(elementId)}]').evaluate(
-          el => el.tagName.toLowerCase()
-        );
-      `,
+        `return await ${loc(elementId)}.evaluate(el => el.tagName.toLowerCase());`,
       );
       return { tagName };
     },
 
     async elementGetRect({ elementId }) {
-      return await getElementRect(ctx, elementId);
+      return await exec(
+        ctx,
+        `
+        const box = await ${loc(elementId)}.boundingBox();
+        return box ? { x: box.x, y: box.y, width: box.width, height: box.height }
+                   : { x: 0, y: 0, width: 0, height: 0 };
+      `,
+      );
     },
 
     async elementIsDisplayed({ elementId }) {
       const value = await exec<boolean>(
         ctx,
-        `return await page.locator('[${EID_ATTR}=${esc(elementId)}]').isVisible();`,
+        `return await ${loc(elementId)}.isVisible();`,
       );
       return { value };
     },
@@ -177,7 +160,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementIsEnabled({ elementId }) {
       const value = await exec<boolean>(
         ctx,
-        `return await page.locator('[${EID_ATTR}=${esc(elementId)}]').isEnabled();`,
+        `return await ${loc(elementId)}.isEnabled();`,
       );
       return { value };
     },
@@ -185,7 +168,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementIsSelected({ elementId }) {
       const value = await exec<boolean>(
         ctx,
-        `return await page.locator('[${EID_ATTR}=${esc(elementId)}]').isChecked();`,
+        `return await ${loc(elementId)}.isChecked();`,
       );
       return { value };
     },
@@ -193,11 +176,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementGetComputedRole({ elementId }) {
       const role = await exec<string>(
         ctx,
-        `
-        return await page.locator('[${EID_ATTR}=${esc(elementId)}]').evaluate(
-          el => el.computedRole ?? el.getAttribute('role') ?? ''
-        );
-      `,
+        `return await ${loc(elementId)}.evaluate(el => el.computedRole ?? el.getAttribute('role') ?? '');`,
       );
       return { role };
     },
@@ -205,11 +184,7 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
     async elementGetComputedLabel({ elementId }) {
       const label = await exec<string>(
         ctx,
-        `
-        return await page.locator('[${EID_ATTR}=${esc(elementId)}]').evaluate(
-          el => (el as any).computedLabel ?? el.getAttribute('aria-label') ?? ''
-        );
-      `,
+        `return await ${loc(elementId)}.evaluate(el => (el as any).computedLabel ?? el.getAttribute('aria-label') ?? '');`,
       );
       return { label };
     },
@@ -219,14 +194,12 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
       const found = await exec<boolean>(
         ctx,
         `
-        return await page.locator('[${EID_ATTR}=${esc(elementId)}]').evaluate(
-          (el, args) => {
-            const sr = el.shadowRoot;
-            if (!sr) return false;
-            (el as any).__kernel_shadow_root_id = args.srId;
-            return true;
-          }, { srId: ${esc(srId)} }
-        );
+        return await ${loc(elementId)}.evaluate((el, args) => {
+          const sr = el.shadowRoot;
+          if (!sr) return false;
+          (el as any).__kernel_shadow_root_id = args.srId;
+          return true;
+        }, { srId: ${esc(srId)} });
       `,
       );
       if (!found) {
@@ -295,20 +268,15 @@ export function createElementHandlers(ctx: KernelContext): ElementHandlers {
       return { elementIds: ids };
     },
 
-    // -- Element screenshot (computer API) -------------------------------
-
     async elementTakeScreenshot({ elementId }) {
-      const rect = await getElementRect(ctx, elementId);
-      const response = await computer().captureScreenshot(sid(), {
-        region: {
-          x: Math.round(rect.x),
-          y: Math.round(rect.y),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-        },
-      });
-      const buffer = await response.arrayBuffer();
-      return { data: Buffer.from(buffer).toString("base64") };
+      const data = await exec<string>(
+        ctx,
+        `
+        const buf = await ${loc(elementId)}.screenshot();
+        return buf.toString('base64');
+      `,
+      );
+      return { data };
     },
   };
 }

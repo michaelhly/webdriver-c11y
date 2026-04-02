@@ -1,7 +1,6 @@
 import Kernel from "@onkernel/sdk";
 import type {
   LocatorStrategy,
-  Rect,
   ScriptExpression,
 } from "@michaelhly.webdriver-c11y/schemas";
 import {
@@ -95,31 +94,6 @@ export async function exec<T>(
     throw new DriverError(response.error ?? "Playwright execution failed");
   }
   return response.result as T;
-}
-
-// ---------------------------------------------------------------------------
-// Element bounding-box helper — resolves element position for computer API.
-// ---------------------------------------------------------------------------
-
-export async function getElementRect(
-  ctx: KernelContext,
-  elementId: string,
-): Promise<Rect> {
-  return await exec<Rect>(
-    ctx,
-    `
-    const box = await page.locator('[${EID_ATTR}=${JSON.stringify(elementId)}]').boundingBox();
-    return box ? { x: box.x, y: box.y, width: box.width, height: box.height }
-               : { x: 0, y: 0, width: 0, height: 0 };
-  `,
-  );
-}
-
-export function elementCenter(rect: Rect): { x: number; y: number } {
-  return {
-    x: Math.round(rect.x + rect.width / 2),
-    y: Math.round(rect.y + rect.height / 2),
-  };
 }
 
 /** data attribute used to tag DOM elements with stable IDs across calls. */
