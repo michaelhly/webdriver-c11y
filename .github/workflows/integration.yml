@@ -19,7 +19,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Start Selenium Grid
-        run: docker compose up --wait || (docker compose logs && exit 1)
+        run: docker compose up --wait selenium-hub chromium
       - name: Run grid tests
         run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
       - name: Stop Selenium Grid
