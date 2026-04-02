@@ -29,20 +29,15 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
       // Merge alwaysMatch with first firstMatch entry (W3C §7.1 processing)
       const merged = { ...alwaysMatch, ...firstMatch[0] };
 
-      const builder = new Builder();
-
-      // Validate and set browser name
-      if (merged.browserName) {
-        if (!VALID_BROWSERS.has(merged.browserName)) {
-          throw new SessionNotCreatedError(
-            `Unsupported browserName: '${merged.browserName}'. ` +
-              `Must be one of: ${[...VALID_BROWSERS].join(", ")}`,
-          );
-        }
-        builder.forBrowser(merged.browserName);
+      if (merged.browserName && !VALID_BROWSERS.has(merged.browserName)) {
+        throw new SessionNotCreatedError(
+          `Unsupported browserName: '${merged.browserName}'. ` +
+            `Must be one of: ${[...VALID_BROWSERS].join(", ")}`,        );
       }
 
-      // Apply all capabilities including vendor extensions
+
+      const builder = new Builder();
+      // Apply all capabilities including vendor extensions      // Apply all capabilities including vendor extensions
       builder.withCapabilities(merged);
 
       // Build browser options from vendor-prefixed capabilities when not
@@ -51,19 +46,25 @@ export function createSessionHandlers(ctx: ClassicContext): SessionHandlers {
       if (!ctx.browserOptions.has(k.chrome) && merged[k.chrome]) {
         ctx.browserOptions.set(
           k.chrome,
-          new ChromeOptions(merged[k.chrome] as object),
+          new ChromeOptions({
+            [k.chrome]: merged[k.chrome] as object,
+          }),
         );
       }
       if (!ctx.browserOptions.has(k.firefox) && merged[k.firefox]) {
         ctx.browserOptions.set(
           k.firefox,
-          new FirefoxOptions(merged[k.firefox] as object),
+          new FirefoxOptions({
+            [k.firefox]: merged[k.firefox] as object,
+          }),
         );
       }
       if (!ctx.browserOptions.has(k.edge) && merged[k.edge]) {
         ctx.browserOptions.set(
           k.edge,
-          new EdgeOptions(merged[k.edge] as object),
+          new EdgeOptions({
+            [k.edge]: merged[k.edge] as object,
+          }),
         );
       }
 
