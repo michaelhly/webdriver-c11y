@@ -32,7 +32,7 @@ services:
       - "4443:4443"
       - "4444:4444"
     healthcheck:
-      test: curl -sf http://localhost:4444/wd/hub/status | grep -q '"ready":true' || exit 1
+      test: wget -qO- http://localhost:4444/wd/hub/status | grep -q '"ready":true' || exit 1
       interval: 5s
       timeout: 5s
       retries: 12
