@@ -6,7 +6,7 @@ import {
   esc,
   exec,
   toPlaywrightSelector,
-} from "./context.js";
+} from "../context.js";
 
 /** Playwright locator expression for an element tagged with the given ID. */
 function loc(elementId: string): string {

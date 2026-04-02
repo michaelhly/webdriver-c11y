@@ -8,8 +8,8 @@ import {
   type KernelContext,
   type KernelDriverOptions,
   createContext,
-} from "../components/context.js";
-import { createContextHandlers } from "../components/context-handlers.js";
+} from "../context.js";
+import { createBrowsingContextHandlers } from "../components/browsing-context.js";
 import { createCookieHandlers } from "../components/cookie.js";
 import { createElementHandlers } from "../components/element.js";
 import { createNavigationHandlers } from "../components/navigation.js";
@@ -23,7 +23,7 @@ export function buildClassicComponents(ctx: KernelContext) {
   return {
     session: createSessionHandlers(ctx),
     navigation: createNavigationHandlers(ctx),
-    context: createContextHandlers(ctx),
+    browsingContext: createBrowsingContextHandlers(ctx),
     element: createElementHandlers(ctx),
     script: createScriptHandlers(ctx),
     cookie: createCookieHandlers(ctx),

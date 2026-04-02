@@ -1,5 +1,5 @@
 import type { WindowHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import type { KernelContext } from "./context.js";
+import type { KernelContext } from "../context.js";
 
 export function createWindowHandlers(ctx: KernelContext): WindowHandlers {
   async function getWindowRect() {

@@ -1,5 +1,5 @@
 import type { AlertHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "./context.js";
+import { type KernelContext, exec } from "../context.js";
 
 export function createAlertHandlers(ctx: KernelContext): AlertHandlers {
   return {
