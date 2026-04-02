@@ -2,7 +2,7 @@ import {
   type ClassicDriver,
   createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { createActionHandlers } from "../components/action.js";
+import { createActionHandlers } from "../components/action/index.js";
 import { createAlertHandlers } from "../components/alert.js";
 import {
   type KernelContext,
