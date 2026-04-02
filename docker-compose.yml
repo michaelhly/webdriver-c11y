@@ -6,8 +6,7 @@ services:
     image: selenium/node-chromium:4.41.0-20260222
     shm_size: 2gb
     depends_on:
-      selenium-hub:
-        condition: service_healthy
+      - selenium-hub
     environment:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
@@ -17,8 +16,7 @@ services:
     image: selenium/node-firefox:4.41.0-20260222
     shm_size: 2gb
     depends_on:
-      selenium-hub:
-        condition: service_healthy
+      - selenium-hub
     environment:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
@@ -31,8 +29,3 @@ services:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
-    healthcheck:
-      test: /opt/bin/check-grid.sh --host 0.0.0.0 --port 4444
-      interval: 5s
-      timeout: 5s
-      retries: 12

@@ -22,15 +22,14 @@ jobs:
         run: |
           docker compose up -d selenium-hub
           for i in $(seq 1 30); do
-            STATUS=$(docker inspect --format='{{.State.Health.Status}}' selenium-hub 2>/dev/null || echo "starting")
-            echo "selenium-hub health: $STATUS ($i/30)"
-            if [ "$STATUS" = "healthy" ]; then
+            if curl -sf http://localhost:4444/wd/hub/status | grep -q '"ready":true'; then
+              echo "Selenium Hub is ready"
               break
             fi
+            echo "Waiting for Selenium Hub... ($i/30)"
             sleep 2
           done
           docker compose up -d chromium
-          docker compose logs
       - name: Run grid tests
         run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
       - name: Stop Selenium Grid
