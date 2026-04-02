@@ -1,7 +1,9 @@
 import type { BrowsingContextHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { ClassicContext } from "../context.js";
 
-export function createBrowsingContextHandlers(ctx: ClassicContext): BrowsingContextHandlers {
+export function createBrowsingContextHandlers(
+  ctx: ClassicContext,
+): BrowsingContextHandlers {
   return {
     async getWindowHandle() {
       const handle = await ctx.getDriver().getWindowHandle();

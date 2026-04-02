@@ -52,9 +52,9 @@ export {
 export {
   type ActionHandlers,
   type AlertHandlers,
+  type BrowsingContextHandlers,
   type ClassicDriver,
   type ClassicDriverComponents,
-  type BrowsingContextHandlers,
   type CookieHandlers,
   createClassicDriver,
   type ElementHandlers,

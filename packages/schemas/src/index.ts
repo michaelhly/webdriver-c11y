@@ -14,9 +14,9 @@ export {
   type BidiResponse,
   type BidiScriptHandlers,
   type BidiStorageHandlers,
+  type BrowsingContextHandlers,
   type ClassicDriver,
   type ClassicDriverComponents,
-  type BrowsingContextHandlers,
   type CookieHandlers,
   // BiDi
   createBidiDriver,
