@@ -1,50 +1,118 @@
 import type { ActionHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "./context.js";
+import type { ComputerBatchParams } from "@onkernel/sdk/resources/browsers/computer.js";
+import type { KernelContext } from "./context.js";
+
+type BatchAction = ComputerBatchParams["actions"][number];
+
+function buttonName(
+  button: number | undefined,
+): "left" | "right" | "middle" {
+  if (button === 1) return "middle";
+  if (button === 2) return "right";
+  return "left";
+}
 
 export function createActionHandlers(ctx: KernelContext): ActionHandlers {
+  const computer = () => ctx.getClient().browsers.computer;
+  const sid = () => ctx.getSessionId();
+
   return {
     async performActions({ actions }) {
-      await exec(ctx, `
-        const actions = ${JSON.stringify(actions)};
-        for (const seq of actions) {
-          for (const action of seq.actions) {
-            if (seq.type === 'pointer') {
-              if (action.type === 'pointerMove') {
-                await page.mouse.move(action.x ?? 0, action.y ?? 0);
-              } else if (action.type === 'pointerDown') {
-                await page.mouse.down({ button: action.button === 2 ? 'right' : 'left' });
-              } else if (action.type === 'pointerUp') {
-                await page.mouse.up({ button: action.button === 2 ? 'right' : 'left' });
-              }
-            } else if (seq.type === 'key') {
-              if (action.type === 'keyDown') {
-                await page.keyboard.down(action.value ?? '');
-              } else if (action.type === 'keyUp') {
-                await page.keyboard.up(action.value ?? '');
-              }
-            } else if (seq.type === 'wheel') {
-              if (action.type === 'scroll') {
-                await page.mouse.wheel(action.deltaX ?? 0, action.deltaY ?? 0);
-              }
-            } else if (seq.type === 'none') {
-              if (action.type === 'pause' && action.duration) {
-                await new Promise(r => setTimeout(r, action.duration));
-              }
+      const batch: BatchAction[] = [];
+
+      for (const seq of actions) {
+        for (const action of seq.actions as Record<string, unknown>[]) {
+          const type = action.type as string;
+
+          if (seq.type === "pointer") {
+            if (type === "pointerMove") {
+              batch.push({
+                type: "move_mouse",
+                move_mouse: {
+                  x: (action.x as number) ?? 0,
+                  y: (action.y as number) ?? 0,
+                },
+              });
+            } else if (type === "pointerDown") {
+              batch.push({
+                type: "click_mouse",
+                click_mouse: {
+                  x: 0,
+                  y: 0,
+                  button: buttonName(action.button as number | undefined),
+                  click_type: "down",
+                },
+              });
+            } else if (type === "pointerUp") {
+              batch.push({
+                type: "click_mouse",
+                click_mouse: {
+                  x: 0,
+                  y: 0,
+                  button: buttonName(action.button as number | undefined),
+                  click_type: "up",
+                },
+              });
+            } else if (type === "pause" && action.duration) {
+              batch.push({
+                type: "sleep",
+                sleep: { duration_ms: action.duration as number },
+              });
+            }
+          } else if (seq.type === "key") {
+            if (type === "keyDown") {
+              batch.push({
+                type: "press_key",
+                press_key: { keys: [action.value as string] },
+              });
+            } else if (type === "keyUp") {
+              // computer API doesn't have separate keyUp — handled by release
+            } else if (type === "pause" && action.duration) {
+              batch.push({
+                type: "sleep",
+                sleep: { duration_ms: action.duration as number },
+              });
+            }
+          } else if (seq.type === "wheel") {
+            if (type === "scroll") {
+              const scrollAction: BatchAction = {
+                type: "scroll",
+                scroll: {
+                  x: (action.x as number) ?? 0,
+                  y: (action.y as number) ?? 0,
+                },
+              };
+              if (action.deltaX != null) scrollAction.scroll!.delta_x = action.deltaX as number;
+              if (action.deltaY != null) scrollAction.scroll!.delta_y = action.deltaY as number;
+              batch.push(scrollAction);
+            } else if (type === "pause" && action.duration) {
+              batch.push({
+                type: "sleep",
+                sleep: { duration_ms: action.duration as number },
+              });
+            }
+          } else if (seq.type === "none") {
+            if (type === "pause" && action.duration) {
+              batch.push({
+                type: "sleep",
+                sleep: { duration_ms: action.duration as number },
+              });
             }
           }
         }
-        return undefined;
-      `);
+      }
+
+      if (batch.length > 0) {
+        await computer().batch(sid(), { actions: batch });
+      }
     },
+
     async releaseActions() {
-      await exec(ctx, `
-        await page.keyboard.up('Shift');
-        await page.keyboard.up('Control');
-        await page.keyboard.up('Alt');
-        await page.keyboard.up('Meta');
-        await page.mouse.up();
-        return undefined;
-      `);
+      await computer().pressKey(sid(), { keys: ["Shift"], duration: 0 });
+      await computer().pressKey(sid(), { keys: ["Control"], duration: 0 });
+      await computer().pressKey(sid(), { keys: ["Alt"], duration: 0 });
+      await computer().pressKey(sid(), { keys: ["Super"], duration: 0 });
+      await computer().clickMouse(sid(), { x: 0, y: 0, click_type: "up" });
     },
   };
 }

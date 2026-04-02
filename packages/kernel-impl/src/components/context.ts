@@ -1,5 +1,5 @@
 import Kernel from "@onkernel/sdk";
-import type { LocatorStrategy } from "@michaelhly.webdriver-c11y/schemas";
+import type { LocatorStrategy, Rect } from "@michaelhly.webdriver-c11y/schemas";
 import {
   DriverError,
   UnsupportedOperationError,
@@ -67,7 +67,8 @@ export function createContext(options: KernelDriverOptions = {}): KernelContext 
 }
 
 // ---------------------------------------------------------------------------
-// Playwright code execution helper.
+// Playwright code execution helper — used only for DOM queries and operations
+// that the computer API cannot perform.
 // ---------------------------------------------------------------------------
 
 export async function exec<T>(ctx: KernelContext, code: string): Promise<T> {
@@ -79,6 +80,31 @@ export async function exec<T>(ctx: KernelContext, code: string): Promise<T> {
   }
   return response.result as T;
 }
+
+// ---------------------------------------------------------------------------
+// Element bounding-box helper — resolves element position for computer API.
+// ---------------------------------------------------------------------------
+
+export async function getElementRect(
+  ctx: KernelContext,
+  elementId: string,
+): Promise<Rect> {
+  return await exec<Rect>(ctx, `
+    const box = await page.locator('[${EID_ATTR}=${JSON.stringify(elementId)}]').boundingBox();
+    return box ? { x: box.x, y: box.y, width: box.width, height: box.height }
+               : { x: 0, y: 0, width: 0, height: 0 };
+  `);
+}
+
+export function elementCenter(rect: Rect): { x: number; y: number } {
+  return {
+    x: Math.round(rect.x + rect.width / 2),
+    y: Math.round(rect.y + rect.height / 2),
+  };
+}
+
+/** data attribute used to tag DOM elements with stable IDs across calls. */
+export const EID_ATTR = "data-kernel-eid";
 
 // ---------------------------------------------------------------------------
 // Locator strategy → Playwright selector conversion.
