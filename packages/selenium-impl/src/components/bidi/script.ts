@@ -4,7 +4,7 @@ import type {
   BidiScriptHandlers,
   GetRealmsResult,
 } from "@michaelhly.webdriver-c11y/schemas";
-import type { ClassicContext } from "../context.js";
+import type { ClassicContext } from "../../context.js";
 
 export function createBidiScriptHandlers(
   ctx: ClassicContext,

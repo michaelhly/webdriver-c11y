@@ -4,13 +4,13 @@ import type {
 } from "@michaelhly.webdriver-c11y/schemas";
 import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import { By, type WebElement } from "selenium-webdriver";
-import type { ClassicContext } from "./context.js";
+import type { ClassicContext } from "../context.js";
 import {
   getElement,
   getShadowRoot,
   storeElement,
   storeShadowRoot,
-} from "./context.js";
+} from "../context.js";
 
 function toBy(using: LocatorStrategy, value: string): By {
   switch (using) {

@@ -54,7 +54,7 @@ export {
   type AlertHandlers,
   type ClassicDriver,
   type ClassicDriverComponents,
-  type ContextHandlers,
+  type BrowsingContextHandlers,
   type CookieHandlers,
   createClassicDriver,
   type ElementHandlers,

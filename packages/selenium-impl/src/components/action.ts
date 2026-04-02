@@ -1,6 +1,6 @@
 import type { ActionHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import { Command, Name } from "selenium-webdriver/lib/command.js";
-import type { ClassicContext } from "./context.js";
+import type { ClassicContext } from "../context.js";
 
 export function createActionHandlers(ctx: ClassicContext): ActionHandlers {
   return {
