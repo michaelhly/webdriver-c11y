@@ -1,0 +1,28 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  grid-tests:
+    name: Selenium Grid Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - name: Start Selenium Grid
+        run: docker compose up -d --wait
+      - name: Run grid tests
+        run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
+      - name: Stop Selenium Grid
+        if: always()
+        run: docker compose down
