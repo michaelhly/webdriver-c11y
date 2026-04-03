@@ -19,9 +19,10 @@ import type {
 export interface KernelContext {
   getClient(): Kernel;
   getSessionId(): string;
-  setSession(sessionId: string, cdpWsUrl?: string): void;
+  setSession(sessionId: string, cdpWsUrl?: string, liveViewUrl?: string): void;
   clearSession(): void;
   getCdpWsUrl(): string;
+  getLiveViewUrl(): string;
   nextElementId(): string;
   nextShadowRootId(): string;
   getCreateParams(): BrowserCreateParams;
@@ -35,6 +36,7 @@ export function createContext(
   const client = new Kernel();
   let sessionId: string | null = null;
   let cdpWsUrl: string | null = null;
+  let liveViewUrl: string | null = null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
@@ -44,19 +46,25 @@ export function createContext(
       if (!sessionId) throw new DriverError("No active session");
       return sessionId;
     },
-    setSession: (id, wsUrl) => {
+    setSession: (id, wsUrl, viewUrl) => {
       sessionId = id;
       cdpWsUrl = wsUrl ?? null;
+      liveViewUrl = viewUrl ?? null;
     },
     clearSession: () => {
       sessionId = null;
       cdpWsUrl = null;
+      liveViewUrl = null;
       elementCounter = 0;
       shadowRootCounter = 0;
     },
     getCdpWsUrl: () => {
       if (!cdpWsUrl) throw new DriverError("No CDP WebSocket URL available");
       return cdpWsUrl;
+    },
+    getLiveViewUrl: () => {
+      if (!liveViewUrl) throw new DriverError("No live view URL available");
+      return liveViewUrl;
     },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,

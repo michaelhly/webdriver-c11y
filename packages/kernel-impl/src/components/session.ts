@@ -19,11 +19,11 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
       try {
         const browser = await ctx.getClient().browsers.create(ctx.getCreateParams())
 
-        ctx.setSession(browser.session_id, browser.cdp_ws_url);
+        ctx.setSession(browser.session_id, browser.cdp_ws_url, browser.browser_live_view_url);
 
         const capabilities: Capabilities = {
           browserName: "chrome",
-          platformName: "kernel",
+          ...browser,
         };
 
         return { sessionId: browser.session_id, capabilities };
