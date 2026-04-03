@@ -1,5 +1,5 @@
 import type { NavigationHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "../context.js";
+import { exec, type KernelContext } from "../context.js";
 
 export function createNavigationHandlers(
   ctx: KernelContext,

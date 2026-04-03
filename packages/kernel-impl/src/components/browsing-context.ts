@@ -1,7 +1,9 @@
 import type { BrowsingContextHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { type KernelContext, exec } from "../context.js";
+import { exec, type KernelContext } from "../context.js";
 
-export function createBrowsingContextHandlers(ctx: KernelContext): BrowsingContextHandlers {
+export function createBrowsingContextHandlers(
+  ctx: KernelContext,
+): BrowsingContextHandlers {
   return {
     async getWindowHandle() {
       const handle = await exec<string>(

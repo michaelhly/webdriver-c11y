@@ -1,4 +1,3 @@
-import Kernel from "@onkernel/sdk";
 import type {
   LocatorStrategy,
   ScriptExpression,
@@ -7,6 +6,7 @@ import {
   DriverError,
   UnsupportedOperationError,
 } from "@michaelhly.webdriver-c11y/schemas";
+import Kernel from "@onkernel/sdk";
 
 // ---------------------------------------------------------------------------
 // Options for creating a Kernel-backed browser session.

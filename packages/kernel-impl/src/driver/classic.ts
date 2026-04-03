@@ -4,11 +4,6 @@ import {
 } from "@michaelhly.webdriver-c11y/schemas";
 import { createActionHandlers } from "../components/action/index.js";
 import { createAlertHandlers } from "../components/alert.js";
-import {
-  type KernelContext,
-  type KernelDriverOptions,
-  createContext,
-} from "../context.js";
 import { createBrowsingContextHandlers } from "../components/browsing-context.js";
 import { createCookieHandlers } from "../components/cookie.js";
 import { createElementHandlers } from "../components/element.js";
@@ -18,6 +13,11 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
+import {
+  createContext,
+  type KernelContext,
+  type KernelDriverOptions,
+} from "../context.js";
 
 export function buildClassicComponents(ctx: KernelContext) {
   return {

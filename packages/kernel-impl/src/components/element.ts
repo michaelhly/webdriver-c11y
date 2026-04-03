@@ -2,9 +2,9 @@ import type { ElementHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import { NoSuchElementError } from "@michaelhly.webdriver-c11y/schemas";
 import {
   EID_ATTR,
-  type KernelContext,
   esc,
   exec,
+  type KernelContext,
   toPlaywrightSelector,
 } from "../context.js";
 

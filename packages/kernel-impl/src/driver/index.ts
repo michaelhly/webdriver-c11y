@@ -2,15 +2,12 @@ import {
   type ClassicDriver,
   createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
-import {
-  type KernelDriverOptions,
-  createContext,
-} from "../context.js";
+import { createContext, type KernelDriverOptions } from "../context.js";
 import { buildClassicComponents } from "./classic.js";
 
+export type { KernelDriverOptions } from "../context.js";
 export { createKernelBidiDriver } from "./bidi.js";
 export { createKernelClassicDriver } from "./classic.js";
-export type { KernelDriverOptions } from "../context.js";
 
 /** Creates a Kernel-backed Classic WebDriver. */
 export function createKernelDriver(
