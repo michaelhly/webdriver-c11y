@@ -1,11 +1,10 @@
 import type { ElementHandlers, Rect } from "@michaelhly.webdriver-c11y/schemas";
 import { NoSuchElementError } from "@michaelhly.webdriver-c11y/schemas";
-import {
-  EID_ATTR,
-  type KernelContext,
-  toPlaywrightSelector,
-} from "../context.js";
+import { type KernelContext, toPlaywrightSelector } from "../context.js";
 import { evaluate } from "../eval.js";
+
+/** Data attribute used to tag DOM elements with stable IDs across calls. */
+const EID_ATTR = "data-kernel-eid";
 
 /** Selector string for finding an element by its kernel element ID. */
 function eidSelector(elementId: string): string {

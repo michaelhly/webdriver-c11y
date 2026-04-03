@@ -89,12 +89,6 @@ export function createContext(
 }
 
 // ---------------------------------------------------------------------------
-// Data attribute used to tag DOM elements with stable IDs across calls.
-// ---------------------------------------------------------------------------
-
-export const EID_ATTR = "data-kernel-eid";
-
-// ---------------------------------------------------------------------------
 // Locator strategy → Playwright selector conversion.
 // ---------------------------------------------------------------------------
 
