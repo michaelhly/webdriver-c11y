@@ -1,12 +1,8 @@
 import type { ElementHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { HttpContext } from "../context.js";
+import { W3C_ELEMENT_KEY, W3C_SHADOW_KEY } from "../constants.js";
 import { get, post } from "../http.js";
 import { toWireLocator } from "../locator.js";
-
-/** W3C WebElement identifier key */
-const W3C_ELEMENT_KEY = "element-6066-11e4-a52e-4f735466cecf";
-/** W3C ShadowRoot identifier key */
-const W3C_SHADOW_KEY = "shadow-6066-11e4-a52e-4f735466cecf";
 
 type ElementRef = { [W3C_ELEMENT_KEY]: string };
 type ShadowRef = { [W3C_SHADOW_KEY]: string };

@@ -1,8 +1,7 @@
 import type { BrowsingContextHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import type { HttpContext } from "../context.js";
+import { W3C_ELEMENT_KEY } from "../constants.js";
 import { del, get, post } from "../http.js";
-
-const W3C_ELEMENT_KEY = "element-6066-11e4-a52e-4f735466cecf";
 
 export function createBrowsingContextHandlers(
   ctx: HttpContext,
