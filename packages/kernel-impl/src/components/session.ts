@@ -15,21 +15,15 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
         return { ready: false, message: "No active session" };
       }
     },
-    async newSession(params) {
-      const alwaysMatch = params.capabilities?.alwaysMatch ?? {};
-      const firstMatch = params.capabilities?.firstMatch ?? [{}];
-      const merged = { ...alwaysMatch, ...firstMatch[0] };
-
+    async newSession(_params) {
       try {
-        const browser =
-          ctx.getBrowser() ??
-          (await ctx.getClient().browsers.create(ctx.getCreateParams()));
+        const browser = await ctx.getClient().browsers.create(ctx.getCreateParams())
 
         ctx.setSession(browser.session_id, browser.cdp_ws_url);
 
         const capabilities: Capabilities = {
           browserName: "chrome",
-          ...merged,
+          platformName: "kernel",
         };
 
         return { sessionId: browser.session_id, capabilities };
