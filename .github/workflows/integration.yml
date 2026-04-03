@@ -34,7 +34,7 @@ jobs:
           docker compose logs
           exit 1
       - name: Run grid tests
-        run: pnpm run test:grid
+        run: pnpm --filter @michaelhly.webdriver-c11y/selenium-impl run test:grid
       - name: Stop Selenium Grid
         if: always()
         run: docker compose down
