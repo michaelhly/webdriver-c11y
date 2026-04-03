@@ -10,6 +10,7 @@ import Kernel from "@onkernel/sdk";
 import type { ClientOptions } from "@onkernel/sdk";
 import type {
   BrowserCreateParams,
+  BrowserCreateResponse,
 } from "@onkernel/sdk/resources/browsers/browsers.js";
 
 // ---------------------------------------------------------------------------
@@ -19,7 +20,8 @@ import type {
 export interface KernelContext {
   getClient(): Kernel;
   getSessionId(): string;
-  setSession(sessionId: string, cdpWsUrl?: string, liveViewUrl?: string): void;
+  getBrowser(): BrowserCreateResponse;
+  setBrowser(browser: BrowserCreateResponse): void;
   clearSession(): void;
   getCdpWsUrl(): string;
   getLiveViewUrl(): string;
@@ -32,38 +34,36 @@ export function createContext(
   browserOpts: BrowserCreateParams = {},
   clientOpts?: ClientOptions,
 ): KernelContext {
-  const client = new Kernel(clientOpts);
-  let sessionId: string | null = null;
-  let cdpWsUrl: string | null = null;
-  let liveViewUrl: string | null = null;
+  const client = new Kernel();
+  let browser: BrowserCreateResponse | null = null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
   return {
-    getClient: () => client,
+    getClient: () => clientOpts ? client.withOptions(clientOpts) : client,
     getSessionId: () => {
-      if (!sessionId) throw new DriverError("No active session");
-      return sessionId;
+      if (!browser) throw new DriverError("No active session");
+      return browser.session_id;
     },
-    setSession: (id, wsUrl, viewUrl) => {
-      sessionId = id;
-      cdpWsUrl = wsUrl ?? null;
-      liveViewUrl = viewUrl ?? null;
+    getBrowser: () => {
+      if (!browser) throw new DriverError("No active session");
+      return browser;
+    },
+    setBrowser: (b) => {
+      browser = b;
     },
     clearSession: () => {
-      sessionId = null;
-      cdpWsUrl = null;
-      liveViewUrl = null;
+      browser = null;
       elementCounter = 0;
       shadowRootCounter = 0;
     },
     getCdpWsUrl: () => {
-      if (!cdpWsUrl) throw new DriverError("No CDP WebSocket URL available");
-      return cdpWsUrl;
+      if (!browser) throw new DriverError("No CDP WebSocket URL available");
+      return browser.cdp_ws_url;
     },
     getLiveViewUrl: () => {
-      if (!liveViewUrl) throw new DriverError("No live view URL available");
-      return liveViewUrl;
+      if (!browser?.browser_live_view_url) throw new DriverError("No live view URL available");
+      return browser.browser_live_view_url;
     },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,
