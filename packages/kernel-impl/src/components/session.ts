@@ -4,8 +4,7 @@ import type {
   Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
-import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
-import type { KernelContext } from "./context.js";
+import type { KernelContext } from "../context.js";
 import { evaluate } from "../eval.js";
 
 export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
@@ -18,40 +17,24 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
         return { ready: false, message: "No active session" };
       }
     },
-    async newSession(params) {
-      const alwaysMatch = params.capabilities?.alwaysMatch ?? {};
-      const firstMatch = params.capabilities?.firstMatch ?? [{}];
-      const merged = { ...alwaysMatch, ...firstMatch[0] };
-
-      const options = ctx.getOptions();
-
+    async newSession(_params) {
       try {
-        const createParams: Record<string, unknown> = {
-          headless: options.headless ?? true,
-        };
-        if (options.stealth !== undefined)
-          createParams.stealth = options.stealth;
-        if (options.gpu !== undefined) createParams.gpu = options.gpu;
-        if (options.viewport !== undefined)
-          createParams.viewport = options.viewport;
-        if (options.timeoutSeconds !== undefined)
-          createParams.timeout_seconds = options.timeoutSeconds;
-
         const browser = await ctx
           .getClient()
-          .browsers.create(createParams as BrowserCreateParams);
+          .browsers.create(ctx.getBrowserOpts());
 
-        ctx.setSession(browser.session_id);
+        ctx.setBrowser(browser);
 
         const capabilities: Capabilities = {
           browserName: "chrome",
-          ...merged,
+          ...browser,
         };
 
         return { sessionId: browser.session_id, capabilities };
       } catch (e) {
+        const error = e as Error;
         throw new SessionNotCreatedError(
-          `Failed to create kernel browser session: ${e instanceof Error ? e.message : String(e)}`,
+          `Failed to create kernel browser session: ${error.message}`,
         );
       }
     },

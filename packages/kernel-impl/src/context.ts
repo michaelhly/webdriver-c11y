@@ -1,22 +1,14 @@
-import Kernel from "@onkernel/sdk";
 import type { LocatorStrategy } from "@michaelhly.webdriver-c11y/schemas";
 import {
   DriverError,
   UnsupportedOperationError,
 } from "@michaelhly.webdriver-c11y/schemas";
-
-// ---------------------------------------------------------------------------
-// Options for creating a Kernel-backed browser session.
-// ---------------------------------------------------------------------------
-
-export interface KernelDriverOptions {
-  apiKey?: string;
-  headless?: boolean;
-  stealth?: boolean;
-  gpu?: boolean;
-  viewport?: { width: number; height: number };
-  timeoutSeconds?: number;
-}
+import type { ClientOptions } from "@onkernel/sdk";
+import Kernel from "@onkernel/sdk";
+import type {
+  BrowserCreateParams,
+  BrowserCreateResponse,
+} from "@onkernel/sdk/resources/browsers/browsers.js";
 
 // ---------------------------------------------------------------------------
 // KernelContext — shared state for all handlers.
@@ -25,38 +17,44 @@ export interface KernelDriverOptions {
 export interface KernelContext {
   getClient(): Kernel;
   getSessionId(): string;
-  setSession(sessionId: string): void;
+  getBrowser(): BrowserCreateResponse;
+  setBrowser(browser: BrowserCreateResponse): void;
   clearSession(): void;
   nextElementId(): string;
   nextShadowRootId(): string;
-  getOptions(): KernelDriverOptions;
+  getBrowserOpts(): BrowserCreateParams;
 }
 
 export function createContext(
-  options: KernelDriverOptions = {},
+  browserOpts: BrowserCreateParams = {},
+  clientOpts?: ClientOptions,
 ): KernelContext {
-  const client = new Kernel({ apiKey: options.apiKey });
-  let sessionId: string | null = null;
+  const client = new Kernel();
+  let browser: BrowserCreateResponse | null = null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
   return {
-    getClient: () => client,
+    getClient: () => (clientOpts ? client.withOptions(clientOpts) : client),
     getSessionId: () => {
-      if (!sessionId) throw new DriverError("No active session");
-      return sessionId;
+      if (!browser) throw new DriverError("No active session");
+      return browser.session_id;
     },
-    setSession: (id) => {
-      sessionId = id;
+    getBrowser: () => {
+      if (!browser) throw new DriverError("No active session");
+      return browser;
+    },
+    setBrowser: (b) => {
+      browser = b;
     },
     clearSession: () => {
-      sessionId = null;
+      browser = null;
       elementCounter = 0;
       shadowRootCounter = 0;
     },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,
-    getOptions: () => options,
+    getBrowserOpts: () => browserOpts,
   };
 }
 

@@ -33,7 +33,7 @@ export function buildClassicComponents(ctx: KernelContext) {
   };
 }
 
-export function createKernelClassicDriver(
+export function createKernelDriver(
   browserOpts?: BrowserCreateParams,
   clientOpts?: ClientOptions,
 ): ClassicDriver {
