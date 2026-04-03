@@ -11,8 +11,7 @@
     "lint": "biome lint .",
     "typecheck": "pnpm -r run typecheck",
     "build": "pnpm -r run build",
-    "test:unit": "pnpm -r run test:unit",
-    "test:grid": "pnpm -r run test:grid"
+    "test:unit": "pnpm -r run test:unit"
   },
   "keywords": [],
   "author": "Michael Huang <michaelhly@gmail.com>",
