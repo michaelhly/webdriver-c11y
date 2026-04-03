@@ -1,5 +1,5 @@
 import { createDriver, type Driver } from "@michaelhly.webdriver-c11y/schemas";
-import { createContext } from "../components/context.js";
+import { createContext } from "../context.js";
 import { buildBidiComponents } from "./bidi.js";
 import {
   applyBrowserOptions,

@@ -6,7 +6,7 @@ import type {
   InfoListResult,
   NavigateResult,
 } from "@michaelhly.webdriver-c11y/schemas";
-import type { ClassicContext } from "../context.js";
+import type { ClassicContext } from "../../context.js";
 
 export function createBidiBrowsingContextHandlers(
   ctx: ClassicContext,

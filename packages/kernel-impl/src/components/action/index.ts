@@ -1,7 +1,7 @@
 import type { ActionHandlers } from "@michaelhly.webdriver-c11y/schemas";
 import { UnsupportedOperationError } from "@michaelhly.webdriver-c11y/schemas";
 import type { ComputerBatchParams } from "@onkernel/sdk/resources/browsers/computer.js";
-import type { KernelContext } from "../context.js";
+import type { KernelContext } from "../../context.js";
 import { mapKeyAction } from "./key.js";
 import { mapNoneAction } from "./none.js";
 import { mapPointerAction } from "./pointer.js";

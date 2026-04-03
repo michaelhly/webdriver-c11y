@@ -14,9 +14,9 @@ export {
   type BidiResponse,
   type BidiScriptHandlers,
   type BidiStorageHandlers,
+  type BrowsingContextHandlers,
   type ClassicDriver,
   type ClassicDriverComponents,
-  type ContextHandlers,
   type CookieHandlers,
   // BiDi
   createBidiDriver,
@@ -163,7 +163,7 @@ export type {
   SwitchToWindowParams,
   WindowHandleResult,
   WindowHandlesResult,
-} from "./generated/context.js";
+} from "./generated/browsing-context.js";
 export type {
   AddCookieParams,
   Cookie,

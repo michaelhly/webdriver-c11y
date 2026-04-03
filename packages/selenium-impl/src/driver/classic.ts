@@ -7,9 +7,7 @@ import type { Options as EdgeWebOptions } from "selenium-webdriver/edge.js";
 import type { Options as FirefoxWebOptions } from "selenium-webdriver/firefox.js";
 import { createActionHandlers } from "../components/action.js";
 import { createAlertHandlers } from "../components/alert.js";
-import type { ClassicContext } from "../components/context.js";
-import { createContext } from "../components/context.js";
-import { createContextHandlers } from "../components/context-handlers.js";
+import { createBrowsingContextHandlers } from "../components/browsing-context.js";
 import { createCookieHandlers } from "../components/cookie.js";
 import { createElementHandlers } from "../components/element.js";
 import { createNavigationHandlers } from "../components/navigation.js";
@@ -18,13 +16,15 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
+import type { ClassicContext } from "../context.js";
+import { createContext } from "../context.js";
 import { BROWSER_CAPABILITY_KEYS } from "../options.js";
 
 export function buildClassicComponents(ctx: ClassicContext) {
   return {
     session: createSessionHandlers(ctx),
     navigation: createNavigationHandlers(ctx),
-    context: createContextHandlers(ctx),
+    browsingContext: createBrowsingContextHandlers(ctx),
     element: createElementHandlers(ctx),
     script: createScriptHandlers(ctx),
     cookie: createCookieHandlers(ctx),

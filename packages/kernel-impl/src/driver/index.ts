@@ -2,23 +2,22 @@ import {
   type ClassicDriver,
   createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
-import {
-  type KernelDriverOptions,
-  createContext,
-} from "../components/context.js";
+import type { ClientOptions } from "@onkernel/sdk";
+import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
+import { createContext } from "../context.js";
 import { buildClassicComponents } from "./classic.js";
 
 export { createKernelBidiDriver } from "./bidi.js";
 export { createKernelClassicDriver } from "./classic.js";
-export type { KernelDriverOptions } from "../components/context.js";
 
 /** Creates a Kernel-backed Classic WebDriver. */
 export function createKernelDriver(
-  options?: KernelDriverOptions,
+  browserOpts?: BrowserCreateParams,
+  clientOpts?: ClientOptions,
 ): ClassicDriver {
-  const ctx = createContext(options);
+  const ctx = createContext(browserOpts, clientOpts);
   return createClassicDriver({
-    protocol: "cdp",
+    protocol: "playwright",
     ...buildClassicComponents(ctx),
   });
 }

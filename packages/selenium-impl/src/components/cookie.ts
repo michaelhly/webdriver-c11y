@@ -3,7 +3,7 @@ import type {
   CookieHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
 import type { IWebDriverOptionsCookie } from "selenium-webdriver";
-import type { ClassicContext } from "./context.js";
+import type { ClassicContext } from "../context.js";
 
 function toCookie(c: IWebDriverOptionsCookie): Cookie {
   const cookie: Cookie = { name: c.name, value: c.value };

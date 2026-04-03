@@ -2,14 +2,11 @@ import {
   type ClassicDriver,
   createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
+import type { ClientOptions } from "@onkernel/sdk";
+import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
 import { createActionHandlers } from "../components/action/index.js";
 import { createAlertHandlers } from "../components/alert.js";
-import {
-  type KernelContext,
-  type KernelDriverOptions,
-  createContext,
-} from "../components/context.js";
-import { createContextHandlers } from "../components/context-handlers.js";
+import { createBrowsingContextHandlers } from "../components/browsing-context.js";
 import { createCookieHandlers } from "../components/cookie.js";
 import { createElementHandlers } from "../components/element.js";
 import { createNavigationHandlers } from "../components/navigation.js";
@@ -18,12 +15,13 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
+import { createContext, type KernelContext } from "../context.js";
 
 export function buildClassicComponents(ctx: KernelContext) {
   return {
     session: createSessionHandlers(ctx),
     navigation: createNavigationHandlers(ctx),
-    context: createContextHandlers(ctx),
+    browsingContext: createBrowsingContextHandlers(ctx),
     element: createElementHandlers(ctx),
     script: createScriptHandlers(ctx),
     cookie: createCookieHandlers(ctx),
@@ -36,11 +34,12 @@ export function buildClassicComponents(ctx: KernelContext) {
 }
 
 export function createKernelClassicDriver(
-  options?: KernelDriverOptions,
+  browserOpts?: BrowserCreateParams,
+  clientOpts?: ClientOptions,
 ): ClassicDriver {
-  const ctx = createContext(options);
+  const ctx = createContext(browserOpts, clientOpts);
   return createClassicDriver({
-    protocol: "cdp",
+    protocol: "playwright",
     ...buildClassicComponents(ctx),
   });
 }
