@@ -4,7 +4,7 @@ import { createHttpClassicDriver } from "../../../src/index.js";
 describe("Chrome session", () => {
   test("#newSession", async () => {
     const driver = createHttpClassicDriver({
-      serverUrl: process.env["SELENIUM_REMOTE_URL"] ?? "http://localhost:4444",
+      serverUrl: process.env.SELENIUM_REMOTE_URL ?? "http://localhost:4444",
     });
     const session = await driver.newSession({
       capabilities: { alwaysMatch: { browserName: "chrome" } },

@@ -1,6 +1,6 @@
 import type { ElementHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import type { HttpContext } from "../context.js";
 import { W3C_ELEMENT_KEY, W3C_SHADOW_KEY } from "../constants.js";
+import type { HttpContext } from "../context.js";
 import { get, post } from "../http.js";
 import { toWireLocator } from "../locator.js";
 
