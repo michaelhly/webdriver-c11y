@@ -28,8 +28,9 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
 
         return { sessionId: browser.session_id, capabilities };
       } catch (e) {
+        const error = e as Error;
         throw new SessionNotCreatedError(
-          `Failed to create kernel browser session: ${e instanceof Error ? e.message : String(e)}`,
+          `Failed to create kernel browser session: ${error.message}`,
         );
       }
     },
