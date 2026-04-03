@@ -1,6 +1,6 @@
-import type { BrowserContext, Page } from "playwright-core";
 import { DriverError } from "@michaelhly.webdriver-c11y/schemas";
-import type { KernelContext } from "./components/context.js";
+import type { BrowserContext, Page } from "playwright-core";
+import type { KernelContext } from "./context.js";
 
 /**
  * A function to be serialized and executed remotely against a Kernel browser.

@@ -1,8 +1,15 @@
-import type { ContextHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import type { KernelContext } from "./context.js";
+import type {
+  BrowsingContextHandlers,
+  NewWindowParams,
+  SwitchToFrameParams,
+  SwitchToWindowParams,
+} from "@michaelhly.webdriver-c11y/schemas";
+import type { KernelContext } from "../context.js";
 import { evaluate } from "../eval.js";
 
-export function createContextHandlers(ctx: KernelContext): ContextHandlers {
+export function createContextHandlers(
+  ctx: KernelContext,
+): BrowsingContextHandlers {
   return {
     async getWindowHandle() {
       const handle = await evaluate(ctx, (page, context) => {
@@ -17,7 +24,7 @@ export function createContextHandlers(ctx: KernelContext): ContextHandlers {
         await page.close();
       });
     },
-    async switchToWindow({ handle }) {
+    async switchToWindow({ handle }: SwitchToWindowParams) {
       await evaluate(
         ctx,
         async (_page, context, args) => {
@@ -36,7 +43,7 @@ export function createContextHandlers(ctx: KernelContext): ContextHandlers {
       });
       return { handles };
     },
-    async newWindow({ type }) {
+    async newWindow({ type }: NewWindowParams) {
       const windowType = type === "window" ? "window" : "tab";
       const handle = await evaluate(ctx, async (_page, context) => {
         const newPage = await context.newPage();
@@ -45,7 +52,7 @@ export function createContextHandlers(ctx: KernelContext): ContextHandlers {
       });
       return { handle, type: windowType };
     },
-    async switchToFrame({ id }) {
+    async switchToFrame({ id }: SwitchToFrameParams) {
       if (id === null || id === undefined) {
         // Switch to main frame — no-op in Playwright (main frame is default)
       }

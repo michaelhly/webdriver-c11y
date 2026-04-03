@@ -3,7 +3,7 @@ import type {
   ScriptHandlers,
   ScriptResult,
 } from "@michaelhly.webdriver-c11y/schemas";
-import type { KernelContext } from "./context.js";
+import type { KernelContext } from "../context.js";
 import { evaluate } from "../eval.js";
 
 export function createScriptHandlers(ctx: KernelContext): ScriptHandlers {

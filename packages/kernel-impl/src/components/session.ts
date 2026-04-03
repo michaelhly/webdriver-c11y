@@ -3,7 +3,11 @@ import type {
   SessionHandlers,
   Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
+import {
+  DriverError,
+  SessionNotCreatedError,
+} from "@michaelhly.webdriver-c11y/schemas";
+import type { BrowserCreateResponse } from "@onkernel/sdk/resources/browsers/browsers.js";
 import type { KernelContext } from "../context.js";
 import { evaluate } from "../eval.js";
 
@@ -19,11 +23,14 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
     },
     async newSession(_params) {
       try {
-        const browser = await ctx
-          .getClient()
-          .browsers.create(ctx.getBrowserOpts());
-
-        ctx.setBrowser(browser);
+        let browser: BrowserCreateResponse;
+        try {
+          browser = ctx.getBrowser();
+        } catch (e) {
+          if (!(e instanceof DriverError)) throw e;
+          browser = await ctx.getClient().browsers.create(ctx.getBrowserOpts());
+          ctx.setBrowser(browser);
+        }
 
         const capabilities: Capabilities = {
           browserName: "chrome",

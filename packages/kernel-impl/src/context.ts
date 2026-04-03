@@ -8,11 +8,36 @@ import Kernel from "@onkernel/sdk";
 import type {
   BrowserCreateParams,
   BrowserCreateResponse,
+  BrowserListResponse,
 } from "@onkernel/sdk/resources/browsers/browsers.js";
 
 // ---------------------------------------------------------------------------
 // KernelContext — shared state for all handlers.
 // ---------------------------------------------------------------------------
+
+/** SDK client wiring for {@link createContext}. */
+export interface KernelSdkOptions {
+  clientOpts?: ClientOptions;
+  /** Shared client; default is `new Kernel()`. */
+  kernel?: Kernel;
+}
+
+/** No browser yet; first `newSession` calls `browsers.create`. */
+export type KernelContextNewSessionOptions = KernelSdkOptions & {
+  mode: "new";
+  /** Passed to `browsers.create` when `newSession` runs. */
+  browserOpts?: BrowserCreateParams;
+};
+
+/** Browser already known; same as {@link KernelContext.setBrowser} before `newSession`. */
+export type KernelContextExistingSessionOptions = KernelSdkOptions & {
+  mode: "existing";
+  existingBrowser: BrowserListResponse;
+};
+
+export type KernelContextOptions =
+  | KernelContextNewSessionOptions
+  | KernelContextExistingSessionOptions;
 
 export interface KernelContext {
   getClient(): Kernel;
@@ -26,16 +51,21 @@ export interface KernelContext {
 }
 
 export function createContext(
-  browserOpts: BrowserCreateParams = {},
-  clientOpts?: ClientOptions,
+  options: KernelContextOptions = { mode: "new" },
 ): KernelContext {
-  const client = new Kernel();
-  let browser: BrowserCreateResponse | null = null;
+  const client = options.kernel ?? new Kernel();
+  const co = options.clientOpts;
+
+  const browserOpts = options.mode === "new" ? (options.browserOpts ?? {}) : {};
+  const existingBrowser =
+    options.mode === "existing" ? options.existingBrowser : undefined;
+
+  let browser: BrowserCreateResponse | null = existingBrowser ?? null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
   return {
-    getClient: () => (clientOpts ? client.withOptions(clientOpts) : client),
+    getClient: () => (co ? client.withOptions(co) : client),
     getSessionId: () => {
       if (!browser) throw new DriverError("No active session");
       return browser.session_id;

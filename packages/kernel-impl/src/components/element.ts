@@ -4,7 +4,7 @@ import {
   EID_ATTR,
   type KernelContext,
   toPlaywrightSelector,
-} from "./context.js";
+} from "../context.js";
 import { evaluate } from "../eval.js";
 
 /** Selector string for finding an element by its kernel element ID. */
