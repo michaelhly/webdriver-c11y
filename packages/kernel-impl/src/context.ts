@@ -6,8 +6,8 @@ import {
   DriverError,
   UnsupportedOperationError,
 } from "@michaelhly.webdriver-c11y/schemas";
-import Kernel from "@onkernel/sdk";
 import type { ClientOptions } from "@onkernel/sdk";
+import Kernel from "@onkernel/sdk";
 import type {
   BrowserCreateParams,
   BrowserCreateResponse,
@@ -40,7 +40,7 @@ export function createContext(
   let shadowRootCounter = 0;
 
   return {
-    getClient: () => clientOpts ? client.withOptions(clientOpts) : client,
+    getClient: () => (clientOpts ? client.withOptions(clientOpts) : client),
     getSessionId: () => {
       if (!browser) throw new DriverError("No active session");
       return browser.session_id;
@@ -62,7 +62,8 @@ export function createContext(
       return browser.cdp_ws_url;
     },
     getLiveViewUrl: () => {
-      if (!browser?.browser_live_view_url) throw new DriverError("No live view URL available");
+      if (!browser?.browser_live_view_url)
+        throw new DriverError("No live view URL available");
       return browser.browser_live_view_url;
     },
     nextElementId: () => `el-${++elementCounter}`,

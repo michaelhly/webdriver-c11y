@@ -17,7 +17,9 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
     },
     async newSession(_params) {
       try {
-        const browser = await ctx.getClient().browsers.create(ctx.getCreateParams())
+        const browser = await ctx
+          .getClient()
+          .browsers.create(ctx.getCreateParams());
 
         ctx.setBrowser(browser);
 

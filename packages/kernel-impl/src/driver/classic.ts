@@ -2,6 +2,8 @@ import {
   type ClassicDriver,
   createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
+import type { ClientOptions } from "@onkernel/sdk";
+import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
 import { createActionHandlers } from "../components/action/index.js";
 import { createAlertHandlers } from "../components/alert.js";
 import { createBrowsingContextHandlers } from "../components/browsing-context.js";
@@ -13,12 +15,7 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
-import type { ClientOptions } from "@onkernel/sdk";
-import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
-import {
-  createContext,
-  type KernelContext,
-} from "../context.js";
+import { createContext, type KernelContext } from "../context.js";
 
 export function buildClassicComponents(ctx: KernelContext) {
   return {
