@@ -2,7 +2,8 @@ import {
   type ClassicDriver,
   createClassicDriver,
 } from "@michaelhly.webdriver-c11y/schemas";
-import type { BrowserCreateParams, BrowserCreateResponse } from "@onkernel/sdk/resources/browsers/browsers.js";
+import type { ClientOptions } from "@onkernel/sdk";
+import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
 import { createContext } from "../context.js";
 import { buildClassicComponents } from "./classic.js";
 
@@ -11,10 +12,10 @@ export { createKernelClassicDriver } from "./classic.js";
 
 /** Creates a Kernel-backed Classic WebDriver. */
 export function createKernelDriver(
-  createParams?: BrowserCreateParams,
-  browser?: BrowserCreateResponse,
+  browserOpts?: BrowserCreateParams,
+  clientOpts?: ClientOptions,
 ): ClassicDriver {
-  const ctx = createContext(createParams, browser);
+  const ctx = createContext(browserOpts, clientOpts);
   return createClassicDriver({
     protocol: "playwright",
     ...buildClassicComponents(ctx),

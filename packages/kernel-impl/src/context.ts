@@ -7,9 +7,9 @@ import {
   UnsupportedOperationError,
 } from "@michaelhly.webdriver-c11y/schemas";
 import Kernel from "@onkernel/sdk";
+import type { ClientOptions } from "@onkernel/sdk";
 import type {
   BrowserCreateParams,
-  BrowserCreateResponse,
 } from "@onkernel/sdk/resources/browsers/browsers.js";
 
 // ---------------------------------------------------------------------------
@@ -26,14 +26,13 @@ export interface KernelContext {
   nextElementId(): string;
   nextShadowRootId(): string;
   getCreateParams(): BrowserCreateParams;
-  getBrowser(): BrowserCreateResponse | undefined;
 }
 
 export function createContext(
-  createParams: BrowserCreateParams = {},
-  browser?: BrowserCreateResponse,
+  browserOpts: BrowserCreateParams = {},
+  clientOpts?: ClientOptions,
 ): KernelContext {
-  const client = new Kernel();
+  const client = new Kernel(clientOpts);
   let sessionId: string | null = null;
   let cdpWsUrl: string | null = null;
   let liveViewUrl: string | null = null;
@@ -68,8 +67,7 @@ export function createContext(
     },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,
-    getCreateParams: () => createParams,
-    getBrowser: () => browser,
+    getCreateParams: () => browserOpts,
   };
 }
 
