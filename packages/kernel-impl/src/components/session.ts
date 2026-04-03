@@ -3,7 +3,6 @@ import type {
   SessionHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
 import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
-import type { BrowserCreateParams } from "@onkernel/sdk/resources/browsers/browsers.js";
 import { exec, type KernelContext } from "../context.js";
 
 export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
@@ -21,25 +20,12 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
       const firstMatch = params.capabilities?.firstMatch ?? [{}];
       const merged = { ...alwaysMatch, ...firstMatch[0] };
 
-      const options = ctx.getOptions();
-
       try {
-        const createParams: Record<string, unknown> = {
-          headless: options.headless ?? true,
-        };
-        if (options.stealth !== undefined)
-          createParams.stealth = options.stealth;
-        if (options.gpu !== undefined) createParams.gpu = options.gpu;
-        if (options.viewport !== undefined)
-          createParams.viewport = options.viewport;
-        if (options.timeoutSeconds !== undefined)
-          createParams.timeout_seconds = options.timeoutSeconds;
+        const browser =
+          ctx.getBrowser() ??
+          (await ctx.getClient().browsers.create(ctx.getCreateParams()));
 
-        const browser = await ctx
-          .getClient()
-          .browsers.create(createParams as BrowserCreateParams);
-
-        ctx.setSession(browser.session_id, browser.webdriver_ws_url);
+        ctx.setSession(browser.session_id, browser.cdp_ws_url);
 
         const capabilities: Capabilities = {
           browserName: "chrome",

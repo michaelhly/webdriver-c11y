@@ -13,10 +13,10 @@ import { createScreenshotHandlers } from "../components/screenshot.js";
 import { createScriptHandlers } from "../components/script.js";
 import { createSessionHandlers } from "../components/session.js";
 import { createWindowHandlers } from "../components/window.js";
+import type { BrowserCreateParams, BrowserCreateResponse } from "@onkernel/sdk/resources/browsers/browsers.js";
 import {
   createContext,
   type KernelContext,
-  type KernelDriverOptions,
 } from "../context.js";
 
 export function buildClassicComponents(ctx: KernelContext) {
@@ -36,11 +36,12 @@ export function buildClassicComponents(ctx: KernelContext) {
 }
 
 export function createKernelClassicDriver(
-  options?: KernelDriverOptions,
+  createParams?: BrowserCreateParams,
+  browser?: BrowserCreateResponse,
 ): ClassicDriver {
-  const ctx = createContext(options);
+  const ctx = createContext(createParams, browser);
   return createClassicDriver({
-    protocol: "cdp",
+    protocol: "playwright",
     ...buildClassicComponents(ctx),
   });
 }

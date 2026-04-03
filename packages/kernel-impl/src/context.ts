@@ -7,19 +7,10 @@ import {
   UnsupportedOperationError,
 } from "@michaelhly.webdriver-c11y/schemas";
 import Kernel from "@onkernel/sdk";
-
-// ---------------------------------------------------------------------------
-// Options for creating a Kernel-backed browser session.
-// ---------------------------------------------------------------------------
-
-export interface KernelDriverOptions {
-  apiKey?: string;
-  headless?: boolean;
-  stealth?: boolean;
-  gpu?: boolean;
-  viewport?: { width: number; height: number };
-  timeoutSeconds?: number;
-}
+import type {
+  BrowserCreateParams,
+  BrowserCreateResponse,
+} from "@onkernel/sdk/resources/browsers/browsers.js";
 
 // ---------------------------------------------------------------------------
 // KernelContext — shared state for all handlers.
@@ -28,20 +19,22 @@ export interface KernelDriverOptions {
 export interface KernelContext {
   getClient(): Kernel;
   getSessionId(): string;
-  setSession(sessionId: string, bidiWsUrl: string): void;
+  setSession(sessionId: string, cdpWsUrl?: string): void;
   clearSession(): void;
-  getBidiWsUrl(): string;
+  getCdpWsUrl(): string;
   nextElementId(): string;
   nextShadowRootId(): string;
-  getOptions(): KernelDriverOptions;
+  getCreateParams(): BrowserCreateParams;
+  getBrowser(): BrowserCreateResponse | undefined;
 }
 
 export function createContext(
-  options: KernelDriverOptions = {},
+  createParams: BrowserCreateParams = {},
+  browser?: BrowserCreateResponse,
 ): KernelContext {
-  const client = new Kernel({ apiKey: options.apiKey });
+  const client = new Kernel();
   let sessionId: string | null = null;
-  let bidiWsUrl: string | null = null;
+  let cdpWsUrl: string | null = null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
@@ -53,21 +46,22 @@ export function createContext(
     },
     setSession: (id, wsUrl) => {
       sessionId = id;
-      bidiWsUrl = wsUrl;
+      cdpWsUrl = wsUrl ?? null;
     },
     clearSession: () => {
       sessionId = null;
-      bidiWsUrl = null;
+      cdpWsUrl = null;
       elementCounter = 0;
       shadowRootCounter = 0;
     },
-    getBidiWsUrl: () => {
-      if (!bidiWsUrl) throw new DriverError("No BiDi WebSocket URL available");
-      return bidiWsUrl;
+    getCdpWsUrl: () => {
+      if (!cdpWsUrl) throw new DriverError("No CDP WebSocket URL available");
+      return cdpWsUrl;
     },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,
-    getOptions: () => options,
+    getCreateParams: () => createParams,
+    getBrowser: () => browser,
   };
 }
 
