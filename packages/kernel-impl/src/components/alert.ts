@@ -1,50 +1,34 @@
 import type { AlertHandlers } from "@michaelhly.webdriver-c11y/schemas";
-import { exec, type KernelContext } from "../context.js";
+import type { KernelContext } from "../context.js";
+import { evaluate } from "../eval.js";
 
 export function createAlertHandlers(ctx: KernelContext): AlertHandlers {
   return {
     async getAlertText() {
-      const text = await exec<string>(
-        ctx,
-        `
-        return await new Promise((resolve) => {
-          page.once('dialog', (dialog) => resolve(dialog.message()));
+      const text = await evaluate(ctx, (page) => {
+        return new Promise<string>((resolve) => {
+          page.once("dialog", (dialog) => resolve(dialog.message()));
         });
-      `,
-      );
+      });
       return { text };
     },
     async acceptAlert() {
-      await exec(
-        ctx,
-        `
-        page.once('dialog', async (dialog) => {
-          await dialog.accept();
-        });
-        return undefined;
-      `,
-      );
+      await evaluate(ctx, (page) => {
+        page.once("dialog", (dialog) => dialog.accept());
+      });
     },
     async dismissAlert() {
-      await exec(
-        ctx,
-        `
-        page.once('dialog', async (dialog) => {
-          await dialog.dismiss();
-        });
-        return undefined;
-      `,
-      );
+      await evaluate(ctx, (page) => {
+        page.once("dialog", (dialog) => dialog.dismiss());
+      });
     },
     async sendAlertText({ text }) {
-      await exec(
+      await evaluate(
         ctx,
-        `
-        page.once('dialog', async (dialog) => {
-          await dialog.accept(${JSON.stringify(text)});
-        });
-        return undefined;
-      `,
+        (page, _context, args) => {
+          page.once("dialog", (dialog) => dialog.accept(args.text));
+        },
+        { text },
       );
     },
   };

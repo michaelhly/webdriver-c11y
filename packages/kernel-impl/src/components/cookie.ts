@@ -2,92 +2,87 @@ import type {
   Cookie,
   CookieHandlers,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { exec, type KernelContext } from "../context.js";
+import type { KernelContext } from "../context.js";
+import { evaluate } from "../eval.js";
+
+function toCookie(c: {
+  name: string;
+  value: string;
+  path: string;
+  domain: string;
+  secure: boolean;
+  httpOnly: boolean;
+  expires: number;
+  sameSite: "Strict" | "Lax" | "None";
+}): Cookie {
+  const cookie: Cookie = { name: c.name, value: c.value };
+  cookie.path = c.path;
+  cookie.domain = c.domain;
+  cookie.secure = c.secure;
+  cookie.httpOnly = c.httpOnly;
+  if (c.expires !== -1) cookie.expiry = Math.floor(c.expires);
+  if (c.sameSite !== "None") cookie.sameSite = c.sameSite as "Strict" | "Lax";
+  return cookie;
+}
 
 export function createCookieHandlers(ctx: KernelContext): CookieHandlers {
   return {
     async getAllCookies() {
-      const cookies = await exec<Cookie[]>(
-        ctx,
-        `
-        const raw = await context.cookies();
-        return raw.map(c => ({
-          name: c.name,
-          value: c.value,
-          path: c.path,
-          domain: c.domain,
-          secure: c.secure,
-          httpOnly: c.httpOnly,
-          expiry: c.expires !== -1 ? Math.floor(c.expires) : undefined,
-          sameSite: c.sameSite !== 'None' ? c.sameSite : undefined,
-        }));
-      `,
-      );
-      return { cookies };
+      const raw = await evaluate(ctx, async (_page, context) => {
+        return context.cookies();
+      });
+      return { cookies: raw.map(toCookie) };
     },
     async getCookie({ name }) {
-      const cookie = await exec<Cookie>(
+      const raw = await evaluate(
         ctx,
-        `
-        const raw = await context.cookies();
-        const c = raw.find(c => c.name === ${JSON.stringify(name)});
-        if (!c) throw new Error('No such cookie: ' + ${JSON.stringify(name)});
-        return {
-          name: c.name,
-          value: c.value,
-          path: c.path,
-          domain: c.domain,
-          secure: c.secure,
-          httpOnly: c.httpOnly,
-          expiry: c.expires !== -1 ? Math.floor(c.expires) : undefined,
-          sameSite: c.sameSite !== 'None' ? c.sameSite : undefined,
-        };
-      `,
+        async (_page, context, args) => {
+          const cookies = await context.cookies();
+          const c = cookies.find((c) => c.name === args.name);
+          if (!c) throw new Error(`No such cookie: ${args.name}`);
+          return c;
+        },
+        { name },
       );
-      return { cookie };
+      return { cookie: toCookie(raw) };
     },
     async addCookie({ cookie }) {
-      await exec(
+      await evaluate(
         ctx,
-        `
-        const c = ${JSON.stringify(cookie)};
-        await context.addCookies([{
-          name: c.name,
-          value: c.value,
-          url: c.domain ? undefined : page.url(),
-          domain: c.domain,
-          path: c.path ?? '/',
-          secure: c.secure,
-          httpOnly: c.httpOnly,
-          expires: c.expiry ? c.expiry : undefined,
-          sameSite: c.sameSite ?? 'Lax',
-        }]);
-        return undefined;
-      `,
+        async (page, context, args) => {
+          const c = args.cookie;
+          const entry: Parameters<typeof context.addCookies>[0][number] = {
+            name: c.name,
+            value: c.value,
+            path: c.path ?? "/",
+            sameSite: (c.sameSite as "Strict" | "Lax" | "None") ?? "Lax",
+          };
+          if (c.domain) {
+            entry.domain = c.domain;
+          } else {
+            entry.url = page.url();
+          }
+          if (c.secure !== undefined) entry.secure = c.secure;
+          if (c.httpOnly !== undefined) entry.httpOnly = c.httpOnly;
+          if (c.expiry !== undefined) entry.expires = c.expiry;
+          await context.addCookies([entry]);
+        },
+        { cookie },
       );
     },
     async deleteCookie({ name }) {
-      await exec(
+      await evaluate(
         ctx,
-        `
-        const url = page.url();
-        const cookies = await context.cookies(url);
-        const target = cookies.find(c => c.name === ${JSON.stringify(name)});
-        if (target) {
-          await context.clearCookies({ name: ${JSON.stringify(name)} });
-        }
-        return undefined;
-      `,
+        async (_page, context, args) => {
+          await context.clearCookies({ name: args.name });
+        },
+        { name },
       );
     },
     async deleteAllCookies() {
-      await exec(
-        ctx,
-        `
+      await evaluate(ctx, async (_page, context) => {
         await context.clearCookies();
-        return undefined;
-      `,
-      );
+      });
     },
   };
 }

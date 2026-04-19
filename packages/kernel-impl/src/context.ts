@@ -1,7 +1,4 @@
-import type {
-  LocatorStrategy,
-  ScriptExpression,
-} from "@michaelhly.webdriver-c11y/schemas";
+import type { LocatorStrategy } from "@michaelhly.webdriver-c11y/schemas";
 import {
   DriverError,
   UnsupportedOperationError,
@@ -11,11 +8,36 @@ import Kernel from "@onkernel/sdk";
 import type {
   BrowserCreateParams,
   BrowserCreateResponse,
+  BrowserListResponse,
 } from "@onkernel/sdk/resources/browsers/browsers.js";
 
 // ---------------------------------------------------------------------------
 // KernelContext — shared state for all handlers.
 // ---------------------------------------------------------------------------
+
+/** SDK client wiring for {@link createContext}. */
+export interface KernelSdkOptions {
+  clientOpts?: ClientOptions;
+  /** Shared client; default is `new Kernel()`. */
+  kernel?: Kernel;
+}
+
+/** No browser yet; first `newSession` calls `browsers.create`. */
+export type KernelContextNewSessionOptions = KernelSdkOptions & {
+  mode: "new";
+  /** Passed to `browsers.create` when `newSession` runs. */
+  browserOpts?: BrowserCreateParams;
+};
+
+/** Browser already known; same as {@link KernelContext.setBrowser} before `newSession`. */
+export type KernelContextExistingSessionOptions = KernelSdkOptions & {
+  mode: "existing";
+  existingBrowser: BrowserListResponse;
+};
+
+export type KernelContextOptions =
+  | KernelContextNewSessionOptions
+  | KernelContextExistingSessionOptions;
 
 export interface KernelContext {
   getClient(): Kernel;
@@ -23,24 +45,27 @@ export interface KernelContext {
   getBrowser(): BrowserCreateResponse;
   setBrowser(browser: BrowserCreateResponse): void;
   clearSession(): void;
-  getCdpWsUrl(): string;
-  getLiveViewUrl(): string;
   nextElementId(): string;
   nextShadowRootId(): string;
-  getCreateParams(): BrowserCreateParams;
+  getBrowserOpts(): BrowserCreateParams;
 }
 
 export function createContext(
-  browserOpts: BrowserCreateParams = {},
-  clientOpts?: ClientOptions,
+  options: KernelContextOptions = { mode: "new" },
 ): KernelContext {
-  const client = new Kernel();
-  let browser: BrowserCreateResponse | null = null;
+  const client = options.kernel ?? new Kernel();
+  const co = options.clientOpts;
+
+  const browserOpts = options.mode === "new" ? (options.browserOpts ?? {}) : {};
+  const existingBrowser =
+    options.mode === "existing" ? options.existingBrowser : undefined;
+
+  let browser: BrowserCreateResponse | null = existingBrowser ?? null;
   let elementCounter = 0;
   let shadowRootCounter = 0;
 
   return {
-    getClient: () => (clientOpts ? client.withOptions(clientOpts) : client),
+    getClient: () => (co ? client.withOptions(co) : client),
     getSessionId: () => {
       if (!browser) throw new DriverError("No active session");
       return browser.session_id;
@@ -57,48 +82,11 @@ export function createContext(
       elementCounter = 0;
       shadowRootCounter = 0;
     },
-    getCdpWsUrl: () => {
-      if (!browser) throw new DriverError("No CDP WebSocket URL available");
-      return browser.cdp_ws_url;
-    },
-    getLiveViewUrl: () => {
-      if (!browser?.browser_live_view_url)
-        throw new DriverError("No live view URL available");
-      return browser.browser_live_view_url;
-    },
     nextElementId: () => `el-${++elementCounter}`,
     nextShadowRootId: () => `sr-${++shadowRootCounter}`,
-    getCreateParams: () => browserOpts,
+    getBrowserOpts: () => browserOpts,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Playwright code execution helper — used only for DOM queries and operations
-// that the computer API cannot perform.
-// ---------------------------------------------------------------------------
-
-function normalizeCode(code: ScriptExpression): string {
-  if (typeof code === "string") return code;
-  return `return (${code.toString()})();`;
-}
-
-export async function exec<T>(
-  ctx: KernelContext,
-  code: ScriptExpression,
-): Promise<T> {
-  const response = await ctx
-    .getClient()
-    .browsers.playwright.execute(ctx.getSessionId(), {
-      code: normalizeCode(code),
-    });
-  if (!response.success) {
-    throw new DriverError(response.error ?? "Playwright execution failed");
-  }
-  return response.result as T;
-}
-
-/** data attribute used to tag DOM elements with stable IDs across calls. */
-export const EID_ATTR = "data-kernel-eid";
 
 // ---------------------------------------------------------------------------
 // Locator strategy → Playwright selector conversion.
@@ -138,12 +126,4 @@ export function toPlaywrightSelector(
         `Unsupported locator strategy: ${using as string}`,
       );
   }
-}
-
-// ---------------------------------------------------------------------------
-// JSON-safe string escaping for injecting into Playwright code templates.
-// ---------------------------------------------------------------------------
-
-export function esc(value: string): string {
-  return JSON.stringify(value);
 }

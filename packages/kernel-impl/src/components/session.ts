@@ -1,9 +1,15 @@
 import type {
   Capabilities,
   SessionHandlers,
+  Timeouts,
 } from "@michaelhly.webdriver-c11y/schemas";
-import { SessionNotCreatedError } from "@michaelhly.webdriver-c11y/schemas";
-import { exec, type KernelContext } from "../context.js";
+import {
+  DriverError,
+  SessionNotCreatedError,
+} from "@michaelhly.webdriver-c11y/schemas";
+import type { BrowserCreateResponse } from "@onkernel/sdk/resources/browsers/browsers.js";
+import type { KernelContext } from "../context.js";
+import { evaluate } from "../eval.js";
 
 export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
   return {
@@ -17,11 +23,14 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
     },
     async newSession(_params) {
       try {
-        const browser = await ctx
-          .getClient()
-          .browsers.create(ctx.getCreateParams());
-
-        ctx.setBrowser(browser);
+        let browser: BrowserCreateResponse;
+        try {
+          browser = ctx.getBrowser();
+        } catch (e) {
+          if (!(e instanceof DriverError)) throw e;
+          browser = await ctx.getClient().browsers.create(ctx.getBrowserOpts());
+          ctx.setBrowser(browser);
+        }
 
         const capabilities: Capabilities = {
           browserName: "chrome",
@@ -42,40 +51,35 @@ export function createSessionHandlers(ctx: KernelContext): SessionHandlers {
       ctx.clearSession();
     },
     async getTimeouts() {
-      return await exec(
-        ctx,
-        `
+      return await evaluate<Timeouts>(ctx, async (page) => {
         const timeouts = await page.evaluate(() => {
-          return (window as any).__webdriver_timeouts || {};
+          const w = window as unknown as Record<string, unknown>;
+          return w.__webdriver_timeouts as Record<string, unknown> | undefined;
         });
         return {
-          script: timeouts.script ?? 30000,
-          pageLoad: timeouts.pageLoad ?? 300000,
-          implicit: timeouts.implicit ?? 0,
+          script: (timeouts?.script as number) ?? 30000,
+          pageLoad: (timeouts?.pageLoad as number) ?? 300000,
+          implicit: (timeouts?.implicit as number) ?? 0,
         };
-      `,
-      );
+      });
     },
     async setTimeouts(params) {
-      const script = params.script ?? null;
-      const pageLoad = params.pageLoad ?? undefined;
-      const implicit = params.implicit ?? undefined;
-      await exec(
+      await evaluate(
         ctx,
-        `
-        const timeouts = {
-          script: ${script === null ? "null" : String(script)},
-          pageLoad: ${pageLoad === undefined ? "undefined" : String(pageLoad)},
-          implicit: ${implicit === undefined ? "undefined" : String(implicit)},
-        };
-        await page.evaluate((t) => {
-          (window as any).__webdriver_timeouts = t;
-        }, timeouts);
-        if (timeouts.implicit !== undefined) {
-          await page.setDefaultTimeout(timeouts.implicit);
-        }
-        return undefined;
-      `,
+        async (page, _context, args) => {
+          await page.evaluate((t) => {
+            const w = window as unknown as Record<string, unknown>;
+            w.__webdriver_timeouts = t;
+          }, args);
+          if (args.implicit !== undefined) {
+            page.setDefaultTimeout(args.implicit);
+          }
+        },
+        {
+          script: params.script,
+          pageLoad: params.pageLoad,
+          implicit: params.implicit,
+        },
       );
     },
   };
