@@ -29,7 +29,17 @@
     "Capabilities": {
       "type": "object",
       "properties": {
-        "browserName": { "type": "string" },
+        "browserName": {
+          "type": "string",
+          "enum": [
+            "chrome",
+            "firefox",
+            "safari",
+            "MicrosoftEdge",
+            "internet explorer",
+            "opera"
+          ]
+        },
         "browserVersion": { "type": "string" },
         "platformName": { "type": "string" },
         "acceptInsecureCerts": { "type": "boolean" },

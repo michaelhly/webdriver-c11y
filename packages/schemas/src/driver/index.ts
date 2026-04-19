@@ -13,7 +13,7 @@ import {
 // Protocol identifier — distinguishes the underlying implementation.
 // ---------------------------------------------------------------------------
 
-export type Protocol = "webdriver" | "cdp";
+export type Protocol = "webdriver" | "cdp" | "playwright";
 
 // ---------------------------------------------------------------------------
 // Driver — combined Classic + BiDi interface.

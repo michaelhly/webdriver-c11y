@@ -22,7 +22,13 @@ export interface ProxyConfiguration {
  * via the `definition` "Capabilities".
  */
 export interface Capabilities {
-  browserName?: string;
+  browserName?:
+    | "chrome"
+    | "firefox"
+    | "safari"
+    | "MicrosoftEdge"
+    | "internet explorer"
+    | "opera";
   browserVersion?: string;
   platformName?: string;
   acceptInsecureCerts?: boolean;
